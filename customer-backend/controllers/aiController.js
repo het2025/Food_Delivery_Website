@@ -13,6 +13,75 @@ const getGroq = () => {
     return new Groq({ apiKey: process.env.GROQ_API_KEY });
 };
 
+// --- MOOD DETECTION ---
+const moodKeywords = {
+    spicy: ['spicy', 'hot', 'fiery', 'chili', 'chilli', 'pepper', 'masala', 'peri', 'schezwan', 'tikka', 'spiced', 'bold flavour', 'bold flavor'],
+    sweet: ['sweet', 'dessert', 'chocolate', 'cake', 'ice cream', 'icecream', 'mithai', 'gulab', 'halwa', 'ladoo', 'barfi', 'kheer', 'pudding', 'brownie', 'pastry', 'candy', 'sugary'],
+    healthy: ['healthy', 'salad', 'light', 'diet', 'nutritious', 'fresh', 'grilled', 'steamed', 'low cal', 'low calorie', 'green', 'clean eating', 'fit'],
+    comfort: ['comfort', 'cozy', 'warm', 'desi', 'homestyle', 'home style', 'traditional', 'classic', 'dal', 'roti', 'khichdi', 'hearty'],
+    exotic: ['exotic', 'fusion', 'international', 'unique', 'special', 'gourmet', 'premium', 'continental', 'thai', 'japanese', 'korean', 'mexican', 'italian', 'sushi', 'adventure'],
+    heavy: ['heavy', 'filling', 'biryani', 'thali', 'platter', 'feast', 'starving', 'very hungry', 'full meal', 'combo'],
+    snack: ['snack', 'quick bite', 'light bite', 'pani puri', 'chaat', 'samosa', 'vada', 'pakora', 'finger food', 'something light', 'munchies'],
+    nonveg: ['non-veg', 'nonveg', 'chicken', 'mutton', 'prawn', 'fish', 'seafood', 'meat', 'egg'],
+    veg: ['veg only', 'vegetarian', 'no meat', 'plant based', 'plant-based'],
+};
+
+const detectMood = (message) => {
+    const lower = message.toLowerCase();
+    for (const [mood, keywords] of Object.entries(moodKeywords)) {
+        if (keywords.some(kw => lower.includes(kw))) {
+            return mood;
+        }
+    }
+    return null;
+};
+
+const searchDishesByMood = (restaurants, mood) => {
+    const keywords = moodKeywords[mood] || [];
+    const moodToDishTypes = {
+        sweet: ['dessert'],
+        snack: ['snack', 'starter'],
+        heavy: ['main', 'combo'],
+        comfort: ['main'],
+        healthy: ['main', 'starter'],
+    };
+    const allowedDishTypes = moodToDishTypes[mood] || [];
+
+    let matches = [];
+
+    for (const r of restaurants) {
+        if (r.menu) {
+            for (const cat of r.menu) {
+                if (cat.items) {
+                    for (const item of cat.items) {
+                        const itemText = `${item.name} ${item.description || ''} ${(item.tags || []).join(' ')}`.toLowerCase();
+                        const matchesKeyword = keywords.some(kw => itemText.includes(kw));
+                        const matchesDishType = allowedDishTypes.length > 0 && allowedDishTypes.includes(item.dishType);
+
+                        if (matchesKeyword || matchesDishType) {
+                            matches.push({
+                                restaurantName: r.name,
+                                restaurantId: r._id,
+                                itemId: item._id,
+                                name: item.name,
+                                price: item.price,
+                                isVeg: item.isVeg,
+                                image: item.url || ''
+                            });
+                        }
+
+                        if (matches.length >= 8) break;
+                    }
+                    if (matches.length >= 8) break;
+                }
+            }
+        }
+        if (matches.length >= 8) break;
+    }
+
+    return matches.slice(0, 5);
+};
+
 export const chatWithAI = async (req, res) => {
     try {
         const { message, userId } = req.body;
@@ -22,11 +91,18 @@ export const chatWithAI = async (req, res) => {
         }
 
         const lowerMessage = message.toLowerCase();
-        const isOrderingIntent = lowerMessage.includes('order') ||
+        // Exclude continuation messages like "show me more" or "I've added X" from triggering a dish search
+        const isFollowUpMessage = lowerMessage.includes("i've added") || lowerMessage.includes("show me more") || lowerMessage.includes("more options");
+        const isOrderingIntent = !isFollowUpMessage && (
+            lowerMessage.includes('order') ||
             lowerMessage.includes('get me') ||
             lowerMessage.includes('buy') ||
             lowerMessage.includes('want to eat') ||
-            lowerMessage.includes('add');
+            /\badd\b/.test(lowerMessage)
+        );
+
+        // Detect mood from the message
+        const detectedMood = detectMood(message);
 
         // Fetch all active restaurants with their popular items/menu highlights
         let restaurants = await Restaurant.find({
@@ -51,10 +127,8 @@ export const chatWithAI = async (req, res) => {
             .toArray();
 
         // MERGE & DEDUPLICATE
-        // Combine Top 30 Rated + Top 5 New
         const allRestaurants = [...limitedRestaurants, ...newRestaurants];
 
-        // Remove duplicates based on _id
         const uniqueRestaurantsMap = new Map();
         allRestaurants.forEach(r => {
             uniqueRestaurantsMap.set(r._id.toString(), r);
@@ -69,6 +143,21 @@ export const chatWithAI = async (req, res) => {
         for (let i = limitedRestaurants.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [limitedRestaurants[i], limitedRestaurants[j]] = [limitedRestaurants[j], limitedRestaurants[i]];
+        }
+
+        // --- MOOD-BASED DISH SEARCH ---
+        let moodDishResults = "";
+        if (detectedMood) {
+            const moodMatches = searchDishesByMood(limitedRestaurants, detectedMood);
+            if (moodMatches.length > 0) {
+                moodDishResults = `MOOD DISHES (Detected Mood: ${detectedMood.toUpperCase()} - Use DISH_CARDS for these):\n` +
+                    moodMatches.map(m =>
+                        `Dish: ${m.name} | Price: ${m.price} | Restaurant: ${m.restaurantName} | ID: ${m.itemId} | RestID: ${m.restaurantId} | Image: ${m.image || ''} | IsVeg: ${m.isVeg}`
+                    ).join('\n');
+                console.log(`[AI Mood] Detected mood '${detectedMood}', found ${moodMatches.length} dishes`);
+            } else {
+                moodDishResults = `MOOD DISHES: No dishes found for mood '${detectedMood}'. Suggest browsing restaurants.`;
+            }
         }
 
         // --- SPECIFIC DISH SEARCH (If intent is ordering) ---
@@ -114,7 +203,6 @@ export const chatWithAI = async (req, res) => {
                     dishSearchResults = "MATCHING DISHES FOUND (Use ONLY these for [ADD_TO_CART]):\n" +
                         matches.map(m => `Dish: ${m.name} | Price: ${m.price} | Restaurant: ${m.restaurantName} | ID: ${m.itemId} | RestID: ${m.restaurantId} | Image: ${m.image || 'N/A'}`).join('\n');
 
-                    // Add this debug log to see what was found
                     console.log(`[AI Search] Found ${matches.length} matches for '${potentialDish}'`);
                 } else {
                     dishSearchResults = "NO EXACT DISH MATCHES FOUND for '" + potentialDish + "'. Do NOT invent false items.";
@@ -174,12 +262,11 @@ export const chatWithAI = async (req, res) => {
             }
 
             if (userObjectId) {
-                // Strict status check for active orders
                 const activeStatuses = ['pending', 'confirmed', 'accepted', 'preparing', 'ready', 'out_for_delivery', 'picked_up'];
 
                 const activeOrders = await Order.find({
                     customer: userObjectId,
-                    status: { $in: activeStatuses } // Use exact match with $in instead of regex
+                    status: { $in: activeStatuses }
                 }).sort({ createdAt: -1 });
 
                 if (activeOrders.length > 0) {
@@ -204,59 +291,83 @@ export const chatWithAI = async (req, res) => {
 
         // Construct System Prompt
         const systemPrompt = `
-        You are QuickBites AI, a smart food delivery assistant. 
-        
+        You are QuickBites AI, a smart food delivery assistant.
+
         DATA CONTEXT (All available restaurants):
         ${contextList}
-        
-        MATCHING DISHES (Priority - Use for Ordering):
-        ${dishSearchResults}
-        
+
+        MATCHING DISHES (Priority - Use for Ordering specific dish):
+        ${dishSearchResults || 'N/A'}
+
+        MOOD DISHES (Priority - Use for mood-based recommendations):
+        ${moodDishResults || 'N/A'}
+
         USER CONTEXT:
         ${orderContext}
 
         YOUR GOAL:
-        Help users find food, TRACK ORDERS, navigate, and ADD ITEMS TO CART.
+        Help users find food, TRACK ORDERS, navigate, ADD ITEMS TO CART, and PLACE ORDERS via mood-based recommendations.
 
         RULES:
-        1. **Live Order Tracking**: 
+        1. **Live Order Tracking**:
            - IF "USER HAS ACTIVE ORDERS": "Your order from [Restaurant] is [Status]." + [NAVIGATE:/track-order/ID]
            - IF "USER HAS NO ACTIVE ORDERS": "You don't have any active orders."
 
         2. **Ordering Specific Dishes (ADD TO CART)**:
-           - **STRICT RULE**: You can ONLY generate an [ADD_TO_CART] tag if the item is explicitly listed in the "MATCHING DISHES" section above.
-           - **NEVER** invent an item ID or price. If "MATCHING DISHES" is empty or says "NO EXACT DISH MATCHES FOUND", you CANNOT offer to add to cart.
-           - IF match found in "MATCHING DISHES": 
-             - Reply: "Found [Dish Name] at [Restaurant Name] for ₹[Price]. Would you like to add it?"
-             - **CRITICAL**: Append this tag: [ADD_TO_CART:{itemId}|{name}|{price}|{restaurantId}|{image}]
-             - Copy the values EXACTLY from the "MATCHING DISHES" line.
-             - If image is "N/A", pass empty string.
-           - IF NO match found:
-             - Apologize and say you couldn't find that specific dish, but recommend a relevant RESTAURANT from "DATA CONTEXT".
-             - Use [NAVIGATE:/restaurants?search=Keyword]
+           - **STRICT RULE**: You can ONLY generate an [ADD_TO_CART] tag if the item is in "MATCHING DISHES".
+           - If match found: [ADD_TO_CART:{itemId}|{name}|{price}|{restaurantId}|{image}]
+           - If NO match: Apologize and suggest a restaurant with [NAVIGATE].
 
-        3. **Dish/Restaurant Search**: 
+        3. **Mood-Based Recommendations (DISH_CARDS)**:
+           - When MOOD DISHES data is available (not N/A), use it for dish cards.
+           - Reply warmly: "Here are some [mood] options I found for you!"
+           - Show up to 5 dishes using the DISH_CARDS format below.
+           - **DISH_CARDS FORMAT** (field order is STRICT — follow exactly):
+             [DISH_CARDS:{ID}|{NAME}|{PRICE}|{RESTAURANT_ID}|{RESTAURANT_NAME}|{IMAGE_URL}|{IS_VEG}:::{ID2}|{NAME2}|{PRICE2}|...]
+             Position 1: Item ID (from "ID:" field in MOOD DISHES)
+             Position 2: Dish name (from "Dish:" field)
+             Position 3: Price as raw number only, no ₹ symbol (from "Price:" field)
+             Position 4: Restaurant ID (from "RestID:" field)
+             Position 5: Restaurant name (from "Restaurant:" field)
+             Position 6: Full image URL (from "Image:" field)
+             Position 7: isVeg true or false (from "IsVeg:" field)
+           - Copy values EXACTLY from MOOD DISHES data, in the order shown above.
+           - **CRITICAL**: Do NOT output dish names, prices, or image URLs as plain text in your reply. ALL dish data must be ONLY inside the [DISH_CARDS:...] tag — never outside it.
+           - Separator between dishes is ::: (three colons).
+           - End reply with: "Click any dish to add it to your order, then I'll ask if you want more or want to place the order!"
+
+        4. **Add More Flow**:
+           - When user message contains "show me more", "more options", "want more", or asks for additional dishes:
+             - Show 3-5 more dishes using DISH_CARDS format (re-use the detected mood).
+             - Ask: "Want to add more, or shall I place your order now?"
+             - Include [ORDER_NOW] tag at the end of your reply.
+           - **DO NOT** mention image URLs, prices, or dish names as plain text — use DISH_CARDS only.
+
+        5. **Finalise Order (ORDER_NOW)**:
+           - When user says "order it", "place order", "that's all", "order now", "no more", "just order":
+             - Reply: "Your order is ready! I'll place it with Cash on Delivery to your home address. Tap the button below to confirm!"
+             - Append: [ORDER_NOW]
+
+        6. **Dish/Restaurant Search**:
            - "I want pizza" -> "Pizza Hut is great! [NAVIGATE:/restaurants?search=pizza]"
-           - "Go to Azure" -> "Sure! [NAVIGATE:/restaurants?search=azure]"
 
-        4. **General Navigation**: 
+        7. **General Navigation**:
            - [NAVIGATE:/orders], [NAVIGATE:/cart], [NAVIGATE:/profile]
 
-        5. **Reorder**:
+        8. **Reorder**:
            - Use "USER HISTORY".
            - "Your last meal was... [NAVIGATE:/restaurants?search=RestaurantName]"
 
-        6. **Surprise Me**:
+        9. **Surprise Me**:
            - Pick top restaurant.
            - "How about [Name]? [NAVIGATE:/restaurants?search=Name]"
 
-        7. **Tone**: Helpful, short, direct. No thinking process revealed.
-        
-        8. **Formatting Rules (STRICT)**:
-           - **MAX 5 RESULTS**: When listing restaurants or options, NEVER list more than 5.
-           - **CONCISE LISTS**: For lists, showing JUST the Name and Rating/Type is best. Do NOT list specific menu items unless the user asks for "dishes" or "menu".
-           - **VEG OPTIONS**: If asked for veg options, list ONLY the top 5 restaurants (Name + Dietary Label). Do NOT list their specific dishes in the reply.
-           - **Custom Orders**: If user says "Custom Order", reply: "I can't take custom requests directly yet! Please browse the menu or choose a restaurant."
+        10. **Tone**: Helpful, short, friendly. No internal thinking exposed.
+
+        11. **Formatting Rules (STRICT)**:
+            - **MAX 5 RESULTS**: Never list more than 5 restaurants or dishes at once.
+            - **CONCISE**: Short replies. Lists: name + rating only unless user asks for dishes.
+            - **Custom Orders**: Reply: "I can't take custom requests directly! Please browse the menu."
 
         `;
 
