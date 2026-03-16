@@ -76,7 +76,7 @@ function ProfileSettings() {
       const token = localStorage.getItem('restaurantOwnerToken');
 
       // Fetch restaurant profile
-      const response = await fetch('http://localhost:5001/api/profile/restaurant', {
+      const response = await fetch(`http://${window.location.hostname}:5001/api/profile/restaurant`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -109,7 +109,7 @@ function ProfileSettings() {
       }
 
       // Fetch owner data
-      const ownerResponse = await fetch('http://localhost:5001/api/auth/me', {
+      const ownerResponse = await fetch(`http://${window.location.hostname}:5001/api/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -186,7 +186,7 @@ function ProfileSettings() {
     try {
       const token = localStorage.getItem('restaurantOwnerToken');
 
-      const response = await fetch('http://localhost:5001/api/profile/restaurant', {
+      const response = await fetch(`http://${window.location.hostname}:5001/api/profile/restaurant`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ function ProfileSettings() {
     try {
       const token = localStorage.getItem('restaurantOwnerToken');
 
-      const response = await fetch('http://localhost:5001/api/profile/owner', {
+      const response = await fetch(`http://${window.location.hostname}:5001/api/profile/owner`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -275,7 +275,7 @@ function ProfileSettings() {
     try {
       const token = localStorage.getItem('restaurantOwnerToken');
 
-      const response = await fetch('http://localhost:5001/api/auth/password', {
+      const response = await fetch(`http://${window.location.hostname}:5001/api/auth/password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

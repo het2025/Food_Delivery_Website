@@ -26,9 +26,10 @@ const corsOptions = {
   origin: process.env.NODE_ENV === 'development'
     ? true  // Allow all origins in development (needed for mobile/LAN access)
     : [
-        'http://localhost:5175',
-        'http://localhost:3000',
         'http://localhost:5174',
+        'http://localhost:5173',
+        // Allow local network IP addresses
+        /^http:\/\/(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}):(5173|5174|5175|3000)$/,
         process.env.FRONTEND_URL
       ].filter(Boolean),
   credentials: true,

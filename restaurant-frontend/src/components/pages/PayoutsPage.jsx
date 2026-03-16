@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Wallet, Building2, Plus, Lock, AlertTriangle, Trash2 } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5001/api'; // Restaurant Backend
+const API_BASE_URL = `http://${window.location.hostname}:5001/api`; // Restaurant Backend
 
 const PayoutsPage = () => {
     const [activeTab, setActiveTab] = useState('overview'); // overview | bank-details

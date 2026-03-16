@@ -1,8 +1,7 @@
 // src/api/restaurantOwnerApi.js
 // Central API helper for restaurant owner backend (cleaned - removed menu/additives/extras)
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://${window.location.hostname}:5001/api`;
 
 // Token key for restaurant owner
 const getToken = () =>

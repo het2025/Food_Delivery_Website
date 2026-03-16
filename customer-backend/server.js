@@ -34,7 +34,9 @@ const allowedOrigins = process.env.NODE_ENV === 'development'
     : [
       'http://localhost:5173',
       'http://localhost:3000',
-      process.env.FRONTEND_URL
+      process.env.FRONTEND_URL,
+      // Allow local network IP addresses
+      /^http:\/\/(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}):(5173|5174|5175|3000)$/
     ].filter(Boolean);
 
 // Initialize Socket.io
