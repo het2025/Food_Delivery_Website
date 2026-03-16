@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   Home,
@@ -6,109 +6,124 @@ import {
   User,
   UtensilsCrossed,
   LogOut,
-  Wallet // ✅ NEW
+  Wallet,
+  Menu,
+  X
 } from 'lucide-react';
+
+const navItems = [
+  { to: '/dashboard', label: 'Dashboard', icon: Home, end: true },
+  { to: '/dashboard/orders', label: 'Orders', icon: ClipboardList },
+  { to: '/dashboard/menu', label: 'Menu Management', icon: UtensilsCrossed },
+  { to: '/dashboard/payouts', label: 'Payouts', icon: Wallet },
+  { to: '/dashboard/profile', label: 'Profile Settings', icon: User },
+];
+
+const linkClass = ({ isActive }) =>
+  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+    isActive
+      ? 'text-red-600 font-semibold bg-red-50'
+      : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
+  }`;
 
 function RestaurantOwnerSidebarLayout() {
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = () => {
-    // Clear auth token
     localStorage.removeItem('restaurantOwnerToken');
     localStorage.removeItem('token');
-
-    // Navigate to login and replace history (prevents back button)
     navigate('/', { replace: true });
   };
 
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <aside className="flex flex-col p-6 w-64 bg-white shadow-xl">
-        {/* Logo + Text */}
-        <div className="flex gap-3 items-center mb-6">
-          <img src="/quickbite_logo.svg" alt="QuickBite Logo" className="w-9 h-9" />
-          <span className="text-2xl font-bold text-black">QuickBite</span>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-gray-600/75 lg:hidden"
+          onClick={closeSidebar}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 flex flex-col w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:shadow-xl ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        {/* Logo row */}
+        <div className="flex items-center justify-between px-5 py-5 border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <img src="/quickbite_logo.svg" alt="QuickBite Logo" className="w-8 h-8 flex-shrink-0" />
+            <span className="text-xl font-bold text-gray-900 truncate">QuickBite</span>
+          </div>
+          <button
+            onClick={closeSidebar}
+            className="lg:hidden p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 flex-shrink-0"
+            aria-label="Close menu"
+          >
+            <X size={20} />
+          </button>
         </div>
 
-        <nav className="flex-1 space-y-2">
-          {/* Dashboard */}
-          <NavLink
-            to="/dashboard"
-            end
-            className={({ isActive }) =>
-              `flex items-center space-x-2 px-2 py-2 rounded ${isActive ? 'text-red-600 font-bold bg-red-50' : 'text-gray-700'
-              } hover:text-red-600 hover:bg-red-50`
-            }
-          >
-            <Home size={20} />
-            <span>Dashboard</span>
-          </NavLink>
-
-          {/* Orders */}
-          <NavLink
-            to="/dashboard/orders"
-            className={({ isActive }) =>
-              `flex items-center space-x-2 px-2 py-2 rounded ${isActive ? 'text-red-600 font-bold bg-red-50' : 'text-gray-700'
-              } hover:text-red-600 hover:bg-red-50`
-            }
-          >
-            <ClipboardList size={20} />
-            <span>Orders</span>
-          </NavLink>
-
-          {/* ✅ Menu Management (between Orders and Profile) */}
-          <NavLink
-            to="/dashboard/menu"
-            className={({ isActive }) =>
-              `flex items-center space-x-2 px-2 py-2 rounded ${isActive ? 'text-red-600 font-bold bg-red-50' : 'text-gray-700'
-              } hover:text-red-600 hover:bg-red-50`
-            }
-          >
-            <UtensilsCrossed size={20} />
-            <span>Menu Management</span>
-          </NavLink>
-
-          {/* ✅ Payouts (below Menu Management) */}
-          <NavLink
-            to="/dashboard/payouts"
-            className={({ isActive }) =>
-              `flex items-center space-x-2 px-2 py-2 rounded ${isActive ? 'text-red-600 font-bold bg-red-50' : 'text-gray-700'
-              } hover:text-red-600 hover:bg-red-50`
-            }
-          >
-            <Wallet size={20} />
-            <span>Payouts</span>
-          </NavLink>
-
-          {/* Profile Settings */}
-          <NavLink
-            to="/dashboard/profile"
-            className={({ isActive }) =>
-              `flex items-center gap-2 px-2 py-2 rounded ${isActive ? 'text-red-600 font-bold bg-red-50' : 'text-gray-700'
-              } hover:text-red-600 hover:bg-red-50`
-            }
-          >
-            <User size={20} />
-            <span>Profile Settings</span>
-          </NavLink>
+        {/* Nav links */}
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {navItems.map(({ to, label, icon: Icon, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              className={linkClass}
+              onClick={closeSidebar}
+            >
+              <Icon size={20} className="flex-shrink-0" />
+              <span>{label}</span>
+            </NavLink>
+          ))}
         </nav>
 
-        {/* Logout Button at Bottom */}
-        <div className="pt-4 mt-4 border-t border-gray-200">
+        {/* Logout */}
+        <div className="px-3 py-4 border-t border-gray-100">
           <button
             onClick={handleLogout}
-            className="flex gap-2 items-center px-2 py-2 w-full font-medium text-red-600 rounded hover:bg-red-50"
+            className="flex items-center gap-3 px-3 py-2.5 w-full text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors"
           >
-            <LogOut size={20} />
+            <LogOut size={20} className="flex-shrink-0" />
             <span>Logout</span>
           </button>
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="overflow-y-auto flex-1 p-8">
-        <Outlet />
-      </main>
+      {/* Main content area */}
+      <div className="flex flex-col flex-1 min-w-0">
+        {/* Mobile top bar */}
+        <header
+          className="flex items-center gap-3 px-4 h-14 bg-white border-b border-gray-200 lg:hidden flex-shrink-0"
+          style={{ paddingTop: 'env(safe-area-inset-top)' }}
+        >
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 -ml-1 text-gray-600 rounded-lg hover:bg-gray-100 flex-shrink-0"
+            aria-label="Open menu"
+          >
+            <Menu size={22} />
+          </button>
+          <div className="flex items-center gap-2 min-w-0">
+            <img src="/quickbite_logo.svg" alt="QuickBite" className="w-6 h-6 flex-shrink-0" />
+            <span className="font-bold text-gray-800 truncate">QuickBite</span>
+          </div>
+        </header>
+
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
