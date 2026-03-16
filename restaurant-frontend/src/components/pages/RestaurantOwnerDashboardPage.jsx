@@ -216,23 +216,23 @@ function RestaurantOwnerDashboardPage() {
 
   // Tabs
   const OverviewTab = () => (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
           const isPositive = stat.change >= 0;
           return (
-            <div key={stat.label} className="h-32 p-4 bg-white border border-gray-100 shadow-sm rounded-xl">
+            <div key={stat.label} className="p-3 sm:p-4 bg-white border border-gray-100 shadow-sm rounded-xl">
               <div className="flex flex-col h-full">
                 <div className="flex justify-end mb-2">
-                  <div className="p-2 rounded-lg bg-orange-50">
-                    <Icon className="w-5 h-5 text-orange-600" />
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-orange-50">
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
                   </div>
                 </div>
                 <div className="flex flex-col justify-end flex-grow">
-                  <p className="mb-1 text-sm text-gray-600">{stat.label}</p>
-                  <h3 className="text-2xl font-bold leading-none">{stat.value}</h3>
+                  <p className="mb-1 text-xs sm:text-sm text-gray-600 leading-tight">{stat.label}</p>
+                  <h3 className="text-lg sm:text-2xl font-bold leading-none truncate">{stat.value}</h3>
                 </div>
                 {stat.change !== 0 && (
                   <div className={`flex items-center mt-2 text-xs ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
@@ -251,11 +251,11 @@ function RestaurantOwnerDashboardPage() {
         })}
       </div>
       {/* Orders Per Day */}
-      <div className="p-5 bg-white border border-gray-100 shadow-sm rounded-xl">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-semibold">Orders </h2>
-          <button onClick={() => setActiveTab('orders')} className="text-sm text-orange-600 hover:text-orange-700">
-            View All Orders
+      <div className="p-3 sm:p-5 bg-white border border-gray-100 shadow-sm rounded-xl">
+        <div className="flex items-center justify-between mb-4 sm:mb-5">
+          <h2 className="text-base sm:text-lg font-semibold">Orders</h2>
+          <button onClick={() => setActiveTab('orders')} className="text-xs sm:text-sm text-orange-600 hover:text-orange-700">
+            View All
           </button>
         </div>
         <div className="space-y-4">
@@ -267,43 +267,42 @@ function RestaurantOwnerDashboardPage() {
           {ordersByDay.slice(0, 7).map((dayData, idx) => {
             const isToday = new Date(dayData.fullDate).toDateString() === new Date().toDateString();
             return (
-              <div key={idx} className={`p-4 rounded-lg border transition-all ${isToday ? 'bg-orange-50 border-orange-300' : 'border-gray-200 hover:bg-gray-50'}`}>
-                <div className="flex items-center justify-between mb-3">
+              <div key={idx} className={`p-3 sm:p-4 rounded-lg border transition-all ${isToday ? 'bg-orange-50 border-orange-300' : 'border-gray-200 hover:bg-gray-50'}`}>
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
                   <div>
-                    <h3 className="font-semibold text-gray-800">{isToday ? '📅 Today' : dayData.date}</h3>
-                    <p className="text-sm text-gray-600">{dayData.totalOrders} {dayData.totalOrders === 1 ? 'order' : 'orders'}</p>
+                    <h3 className="font-semibold text-sm sm:text-base text-gray-800">{isToday ? '📅 Today' : dayData.date}</h3>
+                    <p className="text-xs text-gray-600">{dayData.totalOrders} {dayData.totalOrders === 1 ? 'order' : 'orders'}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-orange-600">
+                    <p className="text-base sm:text-lg font-bold text-orange-600">
                       ₹{dayData.totalRevenue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                     </p>
                     <p className="text-xs text-gray-500">Revenue</p>
                   </div>
                 </div>
-                <div className="pt-3 space-y-2 border-t border-gray-200">
+                <div className="pt-2 sm:pt-3 space-y-1.5 sm:space-y-2 border-t border-gray-200">
                   {dayData.orders.slice(0, 3).map((order, orderIdx) => {
                     const StatusIcon = getStatusIcon(order.status);
                     return (
-                      <div key={orderIdx} className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2">
-                          <StatusIcon size={14} className={
+                      <div key={orderIdx} className="flex items-center justify-between text-sm gap-2">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <StatusIcon size={14} className={`flex-shrink-0 ${
                             order.status.toLowerCase() === 'pending'
                               ? 'text-yellow-600'
                               : order.status.toLowerCase() === 'completed' || order.status.toLowerCase() === 'delivered'
                                 ? 'text-green-600'
                                 : 'text-blue-600'
-                          } />
-                          <span className="text-gray-700">{order.id}</span>
-                          <span className="text-gray-500">•</span>
-                          <span className="text-gray-600">{order.customer}</span>
+                          }`} />
+                          <span className="text-gray-700 truncate max-w-[80px] sm:max-w-none">{order.id}</span>
+                          <span className="text-gray-500 hidden sm:inline">•</span>
+                          <span className="text-gray-600 truncate hidden sm:block max-w-[120px] md:max-w-none">{order.customer}</span>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <span className={`px-2 py-0.5 text-xs rounded-full ${getStatusColor(order.status)}`}>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          <span className={`px-1.5 py-0.5 text-xs rounded-full ${getStatusColor(order.status)}`}>
                             {order.status}
                           </span>
-                          {/* DISPLAY NET AMOUNT ONLY */}
-                          <span className="font-medium text-gray-700">
-                            ₹{order.numericTotal.toFixed(2)}
+                          <span className="font-medium text-gray-700 text-xs sm:text-sm">
+                            ₹{order.numericTotal.toFixed(0)}
                           </span>
                         </div>
                       </div>
@@ -333,10 +332,49 @@ function RestaurantOwnerDashboardPage() {
   // Orders table uses `mappedOrders`
   const OrdersTab = () => (
     <div className="bg-white border border-gray-100 shadow-sm rounded-xl">
-      <div className="flex flex-col items-start justify-between gap-4 p-5 border-b border-gray-200 sm:flex-row sm:items-center">
+      <div className="flex flex-col items-start justify-between gap-4 p-4 sm:p-5 border-b border-gray-200 sm:flex-row sm:items-center">
         <h2 className="text-lg font-semibold">All Orders ({totalOrders})</h2>
       </div>
-      <div className="overflow-x-auto">
+
+      {/* Mobile card list */}
+      <div className="sm:hidden divide-y divide-gray-100">
+        {mappedOrders.length === 0 && (
+          <p className="py-8 text-sm text-center text-gray-500">No orders found</p>
+        )}
+        {mappedOrders.map((order) => {
+          const StatusIcon = getStatusIcon(order.status);
+          return (
+            <div key={order.backendId} className="p-4 space-y-2">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="font-medium text-sm">{order.id}</p>
+                  <p className="text-xs text-gray-500">{order.time}</p>
+                </div>
+                <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(order.status)} flex items-center gap-1 flex-shrink-0`}>
+                  <StatusIcon size={11} />
+                  {order.status}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 text-sm text-gray-600">
+                <Users size={14} className="text-gray-400 flex-shrink-0" />
+                <span className="truncate">{order.customer}</span>
+              </div>
+              <p className="text-xs text-gray-500 line-clamp-2">{order.itemsText}</p>
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-sm">₹{order.numericTotal.toFixed(2)}</span>
+                <div className="flex items-center gap-2">
+                  <button className="p-2.5 text-blue-600 rounded-lg hover:bg-blue-50 active:bg-blue-100"><Eye size={16} /></button>
+                  <button className="p-2.5 text-orange-600 rounded-lg hover:bg-orange-50 active:bg-orange-100"><Edit size={16} /></button>
+                  <button className="p-2.5 text-red-600 rounded-lg hover:bg-red-50 active:bg-red-100"><Trash2 size={16} /></button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden sm:block overflow-x-auto">
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
@@ -391,18 +429,18 @@ function RestaurantOwnerDashboardPage() {
                   </td>
                   <td className="px-4 py-3">
                     <span className="font-medium">
-                      ₹{order.numericTotal.toFixed(2)} {/* <== ONLY THIS, DO NOT USE order.total! */}
+                      ₹{order.numericTotal.toFixed(2)}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <button className="p-1 text-blue-600 rounded hover:bg-blue-50">
+                      <button className="p-2 text-blue-600 rounded-lg hover:bg-blue-50">
                         <Eye size={16} />
                       </button>
-                      <button className="p-1 text-orange-600 rounded hover:bg-orange-50">
+                      <button className="p-2 text-orange-600 rounded-lg hover:bg-orange-50">
                         <Edit size={16} />
                       </button>
-                      <button className="p-1 text-red-600 rounded hover:bg-red-50">
+                      <button className="p-2 text-red-600 rounded-lg hover:bg-red-50">
                         <Trash2 size={16} />
                       </button>
                     </div>
@@ -413,6 +451,7 @@ function RestaurantOwnerDashboardPage() {
           </tbody>
         </table>
       </div>
+
       <div className="flex items-center justify-between p-4 border-t border-gray-200">
         <p className="text-sm text-gray-600">
           Showing {mappedOrders.length} of {totalOrders} orders
@@ -442,25 +481,25 @@ function RestaurantOwnerDashboardPage() {
     );
   }
   return (
-    <div className="min-h-screen p-4 bg-gray-50 md:p-8">
+    <div className="min-h-screen p-3 sm:p-4 md:p-8 bg-gray-50">
       {/* Header */}
-      <div className="flex flex-col items-center justify-between gap-4 mb-8 md:flex-row">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center w-12 h-12 shadow-lg bg-gradient-to-r from-orange-500 to-red-600 rounded-xl">
-            <BarChart3 className="w-6 h-6 text-white" />
+      <div className="flex flex-col items-start justify-between gap-3 mb-5 sm:mb-8 md:flex-row md:items-center">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 shadow-lg bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex-shrink-0">
+            <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 md:text-3xl">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
               QB - Dashboard
             </h1>
-            <p className="text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600">
               Welcome back! Here's what's happening today
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-            <Download size={16} />
+        <div className="flex items-center gap-3 self-end md:self-auto">
+          <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100">
+            <Download size={14} className="sm:w-4 sm:h-4" />
             Export
           </button>
         </div>
@@ -472,11 +511,11 @@ function RestaurantOwnerDashboardPage() {
         </div>
       )}
       {/* Tab Buttons */}
-      <div className="flex gap-2 p-1 mb-8 bg-white shadow-sm rounded-xl">
+      <div className="flex gap-1 p-1 mb-5 sm:mb-8 bg-white shadow-sm rounded-xl">
         {['overview', 'orders', 'analytics'].map((tab) => (
           <button
             key={tab}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === tab
+            className={`flex-1 px-2 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === tab
               ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
               : 'text-gray-600 hover:text-gray-900'
               }`}
@@ -491,11 +530,11 @@ function RestaurantOwnerDashboardPage() {
       {/* New Order Modal */}
       {showNewOrder && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/40"
           onClick={() => setShowNewOrder(false)}
         >
           <div
-            className="w-full max-w-md p-6 bg-white shadow-xl rounded-2xl"
+            className="w-full sm:max-w-md p-5 sm:p-6 bg-white shadow-xl rounded-t-2xl sm:rounded-2xl max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
@@ -560,17 +599,17 @@ function RestaurantOwnerDashboardPage() {
                   className="w-full p-3 border border-gray-300 rounded-lg"
                 />
               </div>
-              <div className="flex justify-end gap-3 pt-2">
+              <div className="flex gap-3 pt-2">
                 <button
                   type="button"
-                  className="px-4 py-2 text-gray-800 bg-gray-200 rounded-lg hover:bg-gray-300"
+                  className="flex-1 sm:flex-none px-4 py-2.5 text-sm text-gray-800 bg-gray-200 rounded-lg hover:bg-gray-300"
                   onClick={() => setShowNewOrder(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-white bg-orange-600 rounded-lg hover:bg-orange-700"
+                  className="flex-1 sm:flex-none px-4 py-2.5 text-sm text-white bg-orange-600 rounded-lg hover:bg-orange-700"
                 >
                   Create Order
                 </button>

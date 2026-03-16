@@ -11,8 +11,6 @@ const PayoutsPage = () => {
     const [payoutHistory, setPayoutHistory] = useState([]); // ✅ NEW
     const [loading, setLoading] = useState(true);
 
-    console.log('🎯 PayoutsPage component mounted'); // DEBUG
-
     // Modal States
     const [showWarningModal, setShowWarningModal] = useState(false);
     const [showAddBankModal, setShowAddBankModal] = useState(false);
@@ -136,48 +134,50 @@ const PayoutsPage = () => {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Payouts & Bank Details</h1>
+        <div className="min-h-screen bg-gray-50 p-4 md:p-6 pb-24 md:pb-8">
+            <h1 className="mb-5 text-xl md:text-2xl font-bold">Payouts &amp; Bank Details</h1>
 
             {/* Tabs */}
-            <div className="flex space-x-4 border-b mb-6">
+            <div className="flex mb-5 border-b overflow-x-auto">
                 <button
                     onClick={() => setActiveTab('overview')}
-                    className={`pb-2 px-4 ${activeTab === 'overview' ? 'border-b-2 border-red-600 font-bold text-red-600' : 'text-gray-500'}`}
+                    className={`pb-2 px-3 sm:px-4 text-sm font-medium whitespace-nowrap flex-shrink-0 ${activeTab === 'overview' ? 'border-b-2 border-red-600 font-bold text-red-600' : 'text-gray-500'}`}
                 >
                     Overview
                 </button>
                 <button
                     onClick={() => setActiveTab('bank-details')}
-                    className={`pb-2 px-4 ${activeTab === 'bank-details' ? 'border-b-2 border-red-600 font-bold text-red-600' : 'text-gray-500'}`}
+                    className={`pb-2 px-3 sm:px-4 text-sm font-medium whitespace-nowrap flex-shrink-0 ${activeTab === 'bank-details' ? 'border-b-2 border-red-600 font-bold text-red-600' : 'text-gray-500'}`}
                 >
-                    Bank Details Management
+                    Bank Details
                 </button>
             </div>
 
             {loading ? (
-                <div className="text-center py-10">Loading...</div>
+                <div className="flex items-center justify-center py-16">
+                    <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+                </div>
             ) : (
                 <>
                     {activeTab === 'overview' && stats && (
-                        <div>
+                        <div className="space-y-4">
                             {/* Pending Payout Card */}
-                            <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mb-6">
-                                <h2 className="text-gray-500 mb-2">Total Pending Payout</h2>
-                                <div className="text-4xl font-bold text-green-600">
+                            <div className="w-full p-5 bg-white rounded-xl shadow-sm border border-gray-100">
+                                <h2 className="mb-1 text-sm text-gray-500">Total Pending Payout</h2>
+                                <div className="text-3xl md:text-4xl font-bold text-green-600">
                                     ₹{(stats.pendingPayout || 0).toLocaleString()}
                                 </div>
 
-                                <div className="mt-4 text-sm text-gray-500 border-t pt-4">
-                                    <div className="flex justify-between mb-2">
+                                <div className="pt-4 mt-4 text-sm text-gray-500 border-t space-y-2">
+                                    <div className="flex justify-between">
                                         <span>Dish Price Earnings:</span>
-                                        <span className="font-semibold">₹{stats.breakdown.dishPrice.toLocaleString()}</span>
+                                        <span className="font-semibold text-gray-800">₹{stats.breakdown.dishPrice.toLocaleString()}</span>
                                     </div>
-                                    <div className="flex justify-between mb-2">
+                                    <div className="flex justify-between">
                                         <span>Tax Collected:</span>
-                                        <span className="font-semibold">₹{stats.breakdown.taxes.toLocaleString()}</span>
+                                        <span className="font-semibold text-gray-800">₹{stats.breakdown.taxes.toLocaleString()}</span>
                                     </div>
-                                    <div className="flex justify-between font-bold text-black border-t pt-2">
+                                    <div className="flex justify-between pt-2 font-bold text-black border-t">
                                         <span>Total:</span>
                                         <span>₹{(stats.breakdown.dishPrice + stats.breakdown.taxes).toLocaleString()}</span>
                                     </div>
@@ -187,8 +187,8 @@ const PayoutsPage = () => {
                                 <button
                                     onClick={handleCollectPayout}
                                     disabled={!stats.pendingPayout || stats.pendingPayout <= 0}
-                                    className={`mt-6 w-full py-3 rounded-lg font-semibold text-white transition ${stats.pendingPayout > 0
-                                        ? 'bg-green-600 hover:bg-green-700'
+                                    className={`mt-5 w-full py-3 rounded-xl text-sm font-semibold text-white transition ${stats.pendingPayout > 0
+                                        ? 'bg-green-600 hover:bg-green-700 active:bg-green-800'
                                         : 'bg-gray-300 cursor-not-allowed'
                                         }`}
                                 >
@@ -197,24 +197,24 @@ const PayoutsPage = () => {
                             </div>
 
                             {/* Payout History */}
-                            <div className="bg-white p-6 rounded-lg shadow-md">
-                                <h2 className="text-lg font-semibold mb-4">Payout History</h2>
+                            <div className="p-5 bg-white rounded-xl shadow-sm border border-gray-100">
+                                <h2 className="mb-4 text-base font-semibold">Payout History</h2>
                                 {payoutHistory.length === 0 ? (
-                                    <p className="text-gray-500 italic">No payout history yet.</p>
+                                    <p className="italic text-sm text-gray-500">No payout history yet.</p>
                                 ) : (
                                     <div className="space-y-3">
                                         {payoutHistory.map((payout) => (
-                                            <div key={payout._id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border">
-                                                <div>
-                                                    <p className="font-semibold text-green-700">₹{payout.amount.toLocaleString()}</p>
-                                                    <p className="text-sm text-gray-600">
+                                            <div key={payout._id} className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 gap-3">
+                                                <div className="min-w-0">
+                                                    <p className="font-semibold text-sm text-green-700">₹{payout.amount.toLocaleString()}</p>
+                                                    <p className="text-xs text-gray-500 mt-0.5">
                                                         {new Date(payout.transactionDate).toLocaleString('en-IN', {
                                                             dateStyle: 'medium',
                                                             timeStyle: 'short'
                                                         })}
                                                     </p>
                                                 </div>
-                                                <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                                <span className="px-2.5 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full flex-shrink-0">
                                                     {payout.status}
                                                 </span>
                                             </div>
@@ -227,45 +227,44 @@ const PayoutsPage = () => {
 
                     {activeTab === 'bank-details' && (
                         <div>
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-lg font-semibold">Your Linked Accounts</h2>
+                            <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+                                <h2 className="text-base font-semibold">Your Linked Accounts</h2>
                                 <button
                                     onClick={handleAddBankClick}
-                                    className="bg-red-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-red-700"
+                                    className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
                                 >
-                                    <Plus size={18} /> Add New Bank
+                                    <Plus size={16} /> Add New Bank
                                 </button>
                             </div>
 
-                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                 {banks.map((bank) => (
-                                    <div key={bank._id} className="border rounded-lg p-5 bg-gray-50 relative">
-                                        <div className="absolute top-4 right-4 text-gray-400">
-                                            {bank.status === 'Approved' ? <Lock size={18} /> : <span className="text-yellow-600 text-xs font-bold bg-yellow-100 px-2 py-1 rounded">PENDING</span>}
+                                    <div key={bank._id} className="relative p-4 border rounded-xl bg-white shadow-sm">
+                                        <div className="absolute top-4 right-4">
+                                            {bank.status === 'Approved' ? <Lock size={16} className="text-gray-400" /> : <span className="px-2 py-1 text-xs font-bold text-yellow-600 bg-yellow-100 rounded">PENDING</span>}
                                         </div>
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <Building2 className="text-gray-600" />
-                                            <h3 className="font-bold">{bank.bankName}</h3>
+                                        <div className="flex items-center gap-3 mb-3 pr-10">
+                                            <Building2 size={18} className="text-gray-600 flex-shrink-0" />
+                                            <h3 className="font-bold text-sm truncate">{bank.bankName}</h3>
                                         </div>
-                                        <div className="text-sm space-y-2 text-gray-600">
-                                            <p>Account Holder: <span className="font-medium text-black">{bank.accountHolderName}</span></p>
-                                            <p>Account No: <span className="font-medium text-black">•••• {bank.accountNumber.slice(-4)}</span></p>
-                                            <p>IFSC: <span className="font-medium text-black">{bank.ifscCode}</span></p>
+                                        <div className="space-y-1.5 text-sm text-gray-500">
+                                            <p>Holder: <span className="font-medium text-gray-900">{bank.accountHolderName}</span></p>
+                                            <p>Account: <span className="font-medium text-gray-900">•••• {bank.accountNumber.slice(-4)}</span></p>
+                                            <p>IFSC: <span className="font-medium text-gray-900">{bank.ifscCode}</span></p>
                                         </div>
 
-                                        {/* ✅ Delete button for approved accounts */}
                                         {bank.status === 'Approved' && (
                                             <button
                                                 onClick={() => handleDeleteBank(bank._id)}
-                                                className="mt-4 w-full flex items-center justify-center gap-2 px-3 py-2 text-sm text-red-600 bg-red-50 rounded hover:bg-red-100 transition"
+                                                className="flex items-center justify-center w-full gap-2 px-3 py-2 mt-4 text-sm text-red-600 transition rounded-lg bg-red-50 hover:bg-red-100"
                                             >
-                                                <Trash2 size={16} />
+                                                <Trash2 size={15} />
                                                 Delete Account
                                             </button>
                                         )}
                                     </div>
                                 ))}
-                                {banks.length === 0 && <p className="text-gray-500 italic">No bank accounts added yet.</p>}
+                                {banks.length === 0 && <p className="italic text-sm text-gray-500 col-span-full">No bank accounts added yet.</p>}
                             </div>
                         </div>
                     )}
@@ -274,29 +273,37 @@ const PayoutsPage = () => {
 
             {/* Warning Modal */}
             {showWarningModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-                        <div className="flex items-center gap-3 text-yellow-600 mb-4">
-                            <AlertTriangle size={32} />
-                            <h2 className="text-xl font-bold">Important Notice</h2>
+                <div
+                    className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50"
+                    onClick={() => setShowWarningModal(false)}
+                >
+                    <div
+                        className="w-full sm:max-w-lg bg-white rounded-t-2xl sm:rounded-xl p-5 max-h-[90vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center gap-3 mb-4 text-yellow-600">
+                            <AlertTriangle size={26} className="flex-shrink-0" />
+                            <h2 className="text-base font-bold">Important Notice</h2>
                         </div>
-                        <p className="text-gray-700 mb-6 leading-relaxed">
+                        <p className="mb-5 text-sm leading-relaxed text-gray-700">
                             You may add new bank details; however, you must email the company with your
-                            <span className="font-bold"> existing (old) bank account details</span>.
-                            for verification. This allows us to cross-check the information and confirm your identity before approving the new bank account. Until both the old and new bank details are approved, payouts may be temporarily paused.
+                            <span className="font-bold"> existing (old) bank account details</span> for
+                            verification. This allows us to cross-check the information and confirm your
+                            identity before approving the new bank account. Until both the old and new bank
+                            details are approved, payouts may be temporarily paused.
                         </p>
-                        <div className="flex justify-end gap-3">
+                        <div className="flex gap-3">
                             <button
                                 onClick={() => setShowWarningModal(false)}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+                                className="flex-1 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleConfirmWarning}
-                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                                className="flex-1 py-2.5 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
                             >
-                                I Understand, Continue
+                                I Understand
                             </button>
                         </div>
                     </div>
@@ -305,57 +312,64 @@ const PayoutsPage = () => {
 
             {/* Add Bank Modal */}
             {showAddBankModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg max-w-md w-full">
-                        <h2 className="text-xl font-bold mb-4">Add Bank Details</h2>
+                <div
+                    className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50"
+                    onClick={() => setShowAddBankModal(false)}
+                >
+                    <div
+                        className="w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-xl p-5 max-h-[92vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2 className="mb-4 text-base font-bold">Add Bank Details</h2>
                         <form onSubmit={handleAddBankSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Bank Name</label>
+                                <label className="block mb-1 text-sm font-medium">Bank Name</label>
                                 <input
                                     type="text" required
-                                    className="w-full border p-2 rounded"
+                                    className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                                     value={formData.bankName}
                                     onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Account Holder Name</label>
+                                <label className="block mb-1 text-sm font-medium">Account Holder Name</label>
                                 <input
                                     type="text" required
-                                    className="w-full border p-2 rounded"
+                                    className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                                     value={formData.accountHolderName}
                                     onChange={(e) => setFormData({ ...formData, accountHolderName: e.target.value })}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Account Number</label>
+                                <label className="block mb-1 text-sm font-medium">Account Number</label>
                                 <input
                                     type="text" required
-                                    className="w-full border p-2 rounded"
+                                    inputMode="numeric"
+                                    className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                                     value={formData.accountNumber}
                                     onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">IFSC Code</label>
+                                <label className="block mb-1 text-sm font-medium">IFSC Code</label>
                                 <input
                                     type="text" required
-                                    className="w-full border p-2 rounded uppercase"
+                                    className="w-full p-3 text-sm uppercase border border-gray-300 rounded-lg"
                                     value={formData.ifscCode}
                                     onChange={(e) => setFormData({ ...formData, ifscCode: e.target.value })}
                                 />
                             </div>
-                            <div className="flex justify-end gap-3 mt-6">
+                            <div className="flex gap-3 pt-1">
                                 <button
                                     type="button"
                                     onClick={() => setShowAddBankModal(false)}
-                                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+                                    className="flex-1 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                    className="flex-1 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
                                 >
                                     Save Details
                                 </button>
@@ -365,23 +379,21 @@ const PayoutsPage = () => {
                 </div>
             )}
 
-            {/* ✅ Payout Confirmation Modal */}
+            {/* Payout Confirmation Modal */}
             {showPayoutModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-8 rounded-lg max-w-md w-full text-center">
-                        <div className="mb-4">
-                            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <h2 className="text-2xl font-bold text-gray-800 mb-2">Payout Collected!</h2>
-                            <p className="text-gray-600 mb-4">You have successfully collected:</p>
-                            <div className="text-4xl font-bold text-green-600 mb-6">
-                                ₹{payoutAmount.toLocaleString()}
-                            </div>
-                            <p className="text-sm text-gray-500">This amount has been transferred to your bank account.</p>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                    <div className="w-full max-w-sm p-6 text-center bg-white rounded-2xl shadow-xl">
+                        <div className="flex items-center justify-center w-14 h-14 mx-auto mb-4 bg-green-100 rounded-full">
+                            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
                         </div>
+                        <h2 className="mb-2 text-xl font-bold text-gray-800">Payout Collected!</h2>
+                        <p className="mb-3 text-sm text-gray-500">You have successfully collected:</p>
+                        <div className="mb-4 text-3xl font-bold text-green-600">
+                            ₹{payoutAmount.toLocaleString()}
+                        </div>
+                        <p className="text-xs text-gray-400">This amount has been transferred to your bank account.</p>
                     </div>
                 </div>
             )}

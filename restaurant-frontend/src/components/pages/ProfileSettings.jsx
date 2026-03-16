@@ -310,77 +310,80 @@ function ProfileSettings() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen">
         <Loader className="w-8 h-8 text-orange-600 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 mx-auto max-w-6xl">
+    <div className="max-w-6xl p-4 mx-auto md:p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Profile Settings</h1>
-        <p className="mt-2 text-gray-600">Manage your restaurant and account information</p>
+        <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">Profile Settings</h1>
+        <p className="mt-1 text-sm text-gray-600 md:text-base">Manage your restaurant and account information</p>
       </div>
 
       {/* Messages */}
       {error && (
-        <div className="flex gap-2 items-center p-4 mb-6 text-red-700 bg-red-50 rounded-lg border border-red-200">
+        <div className="flex items-center gap-2 p-4 mb-6 text-red-700 border border-red-200 rounded-lg bg-red-50">
           <AlertCircle size={20} />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="flex gap-2 items-center p-4 mb-6 text-green-700 bg-green-50 rounded-lg border border-green-200">
+        <div className="flex items-center gap-2 p-4 mb-6 text-green-700 border border-green-200 rounded-lg bg-green-50">
           <CheckCircle size={20} />
           <span>{success}</span>
         </div>
       )}
 
       {/* ✅ UPDATED: Tabs - Added Password Tab */}
-      <div className="flex gap-2 mb-6 border-b border-gray-200">
+      <div className="flex gap-1 px-4 mb-6 -mx-4 overflow-x-auto border-b border-gray-200 md:mx-0 md:px-0">
         <button
           onClick={() => setActiveTab('restaurant')}
-          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+          className={`px-3 sm:px-5 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 flex items-center gap-1.5 ${
             activeTab === 'restaurant'
               ? 'border-orange-600 text-orange-600'
               : 'border-transparent text-gray-600 hover:text-gray-900'
           }`}
         >
-          <Building className="inline-block mr-2 w-4 h-4" />
-          Restaurant Details
+          <Building className="flex-shrink-0 w-4 h-4" />
+          <span className="hidden sm:inline">Restaurant Details</span>
+          <span className="sm:hidden">Restaurant</span>
         </button>
         <button
           onClick={() => setActiveTab('owner')}
-          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+          className={`px-3 sm:px-5 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 flex items-center gap-1.5 ${
             activeTab === 'owner'
               ? 'border-orange-600 text-orange-600'
               : 'border-transparent text-gray-600 hover:text-gray-900'
           }`}
         >
-          <User className="inline-block mr-2 w-4 h-4" />
-          Owner Information
+          <User className="flex-shrink-0 w-4 h-4" />
+          <span className="hidden sm:inline">Owner Information</span>
+          <span className="sm:hidden">Owner</span>
         </button>
         <button
           onClick={() => setActiveTab('password')}
-          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+          className={`px-3 sm:px-5 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 flex items-center gap-1.5 ${
             activeTab === 'password'
               ? 'border-orange-600 text-orange-600'
               : 'border-transparent text-gray-600 hover:text-gray-900'
           }`}
         >
-          <Lock className="inline-block mr-2 w-4 h-4" />
-          Change Password
+          <Lock className="flex-shrink-0 w-4 h-4" />
+          <span className="hidden sm:inline">Change Password</span>
+          <span className="sm:hidden">Password</span>
         </button>
       </div>
 
       {/* Restaurant Tab */}
       {activeTab === 'restaurant' && (
-        <form onSubmit={handleSaveRestaurant} className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="space-y-6">
+        <form onSubmit={handleSaveRestaurant} className="p-4 bg-white border border-gray-200 shadow-sm md:p-6 rounded-xl">
+          <div className="space-y-4 sm:space-y-6">
             {/* Basic Info */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-700">
                   Restaurant Name *
@@ -391,12 +394,12 @@ function ProfileSettings() {
                   value={restaurantData.name}
                   onChange={handleRestaurantChange}
                   required
-                  className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="flex gap-2 items-center mb-2 text-sm font-medium text-gray-700">
+                <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
                   <ImageIcon size={16} />
                   Image URL
                 </label>
@@ -405,7 +408,7 @@ function ProfileSettings() {
                   name="image"
                   value={restaurantData.image}
                   onChange={handleRestaurantChange}
-                  className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="https://example.com/image.jpg"
                 />
               </div>
@@ -420,11 +423,11 @@ function ProfileSettings() {
                 value={restaurantData.description}
                 onChange={handleRestaurantChange}
                 rows={3}
-                className="px-4 py-3 w-full rounded-lg border border-gray-300 resize-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3">
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-700">
                   Cuisine Type
@@ -434,13 +437,13 @@ function ProfileSettings() {
                   name="cuisine"
                   value={restaurantData.cuisine}
                   onChange={handleRestaurantChange}
-                  className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="Italian, Chinese"
                 />
               </div>
 
               <div>
-                <label className="flex gap-2 items-center mb-2 text-sm font-medium text-gray-700">
+                <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
                   <Clock size={16} />
                   Delivery Time (mins)
                 </label>
@@ -449,12 +452,12 @@ function ProfileSettings() {
                   name="deliveryTime"
                   value={restaurantData.deliveryTime}
                   onChange={handleRestaurantChange}
-                  className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="flex gap-2 items-center mb-2 text-sm font-medium text-gray-700">
+                <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
                   <DollarSign size={16} />
                   Price Range
                 </label>
@@ -462,7 +465,7 @@ function ProfileSettings() {
                   name="priceRange"
                   value={restaurantData.priceRange}
                   onChange={handleRestaurantChange}
-                  className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="₹">₹ - Budget</option>
                   <option value="₹₹">₹₹ - Moderate</option>
@@ -481,18 +484,18 @@ function ProfileSettings() {
                 name="gstNumber"
                 value={restaurantData.gstNumber}
                 onChange={handleRestaurantChange}
-                className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
 
             {/* Location */}
-            <div className="pt-6 border-t border-gray-200">
-              <h3 className="flex gap-2 items-center mb-4 text-lg font-semibold text-gray-900">
+            <div className="pt-4 sm:pt-6 border-t border-gray-200">
+              <h3 className="flex items-center gap-2 mb-4 text-lg font-semibold text-gray-900">
                 <MapPin size={20} />
                 Location Details
               </h3>
-              
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+
+              <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">Area *</label>
                   <input
@@ -501,7 +504,7 @@ function ProfileSettings() {
                     value={restaurantData.location.area}
                     onChange={handleRestaurantChange}
                     required
-                    className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -512,7 +515,7 @@ function ProfileSettings() {
                     name="location.city"
                     value={restaurantData.location.city}
                     onChange={handleRestaurantChange}
-                    className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -524,7 +527,7 @@ function ProfileSettings() {
                     onChange={handleRestaurantChange}
                     required
                     rows={2}
-                    className="px-4 py-3 w-full rounded-lg border border-gray-300 resize-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -535,7 +538,7 @@ function ProfileSettings() {
                     name="location.state"
                     value={restaurantData.location.state}
                     onChange={handleRestaurantChange}
-                    className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -546,20 +549,20 @@ function ProfileSettings() {
                     name="location.pincode"
                     value={restaurantData.location.pincode}
                     onChange={handleRestaurantChange}
-                    className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
               </div>
             </div>
 
             {/* Contact */}
-            <div className="pt-6 border-t border-gray-200">
-              <h3 className="flex gap-2 items-center mb-4 text-lg font-semibold text-gray-900">
+            <div className="pt-4 sm:pt-6 border-t border-gray-200">
+              <h3 className="flex items-center gap-2 mb-4 text-lg font-semibold text-gray-900">
                 <Phone size={20} />
                 Contact Information
               </h3>
-              
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+
+              <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">Phone</label>
                   <input
@@ -567,7 +570,7 @@ function ProfileSettings() {
                     name="contact.phone"
                     value={restaurantData.contact.phone}
                     onChange={handleRestaurantChange}
-                    className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -578,18 +581,18 @@ function ProfileSettings() {
                     name="contact.email"
                     value={restaurantData.contact.email}
                     onChange={handleRestaurantChange}
-                    className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
               </div>
             </div>
 
             {/* Save Button */}
-            <div className="flex justify-end pt-6 border-t border-gray-200">
+            <div className="flex justify-end pt-4 sm:pt-6 border-t border-gray-200">
               <button
                 type="submit"
                 disabled={saving}
-                className="flex gap-2 items-center px-6 py-3 font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center w-full gap-2 px-6 py-3 font-medium text-white bg-orange-600 rounded-lg sm:w-auto hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? (
                   <>
@@ -610,8 +613,8 @@ function ProfileSettings() {
 
       {/* Owner Tab */}
       {activeTab === 'owner' && (
-        <form onSubmit={handleSaveOwner} className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="space-y-6">
+        <form onSubmit={handleSaveOwner} className="p-4 bg-white border border-gray-200 shadow-sm md:p-6 rounded-xl">
+          <div className="space-y-4 sm:space-y-6">
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">Name</label>
               <input
@@ -619,7 +622,7 @@ function ProfileSettings() {
                 name="name"
                 value={ownerData.name}
                 onChange={handleOwnerChange}
-                className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
 
@@ -630,7 +633,7 @@ function ProfileSettings() {
                 name="email"
                 value={ownerData.email}
                 disabled
-                className="px-4 py-3 w-full bg-gray-100 rounded-lg border border-gray-300 cursor-not-allowed"
+                className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg cursor-not-allowed"
               />
               <p className="mt-1 text-sm text-gray-500">Email cannot be changed</p>
             </div>
@@ -642,15 +645,15 @@ function ProfileSettings() {
                 name="phone"
                 value={ownerData.phone}
                 onChange={handleOwnerChange}
-                className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
 
-            <div className="flex justify-end pt-6 border-t border-gray-200">
+            <div className="flex justify-end pt-4 sm:pt-6 border-t border-gray-200">
               <button
                 type="submit"
                 disabled={saving}
-                className="flex gap-2 items-center px-6 py-3 font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center w-full gap-2 px-6 py-3 font-medium text-white bg-orange-600 rounded-lg sm:w-auto hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? (
                   <>
@@ -671,8 +674,8 @@ function ProfileSettings() {
 
       {/* ✅ NEW: Password Tab */}
       {activeTab === 'password' && (
-        <form onSubmit={handlePasswordSubmit} className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="space-y-6">
+        <form onSubmit={handlePasswordSubmit} className="p-4 bg-white border border-gray-200 shadow-sm md:p-6 rounded-xl">
+          <div className="space-y-4 sm:space-y-6">
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Current Password *
@@ -680,7 +683,7 @@ function ProfileSettings() {
               <div className="relative">
                 <Lock
                   size={18}
-                  className="absolute left-3 top-1/2 text-gray-400 transform -translate-y-1/2"
+                  className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
                 />
                 <input
                   type={showPasswords.current ? 'text' : 'password'}
@@ -691,12 +694,12 @@ function ProfileSettings() {
                   autoComplete="current-password"
                   required
                   disabled={saving}
-                  className="py-3 pr-12 pl-10 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
+                  className="w-full py-3 pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
                 />
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility('current')}
-                  className="absolute right-3 top-1/2 text-gray-400 transform -translate-y-1/2 hover:text-gray-600"
+                  className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:text-gray-600"
                   disabled={saving}
                 >
                   {showPasswords.current ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -711,7 +714,7 @@ function ProfileSettings() {
               <div className="relative">
                 <Lock
                   size={18}
-                  className="absolute left-3 top-1/2 text-gray-400 transform -translate-y-1/2"
+                  className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
                 />
                 <input
                   type={showPasswords.new ? 'text' : 'password'}
@@ -722,12 +725,12 @@ function ProfileSettings() {
                   autoComplete="new-password"
                   required
                   disabled={saving}
-                  className="py-3 pr-12 pl-10 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
+                  className="w-full py-3 pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
                 />
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility('new')}
-                  className="absolute right-3 top-1/2 text-gray-400 transform -translate-y-1/2 hover:text-gray-600"
+                  className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:text-gray-600"
                   disabled={saving}
                 >
                   {showPasswords.new ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -743,7 +746,7 @@ function ProfileSettings() {
               <div className="relative">
                 <Lock
                   size={18}
-                  className="absolute left-3 top-1/2 text-gray-400 transform -translate-y-1/2"
+                  className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
                 />
                 <input
                   type={showPasswords.confirm ? 'text' : 'password'}
@@ -754,12 +757,12 @@ function ProfileSettings() {
                   autoComplete="new-password"
                   required
                   disabled={saving}
-                  className="py-3 pr-12 pl-10 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
+                  className="w-full py-3 pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
                 />
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility('confirm')}
-                  className="absolute right-3 top-1/2 text-gray-400 transform -translate-y-1/2 hover:text-gray-600"
+                  className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:text-gray-600"
                   disabled={saving}
                 >
                   {showPasswords.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -767,11 +770,11 @@ function ProfileSettings() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-6 border-t border-gray-200">
+            <div className="flex justify-end pt-4 sm:pt-6 border-t border-gray-200">
               <button
                 type="submit"
                 disabled={saving}
-                className="flex gap-2 items-center px-6 py-3 font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center w-full gap-2 px-6 py-3 font-medium text-white bg-orange-600 rounded-lg sm:w-auto hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? (
                   <>

@@ -40,7 +40,7 @@ const BottomNav = () => {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`relative flex flex-col items-center justify-center flex-1 min-h-[52px] py-2 text-[10px] font-medium transition-colors active:bg-gray-50 ${
+              className={`relative flex flex-col items-center justify-center flex-1 min-h-[56px] py-2 text-[11px] font-medium transition-colors active:bg-gray-50 ${
                 isActive ? 'text-primary' : 'text-gray-400'
               }`}
             >

@@ -194,7 +194,7 @@ function AdditivesPage() {
 
     return (
       <span
-        className={`px-2 py-1 rounded-full text-xs flex items-center gap-1 ${
+        className={`px-2 py-1 rounded-full text-xs flex items-center gap-1 w-fit ${
           statusConfig[status]?.color || 'bg-gray-100 text-gray-800'
         }`}
       >
@@ -205,23 +205,23 @@ function AdditivesPage() {
   }
 
   const OverviewTab = () => (
-    <div className="space-y-6">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="space-y-5">
+      {/* Stats Grid — 2 cols on mobile, 4 on large */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {additivesStats.map((stat) => {
           const Icon = stat.icon
           return (
             <div
               key={stat.label}
-              className="bg-white p-4 rounded-xl shadow-sm border border-gray-100"
+              className="p-4 bg-white border border-gray-100 shadow-sm rounded-xl"
             >
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-sm text-gray-600">{stat.label}</p>
-                  <h3 className="text-2xl font-bold mt-1">{stat.value}</h3>
+              <div className="flex items-start justify-between">
+                <div className="min-w-0">
+                  <p className="text-xs leading-tight text-gray-500">{stat.label}</p>
+                  <h3 className="mt-1 text-2xl font-bold">{stat.value}</h3>
                 </div>
-                <div className="p-2 rounded-lg bg-orange-50">
-                  <Icon className="w-5 h-5 text-orange-600" />
+                <div className="flex-shrink-0 p-2 rounded-lg bg-orange-50">
+                  <Icon className="w-4 h-4 text-orange-600" />
                 </div>
               </div>
             </div>
@@ -230,31 +230,31 @@ function AdditivesPage() {
       </div>
 
       {/* Recent Additives */}
-      <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-        <h2 className="text-lg font-semibold mb-5">Recent Additives</h2>
-        <div className="space-y-4">
+      <div className="p-4 bg-white border border-gray-100 shadow-sm rounded-xl">
+        <h2 className="mb-4 text-base font-semibold">Recent Additives</h2>
+        <div className="space-y-3">
           {additives.slice(0, 5).map((additive) => (
             <div
               key={additive._id}
-              className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg"
+              className="flex items-center justify-between gap-2 p-3 rounded-lg hover:bg-gray-50"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center text-white font-semibold">
-                  <Package size={16} />
+              <div className="flex items-center min-w-0 gap-3">
+                <div className="flex items-center justify-center flex-shrink-0 text-white rounded-full w-9 h-9 bg-gradient-to-r from-orange-500 to-red-600">
+                  <Package size={14} />
                 </div>
-                <div>
-                  <p className="font-medium">{additive.name}</p>
-                  <p className="text-sm text-gray-600">{additive.category}</p>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">{additive.name}</p>
+                  <p className="text-xs text-gray-500 truncate">{additive.category}</p>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="font-medium">₹{additive.price.toFixed(2)}</p>
+              <div className="flex-shrink-0 text-right">
+                <p className="text-sm font-medium">₹{additive.price.toFixed(2)}</p>
                 {renderStatusBadge(additive.isAvailable)}
               </div>
             </div>
           ))}
           {additives.length === 0 && (
-            <p className="text-sm text-gray-500 text-center py-4">
+            <p className="py-4 text-sm text-center text-gray-500">
               No additives yet. Click "Add Additive" to create one.
             </p>
           )}
@@ -264,24 +264,34 @@ function AdditivesPage() {
   )
 
   const ListTab = () => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="p-5 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-lg font-semibold">All Additives</h2>
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="relative flex-1 sm:flex-initial">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+    <div className="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-xl">
+      {/* Header controls */}
+      <div className="flex flex-col gap-3 p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-semibold">All Additives</h2>
+          <button
+            className="flex items-center gap-1.5 bg-gradient-to-r from-orange-500 to-red-600 text-white px-3 py-2 rounded-lg text-sm hover:opacity-90"
+            onClick={() => setShowAddModal(true)}
+          >
+            <Plus size={15} />
+            Add
+          </button>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1 min-w-0">
+            <Search className="absolute w-4 h-4 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
             <input
               type="text"
               placeholder="Search additives..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full"
+              className="w-full py-2 pr-3 text-sm border border-gray-300 rounded-lg pl-9"
             />
           </div>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+            className="px-2 py-2 border border-gray-300 rounded-lg text-sm flex-shrink-0 max-w-[110px]"
           >
             {categories.map((category) => (
               <option key={category} value={category}>
@@ -289,84 +299,109 @@ function AdditivesPage() {
               </option>
             ))}
           </select>
-          <button
-            className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-2 rounded-lg hover:opacity-90"
-            onClick={() => setShowAddModal(true)}
-          >
-            <Plus size={16} />
-            Add
-          </button>
         </div>
       </div>
 
       {error && (
-        <div className="mx-5 mt-4 px-4 py-2 rounded-lg bg-red-50 text-red-700 text-sm">
+        <div className="px-4 py-2 mx-4 mt-3 text-sm text-red-700 rounded-lg bg-red-50">
           {error}
         </div>
       )}
 
-      <div className="overflow-x-auto">
+      {/* Mobile card list */}
+      <div className="divide-y divide-gray-100 sm:hidden">
+        {filteredAdditives.map((additive) => (
+          <div key={additive._id} className="flex items-start justify-between gap-3 p-4">
+            <div className="flex items-start min-w-0 gap-3">
+              <div className="w-9 h-9 flex-shrink-0 rounded-full bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center text-white mt-0.5">
+                <Package size={14} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium">{additive.name}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{additive.category}</p>
+                {additive.description && (
+                  <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{additive.description}</p>
+                )}
+                <div className="mt-1.5">{renderStatusBadge(additive.isAvailable)}</div>
+              </div>
+            </div>
+            <div className="flex flex-col items-end flex-shrink-0 gap-2">
+              <p className="text-sm font-semibold">₹{additive.price.toFixed(2)}</p>
+              <div className="flex items-center gap-1.5">
+                <button
+                  className="p-1.5 text-orange-600 hover:bg-orange-50 rounded"
+                  onClick={() => {
+                    setSelectedAdditive(additive)
+                    setShowEditModal(true)
+                  }}
+                >
+                  <Edit size={15} />
+                </button>
+                <button
+                  className="p-1.5 text-red-600 hover:bg-red-50 rounded"
+                  onClick={() => {
+                    setSelectedAdditive(additive)
+                    setShowDeleteModal(true)
+                  }}
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+        {filteredAdditives.length === 0 && (
+          <p className="py-8 text-sm text-center text-gray-500">No additives found.</p>
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-x-auto sm:block">
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Additive
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Category
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Price
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Status
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Description
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Actions
-              </th>
+              <th className="px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase">Additive</th>
+              <th className="px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase">Category</th>
+              <th className="px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase">Price</th>
+              <th className="px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase">Status</th>
+              <th className="px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase">Description</th>
+              <th className="px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {filteredAdditives.map((additive) => (
               <tr key={additive._id} className="hover:bg-gray-50">
-                <td className="py-3 px-4">
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center text-white font-semibold">
-                      <Package size={16} />
+                    <div className="flex items-center justify-center flex-shrink-0 text-white rounded-full w-9 h-9 bg-gradient-to-r from-orange-500 to-red-600">
+                      <Package size={15} />
                     </div>
-                    <p className="font-medium">{additive.name}</p>
+                    <p className="text-sm font-medium">{additive.name}</p>
                   </div>
                 </td>
-                <td className="py-3 px-4">{additive.category}</td>
-                <td className="py-3 px-4">₹{additive.price.toFixed(2)}</td>
-                <td className="py-3 px-4">
-                  {renderStatusBadge(additive.isAvailable)}
-                </td>
-                <td className="py-3 px-4 max-w-xs truncate">
-                  {additive.description || '—'}
-                </td>
-                <td className="py-3 px-4">
+                <td className="px-4 py-3 text-sm">{additive.category}</td>
+                <td className="px-4 py-3 text-sm">₹{additive.price.toFixed(2)}</td>
+                <td className="px-4 py-3">{renderStatusBadge(additive.isAvailable)}</td>
+                <td className="max-w-xs px-4 py-3 text-sm truncate">{additive.description || '—'}</td>
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <button
-                      className="p-1 text-orange-600 hover:bg-orange-50 rounded"
+                      className="p-1.5 text-orange-600 hover:bg-orange-50 rounded"
                       onClick={() => {
                         setSelectedAdditive(additive)
                         setShowEditModal(true)
                       }}
                     >
-                      <Edit size={16} />
+                      <Edit size={15} />
                     </button>
                     <button
-                      className="p-1 text-red-600 hover:bg-red-50 rounded"
+                      className="p-1.5 text-red-600 hover:bg-red-50 rounded"
                       onClick={() => {
                         setSelectedAdditive(additive)
                         setShowDeleteModal(true)
                       }}
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={15} />
                     </button>
                   </div>
                 </td>
@@ -374,10 +409,7 @@ function AdditivesPage() {
             ))}
             {filteredAdditives.length === 0 && (
               <tr>
-                <td
-                  colSpan={6}
-                  className="py-6 px-4 text-center text-sm text-gray-500"
-                >
+                <td colSpan={6} className="px-4 py-8 text-sm text-center text-gray-500">
                   No additives found.
                 </td>
               </tr>
@@ -387,7 +419,7 @@ function AdditivesPage() {
       </div>
 
       <div className="p-4 border-t border-gray-200">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-500">
           Showing {filteredAdditives.length} of {additives.length} additives
         </p>
       </div>
@@ -396,44 +428,44 @@ function AdditivesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="w-12 h-12 border-4 border-orange-500 rounded-full border-t-transparent animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 pb-24 bg-gray-50 md:p-6 md:pb-8">
       {/* HEADER */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="bg-gradient-to-r from-orange-500 to-red-600 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
-          <Package className="w-6 h-6 text-white" />
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center justify-center flex-shrink-0 w-10 h-10 shadow-lg bg-gradient-to-r from-orange-500 to-red-600 md:w-12 md:h-12 rounded-xl">
+          <Package className="w-5 h-5 text-white md:w-6 md:h-6" />
         </div>
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold leading-tight text-gray-800 md:text-2xl">
             Additives Management
           </h1>
-          <p className="text-gray-600">
+          <p className="hidden text-sm text-gray-500 sm:block">
             Manage your menu additives and ingredients
           </p>
         </div>
       </div>
 
       {/* TAB BUTTONS */}
-      <div className="flex gap-2 bg-white rounded-xl p-1 mb-8 shadow-sm">
+      <div className="flex gap-1 p-1 mb-5 bg-white shadow-sm rounded-xl">
         {['overview', 'list'].map((tab) => (
           <button
             key={tab}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeTab === tab
                 ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
             onClick={() => setActiveTab(tab)}
           >
-            <span className="capitalize flex items-center gap-1">
-              {tab === 'overview' && <Package size={16} />}
-              {tab === 'list' && <Star size={16} />}
+            <span className="capitalize flex items-center justify-center gap-1.5">
+              {tab === 'overview' && <Package size={15} />}
+              {tab === 'list' && <Star size={15} />}
               {tab}
             </span>
           </button>
@@ -446,23 +478,23 @@ function AdditivesPage() {
       {/* ADD MODAL */}
       {showAddModal && (
         <div
-          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 z-50 flex items-end justify-center p-0 bg-black/40 sm:items-center sm:p-4"
           onClick={() => setShowAddModal(false)}
         >
           <div
-            className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl"
+            className="bg-white rounded-t-2xl sm:rounded-2xl p-5 w-full sm:max-w-md shadow-xl max-h-[92vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">➕ Add New Additive</h2>
-              <button onClick={() => setShowAddModal(false)}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-bold">Add New Additive</h2>
+              <button onClick={() => setShowAddModal(false)} className="p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleAddAdditive} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block mb-1 text-sm font-medium text-gray-700">
                   Additive Name
                 </label>
                 <input
@@ -471,13 +503,13 @@ function AdditivesPage() {
                   value={newAdditive.name}
                   onChange={handleInputChange}
                   placeholder="Enter additive name"
-                  className="w-full border border-gray-300 rounded-lg p-3"
+                  className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block mb-1 text-sm font-medium text-gray-700">
                   Category
                 </label>
                 <input
@@ -486,13 +518,13 @@ function AdditivesPage() {
                   value={newAdditive.category}
                   onChange={handleInputChange}
                   placeholder="e.g., Dairy, Meat, Vegetables"
-                  className="w-full border border-gray-300 rounded-lg p-3"
+                  className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block mb-1 text-sm font-medium text-gray-700">
                   Price (₹)
                 </label>
                 <input
@@ -502,13 +534,13 @@ function AdditivesPage() {
                   value={newAdditive.price}
                   onChange={handleInputChange}
                   placeholder="Enter price"
-                  className="w-full border border-gray-300 rounded-lg p-3"
+                  className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block mb-1 text-sm font-medium text-gray-700">
                   Description
                 </label>
                 <textarea
@@ -517,14 +549,18 @@ function AdditivesPage() {
                   onChange={handleInputChange}
                   placeholder="Enter description"
                   rows="3"
-                  className="w-full border border-gray-300 rounded-lg p-3"
+                  className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-2">
+              {error && (
+                <p className="text-sm text-red-600">{error}</p>
+              )}
+
+              <div className="flex gap-3 pt-1">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg"
+                  className="flex-1 py-2.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium"
                   onClick={() => setShowAddModal(false)}
                   disabled={saving}
                 >
@@ -532,10 +568,10 @@ function AdditivesPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-orange-600 text-white rounded-lg disabled:opacity-50"
+                  className="flex-1 py-2.5 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
                   disabled={saving}
                 >
-                  {saving ? 'Adding...' : 'Add'}
+                  {saving ? 'Adding...' : 'Add Additive'}
                 </button>
               </div>
             </form>
@@ -546,71 +582,61 @@ function AdditivesPage() {
       {/* EDIT MODAL */}
       {showEditModal && selectedAdditive && (
         <div
-          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 z-50 flex items-end justify-center p-0 bg-black/40 sm:items-center sm:p-4"
           onClick={() => setShowEditModal(false)}
         >
           <div
-            className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl"
+            className="bg-white rounded-t-2xl sm:rounded-2xl p-5 w-full sm:max-w-md shadow-xl max-h-[92vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">✏️ Edit Additive</h2>
-              <button onClick={() => setShowEditModal(false)}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-bold">Edit Additive</h2>
+              <button onClick={() => setShowEditModal(false)} className="p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleEditAdditive} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
-                </label>
+                <label className="block mb-1 text-sm font-medium text-gray-700">Name</label>
                 <input
                   type="text"
                   name="name"
                   defaultValue={selectedAdditive.name}
-                  className="w-full border border-gray-300 rounded-lg p-3"
+                  className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Category
-                </label>
+                <label className="block mb-1 text-sm font-medium text-gray-700">Category</label>
                 <input
                   type="text"
                   name="category"
                   defaultValue={selectedAdditive.category}
-                  className="w-full border border-gray-300 rounded-lg p-3"
+                  className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Price (₹)
-                </label>
+                <label className="block mb-1 text-sm font-medium text-gray-700">Price (₹)</label>
                 <input
                   type="number"
                   step="0.01"
                   name="price"
                   defaultValue={selectedAdditive.price}
-                  className="w-full border border-gray-300 rounded-lg p-3"
+                  className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Status
-                </label>
+                <label className="block mb-1 text-sm font-medium text-gray-700">Status</label>
                 <select
                   name="status"
-                  defaultValue={
-                    selectedAdditive.isAvailable ? 'active' : 'inactive'
-                  }
-                  className="w-full border border-gray-300 rounded-lg p-3"
+                  defaultValue={selectedAdditive.isAvailable ? 'active' : 'inactive'}
+                  className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -618,21 +644,21 @@ function AdditivesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
+                <label className="block mb-1 text-sm font-medium text-gray-700">Description</label>
                 <textarea
                   name="description"
                   defaultValue={selectedAdditive.description}
                   rows="3"
-                  className="w-full border border-gray-300 rounded-lg p-3"
+                  className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-2">
+              {error && <p className="text-sm text-red-600">{error}</p>}
+
+              <div className="flex gap-3 pt-1">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg"
+                  className="flex-1 py-2.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium"
                   onClick={() => setShowEditModal(false)}
                   disabled={saving}
                 >
@@ -640,7 +666,7 @@ function AdditivesPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-orange-600 text-white rounded-lg disabled:opacity-50"
+                  className="flex-1 py-2.5 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
                   disabled={saving}
                 >
                   {saving ? 'Updating...' : 'Update'}
@@ -654,38 +680,35 @@ function AdditivesPage() {
       {/* DELETE MODAL */}
       {showDeleteModal && selectedAdditive && (
         <div
-          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 z-50 flex items-end justify-center p-0 bg-black/40 sm:items-center sm:p-4"
           onClick={() => setShowDeleteModal(false)}
         >
           <div
-            className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+            className="w-full p-5 bg-white shadow-xl rounded-t-2xl sm:rounded-2xl sm:max-w-sm"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold text-red-600">
-                🗑️ Delete Additive
-              </h2>
-              <button onClick={() => setShowDeleteModal(false)}>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-base font-bold text-red-600">Delete Additive</h2>
+              <button onClick={() => setShowDeleteModal(false)} className="p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-gray-600 mb-6">
+            <p className="mb-5 text-sm text-gray-600">
               Are you sure you want to delete{' '}
-              <strong>{selectedAdditive.name}</strong>? This action cannot be
-              undone.
+              <strong>{selectedAdditive.name}</strong>? This action cannot be undone.
             </p>
 
-            <div className="flex justify-end gap-3">
+            <div className="flex gap-3">
               <button
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg"
+                className="flex-1 py-2.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium"
                 onClick={() => setShowDeleteModal(false)}
                 disabled={saving}
               >
                 Cancel
               </button>
               <button
-                className="px-4 py-2 bg-red-600 text-white rounded-lg disabled:opacity-50"
+                className="flex-1 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
                 onClick={handleDeleteAdditive}
                 disabled={saving}
               >

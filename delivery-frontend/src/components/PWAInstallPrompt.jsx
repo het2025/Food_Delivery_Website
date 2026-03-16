@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -25,30 +26,38 @@ export default function PWAInstallPrompt() {
   if (!show) return null;
 
   return (
-    <div style={{
-      position: 'fixed', bottom: 16, left: '50%', transform: 'translateX(-50%)',
-      zIndex: 9999, width: 'calc(100% - 2rem)', maxWidth: 360,
-      background: '#fff', border: '1px solid #DBEAFE', borderRadius: 16,
-      boxShadow: '0 10px 40px rgba(0,0,0,0.12)', padding: '12px 16px',
-      display: 'flex', alignItems: 'center', gap: 12
-    }}>
-      <img src="/quickbite_logo.svg" alt="QB Delivery" style={{ width: 40, height: 40, flexShrink: 0 }} />
-      <div style={{ flex: 1, overflow: 'hidden' }}>
-        <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#1F2937' }}>Install QB Delivery</p>
-        <p style={{ margin: 0, fontSize: 12, color: '#6B7280', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          Add to home screen for quick access
-        </p>
-      </div>
-      <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-        <button onClick={() => setShow(false)}
-          style={{ fontSize: 12, color: '#9CA3AF', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', borderRadius: 8 }}>
-          Later
-        </button>
-        <button onClick={handleInstall}
-          style={{ fontSize: 12, fontWeight: 600, color: '#fff', background: '#3B82F6', border: 'none',
-                   cursor: 'pointer', padding: '6px 12px', borderRadius: 8 }}>
-          Install
-        </button>
+    /* pwa-prompt class in index.css positions it above BottomNav on mobile */
+    <div className="pwa-prompt fixed left-1/2 -translate-x-1/2 z-[9999] w-[calc(100%-2rem)] max-w-sm">
+      <div className="flex items-center gap-3 px-4 py-3 bg-white border border-blue-100 shadow-xl rounded-2xl">
+        {/* Logo */}
+        <img
+          src="/quickbite_logo.svg"
+          alt="QB Delivery"
+          className="flex-shrink-0 w-10 h-10 rounded-xl"
+        />
+
+        {/* Text */}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold leading-tight text-gray-900">Install QB Delivery</p>
+          <p className="text-xs text-gray-500 mt-0.5 truncate">Add to home screen for quick access</p>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex items-center flex-shrink-0 gap-1">
+          <button
+            onClick={handleInstall}
+            className="px-3 py-1.5 text-xs font-semibold text-white bg-primary rounded-lg active:scale-95"
+          >
+            Install
+          </button>
+          <button
+            onClick={() => setShow(false)}
+            className="flex items-center justify-center w-8 h-8 text-gray-400 rounded-lg hover:bg-gray-100 active:scale-95"
+            aria-label="Dismiss"
+          >
+            <XMarkIcon className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

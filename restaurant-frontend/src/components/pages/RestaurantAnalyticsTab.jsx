@@ -22,15 +22,15 @@ const LoadingSpinner = () => (
 
 // Stat Card Component
 const StatCard = ({ title, value, icon: Icon, color = 'orange', subtitle }) => (
-    <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-        <div className="flex items-center justify-between">
-            <div>
-                <p className="text-sm text-gray-500">{title}</p>
-                <p className={`text-2xl font-bold text-${color}-600`}>{value}</p>
+    <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 border border-gray-100">
+        <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+                <p className="text-xs sm:text-sm text-gray-500 truncate">{title}</p>
+                <p className={`text-xl sm:text-2xl font-bold text-${color}-600`}>{value}</p>
                 {subtitle && <p className="text-xs text-gray-400 mt-1">{subtitle}</p>}
             </div>
-            <div className={`p-3 bg-${color}-100 rounded-lg`}>
-                <Icon className={`w-6 h-6 text-${color}-500`} />
+            <div className={`p-2 sm:p-3 bg-${color}-100 rounded-lg flex-shrink-0`}>
+                <Icon className={`w-5 h-5 sm:w-6 sm:h-6 text-${color}-500`} />
             </div>
         </div>
     </div>
@@ -45,15 +45,15 @@ const SimpleBarChart = ({ data, label, valueKey = 'orders', maxValue }) => {
     return (
         <div className="space-y-2">
             {data.map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3">
-                    <div className="w-20 text-sm text-gray-600 truncate">{item.name || item.day || item.category}</div>
-                    <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden">
+                <div key={idx} className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-20 sm:w-28 text-xs sm:text-sm text-gray-600 truncate flex-shrink-0">{item.name || item.day || item.category}</div>
+                    <div className="flex-1 h-5 sm:h-6 bg-gray-100 rounded-full overflow-hidden">
                         <div
                             className="h-full bg-gradient-to-r from-orange-400 to-orange-500 rounded-full transition-all duration-500"
                             style={{ width: `${(item[valueKey] / max) * 100}%` }}
                         />
                     </div>
-                    <div className="w-12 text-sm font-medium text-gray-700 text-right">{item[valueKey]}</div>
+                    <div className="w-8 sm:w-12 text-xs sm:text-sm font-medium text-gray-700 text-right flex-shrink-0">{item[valueKey]}</div>
                 </div>
             ))}
         </div>
@@ -107,25 +107,25 @@ const RestaurantAnalyticsTab = () => {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                    <BarChart3 className="w-6 h-6 text-orange-500" />
+            <div className="flex flex-wrap items-center justify-between gap-2">
+                <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
                     Analytics Overview
                 </h2>
                 <button
                     onClick={loadAnalytics}
-                    className="px-4 py-2 text-sm bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100 transition"
+                    className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100 transition"
                 >
                     Refresh
                 </button>
             </div>
 
             {/* Menu Performance */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* Top Items */}
-                <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-5 border border-gray-100">
                     <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <TrendingUp className="w-5 h-5 text-green-500" />
                         Top Selling Items
@@ -138,7 +138,7 @@ const RestaurantAnalyticsTab = () => {
                 </div>
 
                 {/* Bottom Items */}
-                <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-5 border border-gray-100">
                     <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <TrendingUp className="w-5 h-5 text-red-500 rotate-180" />
                         Least Selling Items
@@ -152,17 +152,17 @@ const RestaurantAnalyticsTab = () => {
             </div>
 
             {/* Revenue by Category */}
-            <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-5 border border-gray-100">
                 <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
                     <BarChart3 className="w-5 h-5 text-blue-500" />
                     Revenue by Category
                 </h3>
                 {revenueByCategory.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                         {revenueByCategory.map((cat, idx) => (
-                            <div key={idx} className="bg-gray-50 rounded-lg p-4 text-center">
-                                <p className="text-sm text-gray-500 truncate">{cat.category}</p>
-                                <p className="text-xl font-bold text-gray-800">₹{cat.revenue?.toLocaleString()}</p>
+                            <div key={idx} className="bg-gray-50 rounded-lg p-3 sm:p-4 text-center">
+                                <p className="text-xs sm:text-sm text-gray-500 truncate">{cat.category}</p>
+                                <p className="text-sm sm:text-lg font-bold text-gray-800 break-all">₹{cat.revenue?.toLocaleString()}</p>
                                 <p className="text-xs text-gray-400">{cat.orders} orders</p>
                             </div>
                         ))}
@@ -173,9 +173,9 @@ const RestaurantAnalyticsTab = () => {
             </div>
 
             {/* Order Frequency */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* Daily */}
-                <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-5 border border-gray-100">
                     <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <Clock className="w-5 h-5 text-purple-500" />
                         Orders by Day
@@ -186,7 +186,7 @@ const RestaurantAnalyticsTab = () => {
                 </div>
 
                 {/* Recent Trend */}
-                <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-5 border border-gray-100">
                     <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <TrendingUp className="w-5 h-5 text-green-500" />
                         Last 7 Days Trend
@@ -194,10 +194,12 @@ const RestaurantAnalyticsTab = () => {
                     {orderFrequency?.recentTrend?.length > 0 ? (
                         <div className="space-y-2">
                             {orderFrequency.recentTrend.map((day, idx) => (
-                                <div key={idx} className="flex justify-between items-center py-2 border-b border-gray-50">
-                                    <span className="text-sm text-gray-600">{day.date}</span>
-                                    <span className="text-sm font-medium text-orange-600">{day.orders} orders</span>
-                                    <span className="text-sm text-gray-500">₹{day.revenue?.toLocaleString()}</span>
+                                <div key={idx} className="flex items-center justify-between gap-2 py-2 border-b border-gray-50">
+                                    <span className="text-xs sm:text-sm text-gray-600 flex-shrink-0">{day.date}</span>
+                                    <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                                        <span className="text-xs sm:text-sm font-medium text-orange-600">{day.orders} orders</span>
+                                        <span className="text-xs sm:text-sm text-gray-500">₹{day.revenue?.toLocaleString()}</span>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -208,17 +210,17 @@ const RestaurantAnalyticsTab = () => {
             </div>
 
             {/* Customer Feedback */}
-            <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-5 border border-gray-100">
                 <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
                     <MessageCircle className="w-5 h-5 text-yellow-500" />
                     Customer Feedback
                 </h3>
 
                 {customerFeedback ? (
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                         {/* Average Rating */}
-                        <div className="text-center py-4">
-                            <p className="text-4xl font-bold text-yellow-500">{customerFeedback.averageRating}</p>
+                        <div className="text-center py-3 sm:py-4">
+                            <p className="text-3xl sm:text-4xl font-bold text-yellow-500">{customerFeedback.averageRating}</p>
                             <div className="flex justify-center my-2">
                                 <RatingStars rating={Math.round(parseFloat(customerFeedback.averageRating))} />
                             </div>
@@ -242,7 +244,7 @@ const RestaurantAnalyticsTab = () => {
                         </div>
 
                         {/* Recent Reviews */}
-                        <div className="max-h-48 overflow-y-auto space-y-3">
+                        <div className="max-h-48 overflow-y-auto overscroll-contain space-y-3">
                             {customerFeedback.recentReviews?.length > 0 ? (
                                 customerFeedback.recentReviews.slice(0, 3).map((review, idx) => (
                                     <div key={idx} className="p-3 bg-gray-50 rounded-lg">

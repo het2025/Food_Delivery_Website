@@ -349,14 +349,14 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
           return (
             <div
               key={stat.label}
-              className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm"
+              className="p-4 bg-white border border-gray-100 shadow-sm rounded-xl"
             >
-              <div className="flex justify-between items-start">
+              <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-gray-600">{stat.label}</p>
                   <h3 className="mt-1 text-2xl font-bold">{stat.value}</h3>
                 </div>
-                <div className="p-2 bg-orange-50 rounded-lg">
+                <div className="p-2 rounded-lg bg-orange-50">
                   <Icon className="w-5 h-5 text-orange-600" />
                 </div>
               </div>
@@ -376,16 +376,16 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
       </div>
 
       {/* Recent Menu Items */}
-      <div className="p-5 bg-white rounded-xl border border-gray-100 shadow-sm">
+      <div className="p-5 bg-white border border-gray-100 shadow-sm rounded-xl">
         <h2 className="mb-5 text-lg font-semibold">Recent Menu Items</h2>
         <div className="space-y-4">
           {items.slice(0, 5).map((item) => (
             <div
               key={item.id}
-              className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-50"
+              className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50"
             >
-              <div className="flex gap-3 items-center">
-                <div className="flex justify-center items-center w-10 h-10 font-semibold text-white bg-gradient-to-r from-orange-500 to-red-600 rounded-full">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 font-semibold text-white rounded-full bg-gradient-to-r from-orange-500 to-red-600">
                   <Utensils size={16} />
                 </div>
                 <div>
@@ -410,24 +410,24 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
   );
 
   const ListTab = () => (
-    <div className="overflow-hidden bg-white rounded-xl border border-gray-100 shadow-sm">
-      <div className="flex flex-col gap-4 justify-between items-start p-5 border-b border-gray-200 sm:flex-row sm:items-center">
+    <div className="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-xl">
+      <div className="flex flex-col items-start justify-between gap-4 p-5 border-b border-gray-200 sm:flex-row sm:items-center">
         <h2 className="text-lg font-semibold">All Menu Items</h2>
-        <div className="flex gap-3 items-center w-full sm:w-auto">
+        <div className="flex items-center w-full gap-3 sm:w-auto">
           <div className="relative flex-1 sm:flex-initial">
-            <Search className="absolute left-3 top-1/2 w-4 h-4 text-gray-400 transform -translate-y-1/2" />
+            <Search className="absolute w-4 h-4 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
             <input
               type="text"
               placeholder="Search restaurant menu items..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="py-2 pr-4 pl-9 w-full text-sm rounded-lg border border-gray-300"
+              className="w-full py-2 pr-4 text-sm border border-gray-300 rounded-lg pl-9"
             />
           </div>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 text-sm rounded-lg border border-gray-300"
+            className="px-3 py-2 text-sm border border-gray-300 rounded-lg"
           >
             {categories.map((category) => (
               <option key={category} value={category}>
@@ -437,13 +437,13 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
           </select>
 
           {/* Category Management Section - ADDED */}
-          <div className="p-4 mb-6 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="p-4 mb-6 border border-blue-200 rounded-lg bg-blue-50">
             <h3 className="mb-3 text-lg font-semibold">Quick Add Category</h3>
             <div className="flex gap-3">
               <input
                 type="text"
                 placeholder="Category Name (e.g., Appetizers)"
-                className="flex-1 p-2 rounded-lg border border-gray-300"
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
               />
@@ -464,7 +464,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
           {/* End Category Management Section */}
 
           <button
-            className="flex gap-2 items-center px-4 py-2 text-white bg-gradient-to-r from-orange-500 to-red-600 rounded-lg disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 text-white rounded-lg bg-gradient-to-r from-orange-500 to-red-600 disabled:opacity-50"
             onClick={() => setShowAddModal(true)}
             disabled={crudLoading}
           >
@@ -502,8 +502,8 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
             {filteredItems.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3">
-                  <div className="flex gap-3 items-center">
-                    <div className="flex justify-center items-center w-10 h-10 font-semibold text-white bg-gradient-to-r from-orange-500 to-red-600 rounded-full">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-10 h-10 font-semibold text-white rounded-full bg-gradient-to-r from-orange-500 to-red-600">
                       <Utensils size={16} />
                     </div>
                     <div>
@@ -514,11 +514,11 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                 <td className="px-4 py-3">{item.category}</td>
                 <td className="px-4 py-3">{item.price}</td>
                 <td className="px-4 py-3">{renderStatusBadge(item.status)}</td>
-                <td className="px-4 py-3 max-w-xs truncate">
+                <td className="max-w-xs px-4 py-3 truncate">
                   {item.description}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex gap-2 items-center">
+                  <div className="flex items-center gap-2">
                     <button
                       className="p-1 text-blue-600 rounded hover:bg-blue-50"
                       title="View"
@@ -562,18 +562,18 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
         </table>
       </div>
 
-      <div className="flex justify-between items-center p-4 border-t border-gray-200">
+      <div className="flex items-center justify-between p-4 border-t border-gray-200">
         <p className="text-sm text-gray-600">
           Showing 1 to {filteredItems.length} of {items.length} items
         </p>
         <div className="flex gap-2">
-          <button className="px-3 py-1 text-sm rounded-lg border border-gray-300">
+          <button className="px-3 py-1 text-sm border border-gray-300 rounded-lg">
             Previous
           </button>
           <button className="px-3 py-1 text-sm text-white bg-orange-600 rounded-lg">
             1
           </button>
-          <button className="px-3 py-1 text-sm rounded-lg border border-gray-300">
+          <button className="px-3 py-1 text-sm border border-gray-300 rounded-lg">
             2
           </button>
         </div>
@@ -594,18 +594,18 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50">
-        <div className="w-12 h-12 rounded-full border-4 border-orange-500 animate-spin border-t-transparent" />
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="w-12 h-12 border-4 border-orange-500 rounded-full animate-spin border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 md:p-8">
+    <div className="min-h-screen p-4 bg-gradient-to-br from-gray-50 to-gray-100 md:p-8">
       {/* HEADER (updated title) */}
-      <div className="flex flex-col gap-4 justify-between items-center mb-4 md:flex-row">
-        <div className="flex gap-4 items-center">
-          <div className="flex justify-center items-center w-12 h-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl shadow-lg">
+      <div className="flex flex-col items-center justify-between gap-4 mb-4 md:flex-row">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center w-12 h-12 shadow-lg bg-gradient-to-r from-orange-500 to-red-600 rounded-xl">
             <Utensils className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -621,13 +621,13 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
 
       {/* Error message (updated) */}
       {backendError && (
-        <div className="px-4 py-2 mb-4 text-sm text-red-700 bg-red-50 rounded-lg">
+        <div className="px-4 py-2 mb-4 text-sm text-red-700 rounded-lg bg-red-50">
           {backendError}
         </div>
       )}
 
       {/* TAB BUTTONS */}
-      <div className="flex overflow-x-auto gap-2 items-center p-1 mb-8 bg-white rounded-xl shadow-sm">
+      <div className="flex items-center gap-2 p-1 mb-8 overflow-x-auto bg-white shadow-sm rounded-xl">
         {['overview', 'list'].map((tab) => (
           <button
             key={tab}
@@ -638,7 +638,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
             }`}
             onClick={() => setActiveTab(tab)}
           >
-            <span className="flex relative z-10 gap-1 items-center capitalize">
+            <span className="relative z-10 flex items-center gap-1 capitalize">
               {tab === 'overview' && <Utensils size={16} />}
               {tab === 'list' && <ChefHat size={16} />}
               {tab}
@@ -655,14 +655,14 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
       {/* ADD ITEM MODAL (now with API) */}
       {showAddModal && (
         <div
-          className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black/40"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
           onClick={() => setShowAddModal(false)}
         >
           <div
-            className="p-6 w-full max-w-md bg-white rounded-2xl shadow-xl"
+            className="w-full max-w-md p-6 bg-white shadow-xl rounded-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">➕ Add New Menu Item</h2>
               <button onClick={() => setShowAddModal(false)}>
                 <X className="w-5 h-5" />
@@ -680,7 +680,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                   value={newItem.name}
                   onChange={handleInputChange}
                   placeholder="Enter item name"
-                  className="p-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
                   required
                   disabled={crudLoading}
                 />
@@ -694,7 +694,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                   name="category"
                   value={newItem.category}
                   onChange={handleInputChange}
-                  className="p-3 w-full rounded-lg border border-gray-300"
+                  className="w-full p-3 border border-gray-300 rounded-lg"
                   required
                 >
                   <option value="">Select a category</option>
@@ -718,7 +718,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                   value={newItem.price}
                   onChange={handleInputChange}
                   placeholder="Enter price (e.g., 250)"
-                  className="p-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
                   required
                   disabled={crudLoading}
                 />
@@ -734,13 +734,13 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                   onChange={handleInputChange}
                   placeholder="Enter item description"
                   rows="3"
-                  className="p-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
                   required
                   disabled={crudLoading}
                 />
               </div>
 
-              <div className="flex gap-3 justify-end pt-2">
+              <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
                   className="px-4 py-2 text-gray-800 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50"
@@ -765,14 +765,14 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
       {/* EDIT ITEM MODAL (now with API and controlled inputs) */}
       {showEditModal && selectedItem && (
         <div
-          className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black/40"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
           onClick={() => setShowEditModal(false)}
         >
           <div
-            className="p-6 w-full max-w-md bg-white rounded-2xl shadow-xl"
+            className="w-full max-w-md p-6 bg-white shadow-xl rounded-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">✏️ Edit Menu Item</h2>
               <button onClick={() => setShowEditModal(false)}>
                 <X className="w-5 h-5" />
@@ -790,7 +790,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                   value={editItem.name}
                   onChange={handleEditInputChange}
                   placeholder="Enter item name"
-                  className="p-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
                   required
                   disabled={crudLoading}
                 />
@@ -804,7 +804,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                   name="category"
                   value={editItem.category}
                   onChange={handleEditInputChange}
-                  className="p-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
                   required
                   disabled={crudLoading}
                 >
@@ -829,7 +829,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                   value={editItem.price}
                   onChange={handleEditInputChange}
                   placeholder="Enter price (e.g., 250)"
-                  className="p-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
                   required
                   disabled={crudLoading}
                 />
@@ -843,7 +843,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                   name="status"
                   value={editItem.status}
                   onChange={handleEditInputChange}
-                  className="p-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
                   required
                   disabled={crudLoading}
                 >
@@ -862,13 +862,13 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
                   onChange={handleEditInputChange}
                   placeholder="Enter item description"
                   rows="3"
-                  className="p-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:opacity-50"
                   required
                   disabled={crudLoading}
                 />
               </div>
 
-              <div className="flex gap-3 justify-end pt-2">
+              <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
                   className="px-4 py-2 text-gray-800 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50"
@@ -893,14 +893,14 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
       {/* DELETE ITEM MODAL (now with API) */}
       {showDeleteModal && selectedItem && (
         <div
-          className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black/40"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
           onClick={() => setShowDeleteModal(false)}
         >
           <div
-            className="p-6 w-full max-w-sm bg-white rounded-2xl shadow-xl"
+            className="w-full max-w-sm p-6 bg-white shadow-xl rounded-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-red-600">🗑️ Delete Menu Item</h2>
               <button onClick={() => setShowDeleteModal(false)}>
                 <X className="w-5 h-5" />
@@ -911,7 +911,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
               Are you sure you want to delete <strong>{selectedItem.name}</strong>? This action cannot be undone.
             </p>
 
-            <div className="flex gap-3 justify-end">
+            <div className="flex justify-end gap-3">
               <button
                 className="px-4 py-2 text-gray-800 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50"
                 onClick={() => setShowDeleteModal(false)}

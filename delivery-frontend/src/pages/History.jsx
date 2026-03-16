@@ -52,8 +52,8 @@ const History = () => {
           </div>
         ) : (
           <>
-            {/* Mobile Cards — visible only on small screens */}
-            <div className="space-y-3 sm:hidden">
+            {/* Mobile Cards — visible only on screens narrower than md (768px) */}
+            <div className="space-y-3 md:hidden">
               {orders.map((order) => (
                 <div key={order._id} className="p-4 bg-white rounded-xl shadow">
                   <div className="flex justify-between items-start mb-2">
@@ -79,8 +79,8 @@ const History = () => {
               ))}
             </div>
 
-            {/* Desktop Table — hidden on small screens */}
-            <div className="hidden overflow-x-auto bg-white rounded-xl shadow sm:block">
+            {/* Desktop Table — shown on md (768px) and wider */}
+            <div className="hidden overflow-x-auto bg-white rounded-xl shadow md:block">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>

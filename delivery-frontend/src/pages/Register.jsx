@@ -55,10 +55,10 @@ const Register = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-start w-full min-h-screen px-4 bg-gradient-to-br from-primary to-secondary sm:justify-center"
+      className="flex flex-col items-center justify-start w-full min-h-screen min-h-screen-dvh px-4 bg-gradient-to-br from-primary to-secondary sm:justify-center"
       style={{
         paddingTop: 'max(2.5rem, env(safe-area-inset-top))',
-        paddingBottom: 'max(2rem, env(safe-area-inset-bottom))'
+        paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom))'
       }}
     >
       <div className="w-full max-w-lg">
@@ -223,9 +223,14 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 mt-6 text-base font-semibold text-white rounded-xl transition bg-primary hover:bg-opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center w-full min-h-[52px] py-3 mt-6 text-base font-semibold text-white rounded-xl transition bg-primary hover:bg-opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Registering…' : 'Create Account'}
+              {loading ? (
+                <>
+                  <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  Registering…
+                </>
+              ) : 'Create Account'}
             </button>
           </form>
 
