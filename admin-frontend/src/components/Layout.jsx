@@ -111,19 +111,19 @@ const Layout = () => {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top header */}
-        <header className="flex justify-between items-center px-6 h-16 bg-white shadow-sm">
+        <header className="flex items-center justify-between px-4 sm:px-6 h-16 bg-white shadow-sm gap-2">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="text-gray-600 lg:hidden hover:text-gray-900"
+            className="flex-shrink-0 text-gray-600 lg:hidden hover:text-gray-900"
           >
             <Bars3Icon className="w-6 h-6" />
           </button>
 
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="flex-1 text-base sm:text-xl font-semibold text-gray-800 truncate text-center lg:text-left">
             {navigation.find(item => item.href === location.pathname)?.name || 'Admin Panel'}
           </h2>
 
-          <div className="text-sm text-gray-600">
+          <div className="hidden sm:block flex-shrink-0 text-sm text-gray-600 whitespace-nowrap">
             {new Date().toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',
@@ -131,10 +131,13 @@ const Layout = () => {
               day: 'numeric'
             })}
           </div>
+          <div className="sm:hidden flex-shrink-0 text-xs text-gray-500 whitespace-nowrap">
+            {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+          </div>
         </header>
 
         {/* Page content */}
-        <main className="p-6">
+        <main className="p-4 sm:p-6">
           <Outlet />
         </main>
       </div>

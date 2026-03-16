@@ -23,14 +23,23 @@ const grayText = '#6B7280';
 // glassy Styled components
 const Container = styled('div')({
   fontFamily: "'Poppins', sans-serif",
-  background: 'url("https://res.cloudinary.com/dovlhkyrr/image/upload/v1753977148/background_image_zdhvnl.png") no-repeat center center fixed', //main background image
+  backgroundImage: 'url("https://res.cloudinary.com/dovlhkyrr/image/upload/v1753977148/background_image_zdhvnl.png")',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center center',
+  backgroundAttachment: 'fixed',
   backgroundSize: 'cover',
   minHeight: '100vh',
-  padding: '0px 20px 0 20px',
+  padding: '0px 12px 0 12px',
   boxSizing: 'border-box',
   color: darkGray,
   overflowX: 'hidden',
   margin: 0,
+  '@media (min-width: 640px)': {
+    padding: '0px 20px 0 20px',
+  },
+  '@media (max-width: 768px)': {
+    backgroundAttachment: 'scroll',
+  },
 });
 
 const GlassyWrapper = styled('div')({
@@ -39,36 +48,54 @@ const GlassyWrapper = styled('div')({
   backdropFilter: 'blur(8px)',
   WebkitBackdropFilter: 'blur(10px)',
   border: '1px solid rgba(255, 255, 255, 0.2)',
-  padding: '40px 100px 100px 100px',
+  padding: '16px 12px 36px 12px',
   boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
   maxWidth: '1400px',
   width: '100%',
-  margin: '60px auto',
+  margin: '24px auto',
+  '@media (min-width: 480px)': {
+    padding: '20px 20px 48px 20px',
+    margin: '36px auto',
+  },
+  '@media (min-width: 640px)': {
+    padding: '32px 40px 80px 40px',
+    margin: '60px auto',
+  },
+  '@media (min-width: 1200px)': {
+    padding: '40px 100px 100px 100px',
+  },
 });
 
 const Header = styled('header')({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: '20px 40px',
-  marginBottom: '30px',
+  padding: '10px 12px',
+  marginBottom: '20px',
   borderBottom: `1px solid #e5e7eb`,
   position: 'sticky',
   top: 0,
   zIndex: 1000,
   width: '100%',
+  '@media (min-width: 480px)': {
+    padding: '12px 16px',
+  },
+  '@media (min-width: 640px)': {
+    padding: '20px 40px',
+    marginBottom: '30px',
+  },
 });
 
 const Logo = styled('h1')({
   fontWeight: 800,
-  fontSize: 28,
+  fontSize: 20,
   userSelect: 'none',
   cursor: 'pointer',
-  letterSpacing: 1.5,
+  letterSpacing: 1,
   display: 'flex',
   alignItems: 'center',
-  gap: 8,
-  padding: '3px 13px',
+  gap: 6,
+  padding: '3px 10px',
   borderRadius: '80px',
   background: 'rgba(255, 255, 255, 0.95)',
   backdropFilter: 'blur(12px)',
@@ -76,13 +103,21 @@ const Logo = styled('h1')({
   border: '2px solid rgba(255, 255, 255, 0.3)',
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2)',
   transition: 'all 0.3s ease',
-  
+  '@media (min-width: 480px)': {
+    fontSize: 24,
+    letterSpacing: 1.5,
+    gap: 8,
+    padding: '3px 13px',
+  },
+  '@media (min-width: 768px)': {
+    fontSize: 28,
+  },
   '&:hover': {
     transform: 'translateY(-2px)',
     boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
     background: 'rgba(255, 255, 255, 1)',
   },
-  
+
   '& span.foo': {
     background: 'linear-gradient(135deg, #DC2626, #EF4444)',
     WebkitBackgroundClip: 'text',
@@ -90,7 +125,7 @@ const Logo = styled('h1')({
     backgroundClip: 'text',
     fontWeight: 900,
   },
-  
+
   '& span.dy': {
     background: 'linear-gradient(135deg, #1F2937, #374151)',
     WebkitBackgroundClip: 'text',
@@ -101,25 +136,35 @@ const Logo = styled('h1')({
 });
 
 const LogoIcon = styled('img')({
-  width: '45px',
-  height: '45px',
+  width: '32px',
+  height: '32px',
   objectFit: 'contain',
   filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1))',
   transition: 'transform 0.3s ease',
-  
+  '@media (min-width: 480px)': {
+    width: '38px',
+    height: '38px',
+  },
+  '@media (min-width: 768px)': {
+    width: '45px',
+    height: '45px',
+  },
   '&:hover': {
     transform: 'rotate(5deg) scale(1.05)',
   },
 });
 
 const Nav = styled('nav')({
-  display: 'flex',
-  gap: 40,
-  fontWeight: 500,
-  fontSize: 16,
-  userSelect: 'none',
-  marginLeft: 'auto',
-  marginRight: '50px',
+  display: 'none',
+  '@media (min-width: 768px)': {
+    display: 'flex',
+    gap: 40,
+    fontWeight: 500,
+    fontSize: 16,
+    userSelect: 'none',
+    marginLeft: 'auto',
+    marginRight: '50px',
+  },
 });
 
 const NavItem = styled('a')(({ active }) => ({
@@ -154,20 +199,22 @@ const NavItem = styled('a')(({ active }) => ({
 }));
 
 const FloatingCTA = styled('button')({
-  position: 'autolute',
-  bottom: 30,
-  right: 30,
-  padding: '12px 24px',
+  padding: '10px 18px',
   backgroundColor: primaryRed,
   color: '#fff',
   border: 'none',
   borderRadius: 9999,
   fontWeight: 600,
-  fontSize: 16,
+  fontSize: 14,
   cursor: 'pointer',
-  zIndex: 2000,
   boxShadow: '0 6px 20px rgba(220, 38, 38, 0.4)',
   transition: 'transform 0.2s ease',
+  display: 'none',
+  '@media (min-width: 768px)': {
+    display: 'inline-flex',
+    fontSize: 16,
+    padding: '12px 24px',
+  },
   '&:hover': {
     transform: 'scale(1.1)',
   },
@@ -177,14 +224,21 @@ const HeroSection = styled('section')({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: 20,
-  marginBottom: 40,
-  flexWrap: 'wrap',
-  gap: 40,
+  marginTop: 12,
+  marginBottom: 32,
+  flexDirection: 'column',
+  gap: 24,
   width: '100%',
   maxWidth: '100%',
   boxSizing: 'border-box',
-  paddingRight: 40,
+  paddingRight: 0,
+  '@media (min-width: 768px)': {
+    flexDirection: 'row',
+    marginTop: 20,
+    marginBottom: 40,
+    gap: 40,
+    paddingRight: 40,
+  },
 });
 
 const slideInFromLeft = keyframes`
@@ -210,35 +264,72 @@ const slideInFromRight = keyframes`
 `;
 
 const HeroLeft = styled('div')({
-  flex: '1 1 400px',
-  maxWidth: 600,
+  flex: '1 1 auto',
+  width: '100%',
+  maxWidth: '100%',
+  textAlign: 'center',
   opacity: 0,
   animation: `${slideInFromLeft} 1s ease-out forwards`,
+  '@media (min-width: 768px)': {
+    flex: '1 1 280px',
+    maxWidth: 600,
+    textAlign: 'left',
+  },
 });
 
 const HeroRight = styled('div')({
-  flex: '1 1 400px',
-  maxWidth: 600,
+  flex: '1 1 auto',
+  width: '100%',
+  maxWidth: '260px',
+  margin: '0 auto',
   position: 'relative',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   opacity: 0,
   animation: `${slideInFromRight} 1s ease-out forwards`,
+  '@media (min-width: 768px)': {
+    flex: '1 1 280px',
+    maxWidth: 600,
+    margin: 0,
+  },
 });
 
 const Headline = styled('h2')({
-  fontSize: 48,
+  fontSize: 24,
   fontWeight: 900,
-  lineHeight: 1.1,
-  marginBottom: 30,
+  lineHeight: 1.2,
+  marginBottom: 20,
   userSelect: 'none',
+  '@media (min-width: 480px)': {
+    fontSize: 28,
+    marginBottom: 24,
+  },
+  '@media (min-width: 640px)': {
+    fontSize: 36,
+    marginBottom: 30,
+  },
+  '@media (min-width: 768px)': {
+    fontSize: 48,
+  },
 });
 
 const ButtonsRow = styled('div')({
   display: 'flex',
-  gap: 20,
-  marginBottom: 30,
+  gap: 12,
+  marginBottom: 24,
+  flexDirection: 'column',
+  '@media (min-width: 480px)': {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  '@media (min-width: 640px)': {
+    gap: 20,
+    flexWrap: 'nowrap',
+    justifyContent: 'flex-start',
+    marginBottom: 30,
+  },
 });
 
 const RedButton = styled('button')({
@@ -248,9 +339,14 @@ const RedButton = styled('button')({
   borderRadius: 9999,
   padding: '12px 28px',
   fontWeight: 600,
-  fontSize: 16,
+  fontSize: 15,
   cursor: 'pointer',
+  width: '100%',
   transition: 'background-color 0.3s ease',
+  '@media (min-width: 480px)': {
+    width: 'auto',
+    fontSize: 16,
+  },
   '&:hover': {
     backgroundColor: '#b91c1c',
   },
@@ -263,9 +359,14 @@ const WhiteButton = styled('button')({
   borderRadius: 9999,
   padding: '12px 28px',
   fontWeight: 600,
-  fontSize: 16,
+  fontSize: 15,
   cursor: 'pointer',
+  width: '100%',
   transition: 'background-color 0.3s ease, color 0.3s ease',
+  '@media (min-width: 480px)': {
+    width: 'auto',
+    fontSize: 16,
+  },
   '&:hover': {
     backgroundColor: primaryRed,
     color: 'white',
@@ -275,8 +376,14 @@ const WhiteButton = styled('button')({
 const ReviewsSection = styled('div')({
   display: 'flex',
   alignItems: 'center',
-  gap: 12,
+  gap: 8,
   userSelect: 'none',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  '@media (min-width: 768px)': {
+    gap: 12,
+    justifyContent: 'flex-start',
+  },
 });
 
 const ReviewsLabel = styled('span')({
@@ -343,7 +450,8 @@ const rotate = keyframes`
 
 const PastaImage = styled('img')({
   width: '100%',
-  height: '100%',
+  maxWidth: '260px',
+  height: 'auto',
   objectFit: 'cover',
   borderRadius: '50%',
   position: 'relative',
@@ -351,13 +459,20 @@ const PastaImage = styled('img')({
   animation: `${rotate} 20s linear infinite`,
   animationFillMode: 'forwards',
   transformOrigin: 'center center',
+  '@media (min-width: 768px)': {
+    maxWidth: '100%',
+    height: '100%',
+  },
 });
 
 const MenuSection = styled('section')({
-  marginTop: 60,
+  marginTop: 32,
   overflow: 'hidden',
   maxWidth: '100%',
   boxSizing: 'border-box',
+  '@media (min-width: 640px)': {
+    marginTop: 60,
+  },
 });
 
 const slideAnimation = keyframes`
@@ -415,8 +530,8 @@ const MenuCard = styled('div')({
 });
 
 const MenuImageContainer = styled('div')({
-  width: 200,
-  height: 200,
+  width: 130,
+  height: 130,
   borderRadius: '50%',
   overflow: 'hidden',
   display: 'flex',
@@ -425,12 +540,16 @@ const MenuImageContainer = styled('div')({
   flexShrink: 0,
   position: 'relative',
   margin: '0 auto 16px auto',
+  '@media (min-width: 640px)': {
+    width: 200,
+    height: 200,
+  },
 });
 
 const MenuImage = styled('img')({
   width: '100%',
   height: '100%',
-  maxWidth: '200px', // Ensure it never exceeds container size
+  maxWidth: '200px',
   maxHeight: '200px',
   objectFit: 'cover',
   objectPosition: 'center',
@@ -440,15 +559,22 @@ const MenuImage = styled('img')({
 
 const MenuTitle = styled('h3')({
   fontWeight: 700,
-  fontSize: 14,
+  fontSize: 12,
   marginBottom: 4,
   color: darkGray,
   width: '100%',
   textAlign: 'left',
+  overflow: 'hidden',
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  '@media (min-width: 640px)': {
+    fontSize: 14,
+  },
 });
 
 const MenuDescription = styled('p')({
-  fontSize: 12,
+  fontSize: 14,
   color: grayText,
   marginBottom: 12,
   width: '100%',
@@ -561,25 +687,28 @@ const restaurantData = [
 
 const FooterContainer = styled('footer')({
   width: '100vw',
-  minHeight: '200px', // Adjust height as needed
+  minHeight: '200px',
   position: 'relative',
   left: '50%',
   right: '50%',
   marginLeft: '-50vw',
   marginRight: '-50vw',
-  background: 'rgba(0, 0, 0, 0.7)', 
+  background: 'rgba(0, 0, 0, 0.7)',
   backdropFilter: 'blur(12px)',
   WebkitBackdropFilter: 'blur(12px)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.3)',
   color: '#fff',
   textAlign: 'center',
-  padding: '50px 20px 0 20px',
-  marginTop: '60px 0 0 0',
+  padding: '32px 16px 0 16px',
+  marginTop: '0',
   marginBottom: 0,
   zIndex: 1,
-  borderRadius: 0, // Remove border radius for full width
+  borderRadius: 0,
   bottom: 0,
+  '@media (min-width: 640px)': {
+    padding: '50px 20px 0 20px',
+  },
 });
 
 // Updated FooterContent to center content within full-width container
@@ -650,25 +779,31 @@ const FooterBottom = styled('div')({
 const FooterLogoContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
-  gap: '12px',
+  gap: '8px',
   fontWeight: 900,
-  fontSize: 28,
-  letterSpacing: 2,
+  fontSize: 22,
+  letterSpacing: 1,
   marginBottom: 12,
-  padding: '8px 16px',
+  padding: '6px 12px',
   borderRadius: '25px',
   background: 'rgba(255, 255, 255, 0.1)',
   backdropFilter: 'blur(8px)',
   WebkitBackdropFilter: 'blur(8px)',
   border: '1px solid rgba(255, 255, 255, 0.2)',
-  
+  '@media (min-width: 480px)': {
+    fontSize: 28,
+    letterSpacing: 2,
+    gap: '12px',
+    padding: '8px 16px',
+  },
+
   '& span.quick': {
     background: 'linear-gradient(135deg, #DC2626, #EF4444)',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
   },
-  
+
   '& span.bite': {
     color: '#fff',
   },
@@ -678,6 +813,7 @@ export default function Homepage() {
   const navigate = useNavigate();
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const handleLoginClick = () => {
     navigate('/login');
   };
@@ -838,7 +974,107 @@ export default function Homepage() {
           <NavItem>Contact</NavItem>
         </Nav>
         <FloatingCTA onClick={handleLoginClick}>SignUp/Login</FloatingCTA>
+        {/* Mobile hamburger button */}
+        <button
+          onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px 8px',
+            fontSize: 22,
+            color: '#1F2937',
+            marginLeft: 8,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minWidth: 36,
+            minHeight: 36,
+          }}
+          className="md:hidden"
+          aria-label="Open menu"
+        >
+          {isMobileNavOpen ? '✕' : '☰'}
+        </button>
       </Header>
+
+      {/* Mobile Nav Overlay */}
+      {isMobileNavOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1001,
+            background: 'rgba(0,0,0,0.4)',
+          }}
+          onClick={() => setIsMobileNavOpen(false)}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              width: 260,
+              height: '100%',
+              background: 'rgba(255,255,255,0.97)',
+              backdropFilter: 'blur(12px)',
+              padding: '24px 20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+              <span style={{ fontWeight: 700, fontSize: 18, color: '#1F2937' }}>Menu</span>
+              <button onClick={() => setIsMobileNavOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20 }}>✕</button>
+            </div>
+            {['Home', 'Menu', 'About Us', 'Contact'].map((item) => (
+              <button
+                key={item}
+                onClick={() => setIsMobileNavOpen(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  textAlign: 'left',
+                  padding: '12px 8px',
+                  fontSize: 16,
+                  fontWeight: 500,
+                  color: '#1F2937',
+                  cursor: 'pointer',
+                  borderRadius: 8,
+                  width: '100%',
+                }}
+                onMouseEnter={(e) => { e.target.style.background = '#FFF7ED'; }}
+                onMouseLeave={(e) => { e.target.style.background = 'none'; }}
+              >
+                {item}
+              </button>
+            ))}
+            <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #E5E7EB' }}>
+              <button
+                onClick={() => { setIsMobileNavOpen(false); handleLoginClick(); }}
+                style={{
+                  width: '100%',
+                  padding: '12px 24px',
+                  background: '#DC2626',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 9999,
+                  fontWeight: 600,
+                  fontSize: 16,
+                  cursor: 'pointer',
+                }}
+              >
+                SignUp / Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <GlassyWrapper>
         <HeroSection>
@@ -894,9 +1130,9 @@ export default function Homepage() {
           </MenuGrid>
 
             {/* ===== Replaced: Dynamic Restaurant Cards Section (fetch from backend) ===== */}
-            <section style={{ marginTop: 60 }}>
+            <section style={{ marginTop: 40 }}>
               <div style={{
-                padding: '60px 20px',
+                padding: '32px 16px',
                 backgroundColor: 'rgba(255, 255, 255, 0.7)',
                 backdropFilter: 'blur(10px)',
                 borderRadius: '20px',
@@ -947,10 +1183,20 @@ export default function Homepage() {
   @media (max-width: 640px) {
     .restaurants-grid {
       grid-template-columns: repeat(1, 1fr);
-      padding: 0 16px;
+      gap: 16px;
+      padding: 0;
     }
     .restaurants-grid .restaurant-card {
       height: auto;
+    }
+    .restaurants-grid .restaurant-card .card-media {
+      height: 160px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .restaurants-grid .restaurant-card .card-media {
+      height: 140px;
     }
   }
 `}

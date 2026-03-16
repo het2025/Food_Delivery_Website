@@ -1,28 +1,48 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function KPICard({ title, value, data, color, type = 'line' }) {
-    // Check if we have monthly data format (array of objects with 'month' and 'value')
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     const isMonthlyData = data && data.length > 0 && data[0].hasOwnProperty('month');
+    const barHeight = isMobile ? 220 : 300;
+    const leftMargin = isMobile ? 32 : 50;
 
     return (
         <Box sx={{
-            p: 2,
+            p: { xs: 1.5, sm: 2 },
             border: '1px solid',
             borderColor: 'divider',
             borderRadius: 2,
             bgcolor: 'background.paper',
             height: '100%',
-            minHeight: isMonthlyData ? 400 : 150, // Increase height for bar charts
+            minHeight: isMonthlyData ? (isMobile ? 300 : 400) : 150,
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
         }}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography
+                variant="body2"
+                color="text.secondary"
+                gutterBottom
+                sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+            >
                 {title}
             </Typography>
-            <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 2 }}>
+            <Typography
+                component="div"
+                sx={{
+                    fontWeight: 'bold',
+                    mb: 2,
+                    fontSize: { xs: '1.4rem', sm: '1.75rem', md: '2.125rem' },
+                    lineHeight: 1.2,
+                    wordBreak: 'break-word',
+                }}
+            >
                 {value}
             </Typography>
 
@@ -30,19 +50,21 @@ export default function KPICard({ title, value, data, color, type = 'line' }) {
                 {isMonthlyData ? (
                     <BarChart
                         dataset={data}
-                        yAxis={[{ scaleType: 'band', dataKey: 'month' }]}
+                        yAxis={[{
+                            scaleType: 'band',
+                            dataKey: 'month',
+                            tickLabelStyle: { fontSize: isMobile ? 10 : 12 },
+                        }]}
                         series={[{
                             dataKey: 'value',
                             label: 'Monthly Change',
                             color: color,
-                            valueFormatter: (v) => v ? v.toLocaleString() : '0'
+                            valueFormatter: (v) => v ? v.toLocaleString() : '0',
                         }]}
                         layout="horizontal"
-                        height={300}
-                        margin={{ left: 50 }} // Space for Y axis labels
-                        slotProps={{
-                            legend: { hidden: true }
-                        }}
+                        height={barHeight}
+                        margin={{ left: leftMargin, right: isMobile ? 8 : 20, top: 8, bottom: 8 }}
+                        slotProps={{ legend: { hidden: true } }}
                     />
                 ) : (
                     <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

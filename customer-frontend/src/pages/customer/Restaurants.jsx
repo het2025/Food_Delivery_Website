@@ -278,9 +278,9 @@ const Restaurants = () => {
         key="prev"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-4 py-2 transition-colors bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+        className="px-3 py-2 text-sm transition-colors bg-white border border-gray-300 rounded-lg sm:px-4 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
       >
-        Previous
+        Prev
       </button>
     )
 
@@ -290,7 +290,7 @@ const Restaurants = () => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`px-4 py-2 rounded-lg transition-colors ${currentPage === i
+          className={`px-3 py-2 text-sm rounded-lg transition-colors ${currentPage === i
             ? 'bg-orange-500 text-white'
             : 'bg-white border border-gray-300 hover:bg-gray-50'
             }`}
@@ -306,7 +306,7 @@ const Restaurants = () => {
         key="next"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-4 py-2 transition-colors bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+        className="px-3 py-2 text-sm transition-colors bg-white border border-gray-300 rounded-lg sm:px-4 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
       >
         Next
       </button>
@@ -335,18 +335,18 @@ const Restaurants = () => {
 
       <div className="pt-20">
         {/* Hero Section */}
-        <div className="py-16 text-white bg-gradient-to-r from-orange-500 to-red-500">
+        <div className="py-10 text-white md:py-16 bg-gradient-to-r from-orange-500 to-red-500">
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               className="md:max-w-2xl"
             >
-              <h1 className="mb-4 text-4xl font-bold md:text-5xl">
+              <h1 className="mb-3 text-2xl font-bold sm:text-3xl md:text-4xl lg:text-5xl">
                 Discover Amazing Restaurants
               </h1>
 
-              <p className="mb-10 text-xl opacity-90">
+              <p className="mb-6 text-base opacity-90 sm:text-lg md:text-xl md:mb-8">
                 Find your favorite cuisines delivered fast to your doorstep
               </p>
 
@@ -361,11 +361,11 @@ const Restaurants = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="w-full py-4 pl-12 pr-20 text-gray-800 placeholder-gray-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-white/30"
+                  className="w-full py-4 pl-12 pr-24 text-gray-800 placeholder-gray-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-white/30 text-sm sm:text-base"
                 />
                 <button
                   onClick={handleSearch}
-                  className="absolute px-6 py-2 text-white transition-colors -translate-y-1/2 bg-orange-600 right-3 top-1/2 rounded-xl hover:bg-orange-700"
+                  className="absolute px-4 py-2 text-sm text-white transition-colors -translate-y-1/2 bg-orange-600 right-2 top-1/2 rounded-xl hover:bg-orange-700 sm:px-6"
                 >
                   Search
                 </button>
@@ -389,17 +389,17 @@ const Restaurants = () => {
           )}
 
           {/* Filters and Sort Section */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
             {/* Left side - Filters */}
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowFilters(true)}
-                className="flex items-center gap-2 px-4 py-3 transition-colors bg-white border border-gray-300 shadow-sm rounded-xl hover:bg-gray-50"
+                className="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 transition-colors bg-white border border-gray-300 shadow-sm rounded-xl hover:bg-gray-50"
               >
-                <SlidersHorizontal className="w-5 h-5 text-gray-600" />
-                <span className="font-medium text-gray-700">Filters</span>
+                <SlidersHorizontal className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700 sm:text-base">Filters</span>
                 {activeFilterCount > 0 && (
-                  <span className="px-2 py-1 text-xs font-bold text-white bg-orange-500 rounded-full">
+                  <span className="px-2 py-0.5 text-xs font-bold text-white bg-orange-500 rounded-full">
                     {activeFilterCount}
                   </span>
                 )}
@@ -419,13 +419,13 @@ const Restaurants = () => {
             <div className="relative">
               <button
                 onClick={() => setShowSortDropdown(!showSortDropdown)}
-                className="flex items-center gap-3 bg-white border border-gray-300 rounded-xl px-4 py-3 hover:bg-gray-50 transition-colors shadow-sm min-w-[200px]"
+                className="flex items-center gap-2 bg-white border border-gray-300 rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-gray-50 transition-colors shadow-sm"
               >
-                <ArrowUpDown className="w-5 h-5 text-gray-600" />
-                <span className="flex-1 font-medium text-left text-gray-700">
+                <ArrowUpDown className="flex-shrink-0 w-4 h-4 text-gray-600 sm:w-5 sm:h-5" />
+                <span className="text-sm font-medium text-left text-gray-700 sm:text-base">
                   {sortOptions.find(opt => opt.value === sortBy)?.label}
                 </span>
-                <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${showSortDropdown ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`flex-shrink-0 w-4 h-4 text-gray-500 transition-transform ${showSortDropdown ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Sort Dropdown */}
@@ -435,7 +435,7 @@ const Restaurants = () => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 z-20 w-64 mt-2 overflow-hidden bg-white border border-gray-200 shadow-lg top-full rounded-xl"
+                    className="absolute right-0 z-20 mt-2 overflow-hidden bg-white border border-gray-200 shadow-lg w-52 sm:w-64 top-full rounded-xl"
                   >
                     {sortOptions.map((option) => (
                       <button
@@ -449,7 +449,7 @@ const Restaurants = () => {
                           }`}
                       >
                         <span className="text-lg">{option.icon}</span>
-                        <span className="font-medium">{option.label}</span>
+                        <span className="text-sm font-medium sm:text-base">{option.label}</span>
                         {sortBy === option.value && (
                           <Check className="w-4 h-4 ml-auto text-orange-600" />
                         )}
@@ -520,8 +520,8 @@ const Restaurants = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center mt-12">
-              <div className="flex items-center space-x-2">
+            <div className="flex justify-center mt-10">
+              <div className="flex flex-wrap items-center justify-center gap-2">
                 {renderPagination()}
               </div>
             </div>
@@ -529,7 +529,7 @@ const Restaurants = () => {
 
           {/* Pagination Info */}
           {totalPages > 1 && (
-            <div className="mt-4 text-center text-gray-600">
+            <div className="px-2 mt-3 text-sm text-center text-gray-600">
               Showing {((currentPage - 1) * 20) + 1} to {Math.min(currentPage * 20, totalRestaurants)} of {totalRestaurants} restaurants
             </div>
           )}
@@ -555,7 +555,7 @@ const Restaurants = () => {
               animate={{ x: 0 }}
               exit={{ x: -400 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute top-0 left-0 h-full overflow-y-auto bg-white shadow-2xl w-96"
+              className="absolute top-0 left-0 h-full overflow-y-auto bg-white shadow-2xl w-full sm:w-96"
             >
               <div className="p-6">
                 {/* Header */}

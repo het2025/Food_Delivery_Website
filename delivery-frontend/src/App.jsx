@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             {/* 404 Route */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
+          <PWAInstallPrompt />
         </SocketProvider>
       </DeliveryProvider>
     </Router>

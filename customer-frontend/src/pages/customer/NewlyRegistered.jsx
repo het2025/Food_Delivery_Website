@@ -22,7 +22,7 @@ function NewlyRegistered() {
 
       console.log('🔍 Fetching newly registered restaurants...');
 
-      const response = await fetch('http://localhost:5000/api/restaurants/newly-registered');
+      const response = await fetch('/api/restaurants/newly-registered');
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -103,19 +103,19 @@ function NewlyRegistered() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-8 mb-12 text-center"
+            className="mt-4 sm:mt-8 mb-6 sm:mb-12 text-center"
           >
-            <div className="flex gap-3 justify-center items-center mb-4">
-              <Sparkles className="w-10 h-10 text-orange-600 animate-pulse" />
-              <h1 className="text-4xl font-bold text-gray-900">
+            <div className="flex flex-wrap gap-2 sm:gap-3 justify-center items-center mb-3 sm:mb-4">
+              <Sparkles className="w-6 h-6 sm:w-10 sm:h-10 text-orange-600 animate-pulse" />
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
                 Newly Registered Restaurants
               </h1>
-              <Sparkles className="w-10 h-10 text-orange-600 animate-pulse" />
+              <Sparkles className="w-6 h-6 sm:w-10 sm:h-10 text-orange-600 animate-pulse" />
             </div>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto max-w-2xl text-sm sm:text-lg text-gray-600 px-2">
               Discover fresh restaurants that just joined QuickBite! Be the first to try their delicious food 🎉
             </p>
-            <div className="inline-flex gap-2 items-center px-4 py-2 mt-4 text-green-700 bg-green-100 rounded-full">
+            <div className="inline-flex gap-2 items-center px-3 sm:px-4 py-1.5 sm:py-2 mt-3 sm:mt-4 text-green-700 bg-green-100 rounded-full text-sm sm:text-base">
               <span className="font-semibold">{restaurants.length}</span>
               <span>new restaurants available</span>
             </div>
@@ -126,18 +126,18 @@ function NewlyRegistered() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="py-16 mx-auto max-w-2xl text-center bg-white rounded-2xl shadow-lg"
+              className="py-12 sm:py-16 mx-auto max-w-2xl text-center bg-white rounded-2xl shadow-lg px-4"
             >
-              <div className="flex justify-center items-center mx-auto mb-6 w-24 h-24 bg-gray-100 rounded-full">
-                <Store className="w-12 h-12 text-gray-400" />
+              <div className="flex justify-center items-center mx-auto mb-4 sm:mb-6 w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full">
+                <Store className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400" />
               </div>
-              <h3 className="mb-3 text-2xl font-semibold text-gray-700">
+              <h3 className="mb-2 sm:mb-3 text-lg sm:text-2xl font-semibold text-gray-700">
                 No New Restaurants Yet
               </h3>
-              <p className="mb-6 text-gray-500">Check back soon for exciting new additions!</p>
+              <p className="mb-4 sm:mb-6 text-sm sm:text-base text-gray-500">Check back soon for exciting new additions!</p>
               <button
                 onClick={() => navigate('/restaurants')}
-                className="px-6 py-3 font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-lg transition-all duration-200 hover:from-orange-600 hover:to-red-600"
+                className="px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-lg transition-all duration-200 hover:from-orange-600 hover:to-red-600"
               >
                 Browse All Restaurants
               </button>
@@ -154,7 +154,7 @@ function NewlyRegistered() {
                   className="overflow-hidden bg-white rounded-2xl shadow-lg transition-all duration-300 transform cursor-pointer hover:shadow-2xl hover:-translate-y-2"
                 >
                   {/* Image Section */}
-                  <div className="overflow-hidden relative h-56 bg-gray-200">
+                  <div className="overflow-hidden relative h-44 sm:h-56 bg-gray-200">
                     {restaurant.image && restaurant.image.trim() !== '' ? (
                       <img
                         src={restaurant.image}
@@ -197,61 +197,61 @@ function NewlyRegistered() {
                   </div>
 
                   {/* Content Section */}
-                  <div className="p-6">
-                    <h3 className="mb-2 text-xl font-bold text-gray-900 line-clamp-1">
+                  <div className="p-4 sm:p-6">
+                    <h3 className="mb-1.5 sm:mb-2 text-base sm:text-xl font-bold text-gray-900 line-clamp-1">
                       {restaurant.name}
                     </h3>
 
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2 min-h-[40px]">
+                    <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2 min-h-[32px] sm:min-h-[40px]">
                       {restaurant.description || 'Delicious food awaits you!'}
                     </p>
 
                     {/* Cuisine Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                       {restaurant.cuisine?.slice(0, 3).map((c, i) => (
                         <span
                           key={i}
-                          className="px-3 py-1 text-xs font-medium text-orange-700 bg-orange-100 rounded-full"
+                          className="px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium text-orange-700 bg-orange-100 rounded-full"
                         >
                           {c}
                         </span>
                       ))}
                       {restaurant.cuisine?.length > 3 && (
-                        <span className="px-3 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">
+                        <span className="px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">
                           +{restaurant.cuisine.length - 3} more
                         </span>
                       )}
                     </div>
 
                     {/* Info Row */}
-                    <div className="flex justify-between items-center mb-4 text-sm">
+                    <div className="flex justify-between items-center mb-3 sm:mb-4 text-xs sm:text-sm">
                       <div className="flex gap-1 items-center text-gray-600">
-                        <Clock className="w-4 h-4" />
+                        <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         <span>{restaurant.deliveryTime || '30'} mins</span>
                       </div>
-                      
+
                       <div className="flex gap-1 items-center text-yellow-600">
-                        <Star className="w-4 h-4 fill-current" />
+                        <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
                         <span className="font-medium">
                           {restaurant.rating > 0 ? restaurant.rating.toFixed(1) : 'New'}
                         </span>
                       </div>
-                      
+
                       <span className="font-bold text-orange-600">
                         {restaurant.priceRange || '₹₹'}
                       </span>
                     </div>
 
                     {/* Location */}
-                    <div className="flex gap-2 items-start mb-4 text-sm text-gray-500">
-                      <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    <div className="flex gap-1.5 sm:gap-2 items-start mb-3 sm:mb-4 text-xs sm:text-sm text-gray-500">
+                      <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5" />
                       <span className="line-clamp-1">
                         {restaurant.location?.area}, {restaurant.location?.city}
                       </span>
                     </div>
 
                     {/* Registration Date */}
-                    <div className="pt-3 mt-3 border-t border-gray-100">
+                    <div className="pt-2.5 sm:pt-3 mt-2.5 sm:mt-3 border-t border-gray-100">
                       <div className="flex justify-between items-center">
                         <span className="text-xs font-semibold text-green-600">
                           🎉 Joined {new Date(restaurant.registeredAt || restaurant.createdAt).toLocaleDateString('en-IN', {
@@ -260,7 +260,7 @@ function NewlyRegistered() {
                             year: 'numeric'
                           })}
                         </span>
-                        <ChevronRight className="w-5 h-5 text-gray-400" />
+                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                       </div>
                     </div>
                   </div>
@@ -275,18 +275,18 @@ function NewlyRegistered() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="p-8 mt-12 text-center bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl"
+              className="p-4 sm:p-8 mt-8 sm:mt-12 text-center bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl"
             >
-              <h3 className="mb-3 text-2xl font-bold text-gray-800">
+              <h3 className="mb-2 sm:mb-3 text-xl sm:text-2xl font-bold text-gray-800">
                 Support New Restaurants! 🍽️
               </h3>
-              <p className="mx-auto mb-6 max-w-xl text-gray-600">
-                Help new restaurant partners grow by being their first customer. 
+              <p className="mx-auto mb-4 sm:mb-6 max-w-xl text-sm sm:text-base text-gray-600">
+                Help new restaurant partners grow by being their first customer.
                 Your order makes a huge difference!
               </p>
               <button
                 onClick={() => navigate('/restaurants')}
-                className="px-8 py-3 font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-full shadow-lg transition-all duration-200 hover:from-orange-600 hover:to-red-600 hover:shadow-xl"
+                className="px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-full shadow-lg transition-all duration-200 hover:from-orange-600 hover:to-red-600 hover:shadow-xl"
               >
                 Explore All Restaurants
               </button>

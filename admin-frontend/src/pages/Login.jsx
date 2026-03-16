@@ -49,23 +49,23 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-primary to-secondary">
+    <div className="flex items-center justify-center min-h-screen px-4 py-8 bg-gradient-to-br from-primary to-secondary">
       <div className="w-full max-w-md">
         {/* Logo and Title */}
-        <div className="mb-8 text-center">
-          <div className="inline-block p-4 mb-4 bg-white rounded-full shadow-lg">
-            <svg className="w-16 h-16 text-primary" fill="currentColor" viewBox="0 0 20 20">
+        <div className="mb-5 sm:mb-8 text-center">
+          <div className="inline-block p-3 sm:p-4 mb-3 sm:mb-4 bg-white rounded-full shadow-lg">
+            <svg className="w-12 h-12 sm:w-16 sm:h-16 text-primary" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
               <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
             </svg>
           </div>
-          <h1 className="mb-2 text-4xl font-bold text-white">QuickBite</h1>
-          <p className="text-white text-opacity-90">Admin Panel</p>
+          <h1 className="mb-2 text-3xl sm:text-4xl font-bold text-white">QuickBite</h1>
+          <p className="text-sm sm:text-base text-white text-opacity-90">Admin Panel</p>
         </div>
 
         {/* Login Form */}
-        <div className="p-8 bg-white shadow-2xl rounded-2xl">
-          <h2 className="mb-6 text-2xl font-bold text-gray-800">Sign In</h2>
+        <div className="p-5 sm:p-8 bg-white shadow-2xl rounded-2xl">
+          <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-gray-800">Sign In</h2>
           
           {error && (
             <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 border border-red-400 rounded-lg">
@@ -73,7 +73,7 @@ const Login = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Email Address
@@ -123,9 +123,9 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="mt-6 text-sm text-center text-gray-600">
+          <div className="mt-4 sm:mt-6 text-sm text-center text-gray-600">
             <p>Default credentials:</p>
-            <p className="p-2 mt-2 font-mono bg-gray-100 rounded">
+            <p className="p-2 mt-2 text-xs sm:text-sm font-mono bg-gray-100 rounded break-all">
               admin@quickbite.com / Admin@123
             </p>
           </div>

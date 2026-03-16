@@ -20,10 +20,7 @@ const Login = () => {
   }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
     setError('');
   };
 
@@ -31,9 +28,7 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     const result = await login(formData.email, formData.password);
-
     if (result.success) {
       navigate('/dashboard');
     } else {
@@ -43,45 +38,57 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center px-4 min-h-screen bg-gradient-to-br from-primary to-secondary">
+    <div
+      className="flex flex-col items-center justify-start w-full min-h-screen px-4 bg-gradient-to-br from-primary to-secondary sm:justify-center"
+      style={{
+        paddingTop: 'max(3rem, env(safe-area-inset-top))',
+        paddingBottom: 'max(2rem, env(safe-area-inset-bottom))'
+      }}
+    >
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="mb-8 text-center">
-          <div className="inline-block p-4 mb-4 bg-white rounded-full shadow-lg">
-            <img src="/quickbite_logo.svg" alt="QuickBite Delivery" className="w-16 h-16" />
+        <div className="mb-6 text-center">
+          <div className="inline-flex justify-center items-center p-3 mb-4 bg-white rounded-full shadow-lg">
+            <img src="/quickbite_logo.svg" alt="QuickBite Delivery" className="w-12 h-12 sm:w-14 sm:h-14" />
           </div>
-          <h1 className="mb-2 text-4xl font-bold text-white">QuickBite Delivery</h1>
-          <p className="text-white text-opacity-90">Partner Login</p>
+          <h1 className="text-2xl font-bold text-white sm:text-3xl">QuickBite Delivery</h1>
+          <p className="mt-1 text-sm text-white/80">Partner Login</p>
         </div>
 
-        {/* Login Form */}
-        <div className="p-8 bg-white rounded-2xl shadow-2xl">
-          <h2 className="mb-6 text-2xl font-bold text-gray-800">Sign In</h2>
+        {/* Login Card */}
+        <div className="p-6 bg-white rounded-2xl shadow-2xl">
+          <h2 className="mb-5 text-xl font-bold text-gray-800">Sign In</h2>
 
           {error && (
-            <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded-lg border border-red-400">
-              {error}
+            <div className="flex items-start gap-2 p-3 mb-4 text-sm text-red-700 bg-red-50 rounded-lg border border-red-200">
+              <span className="flex-shrink-0 mt-0.5">⚠</span>
+              <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
+              <label className="block mb-1.5 text-sm font-medium text-gray-700">
                 Email Address
               </label>
               <input
                 type="email"
                 name="email"
+                inputMode="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="delivery@example.com"
-                className="px-4 py-3 w-full rounded-lg border border-gray-300 transition outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-3 text-base rounded-xl border border-gray-300 outline-none transition focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
+                autoComplete="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
               />
             </div>
 
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
+              <label className="block mb-1.5 text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
@@ -90,28 +97,30 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="px-4 py-3 w-full rounded-lg border border-gray-300 transition outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-3 text-base rounded-xl border border-gray-300 outline-none transition focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
+                autoComplete="current-password"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="py-3 w-full font-semibold text-white rounded-lg transition bg-primary hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3.5 mt-1 font-semibold text-white rounded-xl transition bg-primary hover:bg-opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-base"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? 'Signing in…' : 'Sign In'}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/register" className="font-medium text-primary hover:underline">
-                Register as Partner
-              </Link>
-            </p>
-          </div>
+          <p className="mt-5 text-sm text-center text-gray-600">
+            Don't have an account?{' '}
+            <Link
+              to="/register"
+              className="font-semibold text-primary hover:underline"
+            >
+              Register as Partner
+            </Link>
+          </p>
         </div>
       </div>
     </div>

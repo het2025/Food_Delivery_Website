@@ -91,11 +91,11 @@ const Orders = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-800">Orders by Restaurant</h2>
-        <p className="mt-1 text-gray-600">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Orders by Restaurant</h2>
+        <p className="mt-1 text-sm sm:text-base text-gray-600">
           View and manage orders grouped by restaurant ({restaurantOrders.length} restaurants with orders)
         </p>
       </div>
@@ -103,10 +103,10 @@ const Orders = () => {
       {/* Restaurant Cards */}
       <div className="space-y-4">
         {restaurantOrders.length === 0 ? (
-          <div className="p-12 text-center bg-white rounded-lg shadow">
-            <ShoppingCartIcon className="mx-auto mb-4 w-16 h-16 text-gray-400" />
-            <h3 className="mb-2 text-xl font-semibold text-gray-800">No Orders Yet</h3>
-            <p className="text-gray-600">Orders will appear here once customers start placing them.</p>
+          <div className="p-8 sm:p-12 text-center bg-white rounded-lg shadow">
+            <ShoppingCartIcon className="mx-auto mb-4 w-12 h-12 sm:w-16 sm:h-16 text-gray-400" />
+            <h3 className="mb-2 text-lg sm:text-xl font-semibold text-gray-800">No Orders Yet</h3>
+            <p className="text-sm sm:text-base text-gray-600">Orders will appear here once customers start placing them.</p>
           </div>
         ) : (
           restaurantOrders.map((restaurant) => (
@@ -114,52 +114,51 @@ const Orders = () => {
               {/* Restaurant Header */}
               <div
                 onClick={() => handleRestaurantClick(restaurant._id, restaurant.restaurantName)}
-                className="p-6 transition cursor-pointer hover:bg-gray-50"
+                className="p-4 sm:p-6 transition cursor-pointer hover:bg-gray-50"
               >
-                <div className="flex justify-between items-center">
-                  <div className="flex flex-1 items-center">
-                    <div className="flex justify-center items-center w-12 h-12 text-xl font-bold text-white rounded-full bg-primary">
-                      <BuildingStorefrontIcon className="w-6 h-6" />
+                {/* Top row: icon + name + chevron */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center flex-1 min-w-0">
+                    <div className="flex-shrink-0 flex justify-center items-center w-10 h-10 sm:w-12 sm:h-12 font-bold text-white rounded-full bg-primary">
+                      <BuildingStorefrontIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <div className="flex-1 ml-4">
-                      <h3 className="text-lg font-bold text-gray-800">
+                    <div className="flex-1 ml-3 sm:ml-4 min-w-0">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">
                         {restaurant.restaurantName || 'Unknown Restaurant'}
                       </h3>
-                      <p className="mt-1 text-sm text-gray-600">
-                        Last order: {new Date(restaurant.lastOrderDate).toLocaleString()}
+                      <p className="mt-0.5 text-xs sm:text-sm text-gray-600 truncate">
+                        Last order: {new Date(restaurant.lastOrderDate).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
-
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-4 gap-4 mr-6 min-w-max">
-                    <div className="text-center px-2">
-                      <p className="text-2xl font-bold text-gray-800">{restaurant.totalOrders}</p>
-                      <p className="text-xs text-gray-600 whitespace-nowrap">Total Orders</p>
-                    </div>
-                    <div className="text-center px-2">
-                      <p className="text-2xl font-bold text-yellow-600">{restaurant.pendingOrders}</p>
-                      <p className="text-xs text-gray-600">Pending</p>
-                    </div>
-                    <div className="text-center px-2">
-                      <p className="text-2xl font-bold text-green-600">{restaurant.completedOrders}</p>
-                      <p className="text-xs text-gray-600">Completed</p>
-                    </div>
-                    <div className="text-center px-2">
-                      <p className="text-2xl font-bold text-primary">
-                        ₹{(restaurant.totalRevenue || 0).toFixed(2)}
-                      </p>
-                      <p className="text-xs text-gray-600">Revenue</p>
-                    </div>
-                  </div>
-
-                  {/* Expand Icon */}
-                  <div>
+                  <div className="flex-shrink-0 ml-2">
                     {expandedRestaurant === restaurant._id ? (
-                      <ChevronDownIcon className="w-6 h-6 text-gray-400" />
+                      <ChevronDownIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
                     ) : (
-                      <ChevronRightIcon className="w-6 h-6 text-gray-400" />
+                      <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
                     )}
+                  </div>
+                </div>
+
+                {/* Stats Grid - 2x2 on mobile, 4-col on sm+ */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 pt-3 border-t border-gray-100">
+                  <div className="text-center">
+                    <p className="text-xl sm:text-2xl font-bold text-gray-800">{restaurant.totalOrders}</p>
+                    <p className="text-xs text-gray-600">Total Orders</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xl sm:text-2xl font-bold text-yellow-600">{restaurant.pendingOrders}</p>
+                    <p className="text-xs text-gray-600">Pending</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xl sm:text-2xl font-bold text-green-600">{restaurant.completedOrders}</p>
+                    <p className="text-xs text-gray-600">Completed</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-base sm:text-2xl font-bold text-primary break-all">
+                      ₹{(restaurant.totalRevenue || 0).toFixed(0)}
+                    </p>
+                    <p className="text-xs text-gray-600">Revenue</p>
                   </div>
                 </div>
               </div>
@@ -176,55 +175,90 @@ const Orders = () => {
                       No orders found for this restaurant
                     </div>
                   ) : (
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Order ID</th>
-                            <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Customer</th>
-                            <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Items</th>
-                            <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Amount</th>
-                            <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Status</th>
-                            <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Date</th>
-                            <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {restaurantOrderDetails[restaurant._id]?.map((order) => (
-                            <tr key={order._id} className="hover:bg-gray-50">
-                              <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                    <>
+                      {/* Mobile card view */}
+                      <div className="sm:hidden divide-y divide-gray-200">
+                        {restaurantOrderDetails[restaurant._id]?.map((order) => (
+                          <div key={order._id} className="p-4 space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium text-gray-900">
                                 {order.orderNumber || order._id.slice(-8)}
-                              </td>
-                              <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
-                                {order.customerName || 'N/A'}
-                              </td>
-                              <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
-                                {order.items?.length || 0} items
-                              </td>
-                              <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                ₹{order.total || order.totalAmount}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
-                                  {order.status}
-                                </span>
-                              </td>
-                              <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
+                              </span>
+                              <span className={`px-2 text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                                {order.status}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-gray-600">{order.customerName || 'N/A'}</span>
+                              <span className="text-sm font-medium text-gray-900">₹{order.total || order.totalAmount}</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-500">{order.items?.length || 0} items</span>
+                              <span className="text-xs text-gray-400">
                                 {new Date(order.createdAt || order.orderTime).toLocaleDateString()}
-                              </td>
-                              <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                                <button
-                                  onClick={() => navigate(`/orders/${order._id}`)}
-                                  className="text-primary hover:text-opacity-80"
-                                >
-                                  View Details
-                                </button>
-                              </td>
+                              </span>
+                            </div>
+                            <button
+                              onClick={() => navigate(`/orders/${order._id}`)}
+                              className="inline-block text-xs text-primary font-medium mt-2 py-1"
+                            >
+                              View Details →
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Desktop table view */}
+                      <div className="hidden sm:block overflow-x-auto">
+                        <table className="w-full">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Order ID</th>
+                              <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Customer</th>
+                              <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Items</th>
+                              <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Amount</th>
+                              <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Status</th>
+                              <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Date</th>
+                              <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Actions</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            {restaurantOrderDetails[restaurant._id]?.map((order) => (
+                              <tr key={order._id} className="hover:bg-gray-50">
+                                <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                  {order.orderNumber || order._id.slice(-8)}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
+                                  {order.customerName || 'N/A'}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
+                                  {order.items?.length || 0} items
+                                </td>
+                                <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                  ₹{order.total || order.totalAmount}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                                    {order.status}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
+                                  {new Date(order.createdAt || order.orderTime).toLocaleDateString()}
+                                </td>
+                                <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                                  <button
+                                    onClick={() => navigate(`/orders/${order._id}`)}
+                                    className="text-primary hover:text-opacity-80"
+                                  >
+                                    View Details
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
                   )}
                 </div>
               )}

@@ -56,19 +56,19 @@ const Rewards = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="pt-20">
-        <div className="py-12 bg-white">
+        <div className="py-8 bg-white sm:py-12">
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div className="text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl lg:text-5xl">
                 Your Loyalty Rewards
               </h1>
-              <p className="max-w-2xl mx-auto mt-4 text-lg text-gray-500">
+              <p className="max-w-2xl mx-auto mt-3 text-base text-gray-500 sm:mt-4 sm:text-lg">
                 Complete orders to unlock exclusive discounts and offers! You've completed
                 <span className="font-bold text-orange-600"> {completedOrdersCount} </span>
                 orders so far.
               </p>
               {nextTier && (
-                <p className="mt-2 text-gray-600 text-md">
+                <p className="mt-2 text-sm text-gray-600 sm:text-base">
                   Complete <span className="font-bold text-orange-600">{nextTier.remaining}</span> more orders to unlock
                   <span className="font-bold text-orange-600"> {nextTier.nextDiscount}% off!</span>
                 </p>
@@ -77,8 +77,8 @@ const Rewards = () => {
           </div>
         </div>
 
-        <div className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 sm:py-12 lg:px-8">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8">
             {dynamicRewardsTiers.map((reward, index) => {
               const status = calculateStatus(reward.orders);
               const isUnlocked = status === 'unlocked';
@@ -91,21 +91,21 @@ const Rewards = () => {
                   className={`relative flex flex-col overflow-hidden transition-transform duration-300 transform border border-gray-200 shadow-lg rounded-2xl ${isUnlocked ? 'bg-white hover:-translate-y-2' : 'bg-gray-100 opacity-70 cursor-not-allowed'
                     }`}
                 >
-                  <div className={`p-6 flex items-center justify-center ${reward.bgColor}`}>
-                    <Gift className="w-8 h-8 text-white" />
+                  <div className={`p-5 sm:p-6 flex items-center justify-center ${reward.bgColor}`}>
+                    <Gift className="w-7 h-7 text-white sm:w-8 sm:h-8" />
                   </div>
-                  <div className="flex flex-col flex-grow p-6">
-                    <h3 className="mb-2 text-xl font-bold text-gray-800">{reward.discount}% Off!</h3>
-                    <p className="flex-grow text-gray-600">{reward.description}</p>
+                  <div className="flex flex-col flex-grow p-4 sm:p-6">
+                    <h3 className="mb-1 text-lg font-bold text-gray-800 sm:mb-2 sm:text-xl">{reward.discount}% Off!</h3>
+                    <p className="flex-grow text-sm text-gray-600 sm:text-base">{reward.description}</p>
                     <p className="mt-2 text-sm font-medium">
                       Requires: <span className="font-bold">{reward.orders} Orders</span>
                     </p>
                   </div>
-                  <div className="p-4 bg-gray-50">
+                  <div className="p-3 bg-gray-50 sm:p-4">
                     {isUnlocked ? (
                       <div
                         onClick={() => handleCopy(reward.code)}
-                        className="flex items-center justify-center w-full px-4 py-3 text-sm font-bold text-gray-700 border-2 border-dashed rounded-lg cursor-pointer group hover:border-orange-500 hover:text-orange-600"
+                        className="flex items-center justify-center w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm font-bold text-gray-700 border-2 border-dashed rounded-lg cursor-pointer group hover:border-orange-500 hover:text-orange-600"
                       >
                         {copiedCode === reward.code ? (
                           <>
@@ -114,13 +114,13 @@ const Rewards = () => {
                           </>
                         ) : (
                           <>
-                            {reward.code}
-                            <Copy className="w-4 h-4 ml-2 transition-transform duration-200 group-hover:scale-110" />
+                            <span className="truncate">{reward.code}</span>
+                            <Copy className="flex-shrink-0 w-4 h-4 ml-2 transition-transform duration-200 group-hover:scale-110" />
                           </>
                         )}
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center w-full px-4 py-3 text-sm font-semibold text-gray-500 bg-gray-200 rounded-lg">
+                      <div className="flex items-center justify-center w-full px-3 py-2.5 sm:px-4 sm:py-3 text-xs font-semibold text-center text-gray-500 bg-gray-200 rounded-lg sm:text-sm">
                         Complete {ordersRemaining} more orders to unlock
                       </div>
                     )}

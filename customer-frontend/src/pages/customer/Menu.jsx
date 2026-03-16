@@ -94,19 +94,19 @@ const Menu = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader className="w-12 h-12 animate-spin text-orange-500" />
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <Loader className="w-12 h-12 text-orange-500 animate-spin" />
       </div>
     );
   }
 
   if (error || !restaurant) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen px-4 bg-gray-50">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Restaurant Not Found</h2>
-          <p className="text-gray-500 mb-6">{error || 'The restaurant you are looking for does not exist.'}</p>
-          <button onClick={() => navigate('/')} className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600">
+          <h2 className="mb-4 text-xl font-semibold text-gray-800 sm:text-2xl">Restaurant Not Found</h2>
+          <p className="mb-6 text-sm text-gray-500 sm:text-base">{error || 'The restaurant you are looking for does not exist.'}</p>
+          <button onClick={() => navigate('/')} className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 min-h-[48px]">
             Back to Home
           </button>
         </div>
@@ -121,52 +121,52 @@ const Menu = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <main className="pt-16 container mx-auto px-4 py-8">
+      <main className="container px-3 py-4 pt-16 mx-auto sm:px-4 sm:py-8">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-600 hover:text-orange-600 mb-6"
+          className="flex items-center gap-2 text-gray-600 hover:text-orange-600 mb-4 sm:mb-6 min-h-[44px]"
         >
           <ArrowLeft className="w-5 h-5" />
-          Back
+          <span className="text-sm sm:text-base">Back</span>
         </button>
 
         {/* Restaurant Header */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
-          <div className="flex flex-col md:flex-row gap-6">
+        <div className="p-4 mb-5 bg-white shadow-sm rounded-2xl sm:p-6 sm:mb-8">
+          <div className="flex flex-col gap-4 md:flex-row sm:gap-6">
             <img
               src={restaurant.image || '/placeholder-restaurant.jpg'}
               alt={restaurant.name}
-              className="w-full md:w-48 h-48 object-cover rounded-xl"
+              className="object-cover w-full md:w-44 h-44 sm:h-48 md:h-44 rounded-xl"
               onError={(e) => {
                 e.target.src = '/placeholder-restaurant.jpg';
               }}
             />
 
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">{restaurant.name}</h1>
-              <p className="text-gray-600 mb-4">{restaurant.description}</p>
+            <div className="flex-1 min-w-0">
+              <h1 className="mb-2 text-xl font-bold leading-snug text-gray-800 sm:text-3xl">{restaurant.name}</h1>
+              <p className="mb-3 text-sm text-gray-600 sm:mb-4 sm:text-base">{restaurant.description}</p>
 
-              <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-4">
+              <div className="flex flex-wrap gap-2 mb-3 text-xs text-gray-600 sm:gap-4 sm:text-sm sm:mb-4">
                 <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                  <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-current" />
                   <span className="font-semibold">{restaurant.rating}</span>
                   <span>({restaurant.totalReviews} reviews)</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
+                  <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>{restaurant.deliveryTime}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <MapPin className="w-4 h-4" />
+                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>{restaurant.location.area}</span>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {restaurant.cuisine.map((cuisine, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-orange-100 text-orange-800 text-xs rounded-full"
+                    className="px-2 sm:px-3 py-0.5 sm:py-1 bg-orange-100 text-orange-800 text-xs rounded-full"
                   >
                     {cuisine}
                   </span>
@@ -177,10 +177,10 @@ const Menu = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-gray-200 mb-6">
+        <div className="flex mb-4 border-b border-gray-200 sm:mb-6">
           <button
             onClick={() => setActiveTab('menu')}
-            className={`px-6 py-3 font-medium text-sm transition-colors relative ${activeTab === 'menu'
+            className={`px-4 sm:px-6 py-3 font-medium text-sm transition-colors relative min-h-[48px] ${activeTab === 'menu'
               ? 'text-orange-600'
               : 'text-gray-600 hover:text-gray-800'
               }`}
@@ -192,7 +192,7 @@ const Menu = () => {
           </button>
           <button
             onClick={() => setActiveTab('reviews')}
-            className={`px-6 py-3 font-medium text-sm transition-colors relative ${activeTab === 'reviews'
+            className={`px-4 sm:px-6 py-3 font-medium text-sm transition-colors relative min-h-[48px] ${activeTab === 'reviews'
               ? 'text-orange-600'
               : 'text-gray-600 hover:text-gray-800'
               }`}
@@ -206,11 +206,11 @@ const Menu = () => {
 
         {activeTab === 'reviews' ? (
           <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Customer Reviews</h2>
+            <div className="flex flex-col gap-3 mb-5 sm:flex-row sm:justify-between sm:items-center sm:mb-6">
+              <h2 className="text-xl font-bold text-gray-800 sm:text-2xl">Customer Reviews</h2>
               <button
                 onClick={() => setShowReviewForm(!showReviewForm)}
-                className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+                className="bg-orange-500 text-white px-4 py-2.5 rounded-lg hover:bg-orange-600 transition-colors text-sm sm:text-base min-h-[44px] self-start sm:self-auto"
               >
                 {showReviewForm ? 'Cancel Review' : 'Write a Review'}
               </button>
@@ -235,12 +235,12 @@ const Menu = () => {
         ) : (
           <>
             {/* Filters */}
-            <div className="flex flex-wrap gap-3 mb-6">
+            <div className="flex flex-wrap gap-2 mb-4 sm:gap-3 sm:mb-6">
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === category
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[36px] ${selectedCategory === category
                     ? 'bg-orange-500 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
@@ -251,10 +251,10 @@ const Menu = () => {
             </div>
 
             {/* Food Type Filter */}
-            <div className="flex gap-4 mb-8">
+            <div className="flex flex-wrap gap-2 mb-6 sm:gap-3 sm:mb-8">
               <button
                 onClick={() => setFoodFilter('veg')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${foodFilter === 'veg'
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors min-h-[40px] ${foodFilter === 'veg'
                   ? 'bg-green-100 border-2 border-green-500 text-green-700'
                   : 'bg-gray-100 border-2 border-transparent text-gray-700 hover:bg-gray-200'
                   }`}
@@ -262,14 +262,14 @@ const Menu = () => {
                 <img
                   src="https://res.cloudinary.com/dovlhkyrr/image/upload/v1758009402/veg_g9mrsg.png"
                   alt="Veg"
-                  className="w-8 h-10"
+                  className="w-6 h-7 sm:w-8 sm:h-10"
                 />
                 Veg Food
               </button>
 
               <button
                 onClick={() => setFoodFilter('non-veg')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${foodFilter === 'non-veg'
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors min-h-[40px] ${foodFilter === 'non-veg'
                   ? 'bg-red-100 border-2 border-red-500 text-red-700'
                   : 'bg-gray-100 border-2 border-transparent text-gray-700 hover:bg-gray-200'
                   }`}
@@ -277,7 +277,7 @@ const Menu = () => {
                 <img
                   src="https://res.cloudinary.com/dovlhkyrr/image/upload/v1758009402/non-veg_ucnnbj.png"
                   alt="Non-Veg"
-                  className="w-8 h-10"
+                  className="w-6 h-7 sm:w-8 sm:h-10"
                 />
                 Non-Veg Food
               </button>
@@ -285,7 +285,7 @@ const Menu = () => {
               {(foodFilter === 'veg' || foodFilter === 'non-veg') && (
                 <button
                   onClick={() => setFoodFilter('all')}
-                  className="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors"
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-500 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-orange-600 transition-colors min-h-[40px]"
                 >
                   Show All
                 </button>
@@ -294,24 +294,24 @@ const Menu = () => {
 
             {/* Menu Items */}
             {filteredMenu.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500">No items found matching your criteria.</p>
+              <div className="px-4 py-10 text-center sm:py-12">
+                <p className="text-sm text-gray-500 sm:text-base">No items found matching your criteria.</p>
               </div>
             ) : (
-              <div className="space-y-8">
+              <div className="space-y-6 sm:space-y-8">
                 {filteredMenu.map((category) => (
                   <div key={category.category}>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b border-gray-200 pb-2">
+                    <h2 className="pb-2 mb-4 text-xl font-bold text-gray-800 border-b border-gray-200 sm:text-2xl sm:mb-6">
                       {category.category}
                     </h2>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {category.items.map((item) => {
                         const isFavorite = user?.favoriteDishes?.some(
                           fav => fav.dishId === item._id && fav.restaurantId === restaurant.restaurantId
                         );
 
                         return (
-                          <div key={item.name} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow relative group">
+                          <div key={item.name} className="relative p-4 transition-shadow bg-white shadow-sm sm:p-6 rounded-xl hover:shadow-md group">
                             {/* Favorite Button */}
                             <button
                               onClick={async (e) => {
@@ -326,17 +326,17 @@ const Menu = () => {
                                   // Optional: Show toast
                                 }
                               }}
-                              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 min-w-[36px] min-h-[36px] flex items-center justify-center"
                               title={isFavorite ? "Remove from favorites" : "Add to favorites"}
                             >
                               <Heart
-                                className={`w-5 h-5 transition-colors ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-400 hover:text-red-500'}`}
+                                className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-400 hover:text-red-500'}`}
                               />
                             </button>
 
-                            <div className="flex flex-col md:flex-row gap-4">
-                              <div className="flex-1">
-                                <div className="flex items-start gap-3 mb-2">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start gap-2 mb-2 sm:gap-3">
                                   {/* Updated Veg/Non-Veg Image */}
                                   <img
                                     src={
@@ -345,33 +345,33 @@ const Menu = () => {
                                         : "https://res.cloudinary.com/dovlhkyrr/image/upload/v1758012359/non-veg_food_czrcmx.png"
                                     }
                                     alt={item.isVeg ? "Veg" : "Non-Veg"}
-                                    className="w-4 h-4 mt-1"
+                                    className="flex-shrink-0 w-4 h-4 mt-1"
                                   />
 
-                                  <div className="flex-1">
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                                  <div className="flex-1 min-w-0 pr-8 sm:pr-0">
+                                    <h3 className="mb-1 text-base font-semibold leading-snug text-gray-800 sm:text-lg">
                                       {item.name}
                                       {item.isPopular && (
-                                        <span className="ml-2 px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
+                                        <span className="ml-2 px-2 py-0.5 bg-orange-100 text-orange-800 text-xs rounded-full">
                                           Popular
                                         </span>
                                       )}
                                     </h3>
-                                    <p className="text-gray-600 text-sm mb-3">{item.description}</p>
-                                    <p className="text-xl font-bold text-orange-600">₹{item.price}</p>
+                                    <p className="mb-2 text-xs leading-relaxed text-gray-600 sm:text-sm sm:mb-3">{item.description}</p>
+                                    <p className="text-lg font-bold text-orange-600 sm:text-xl">₹{item.price}</p>
                                   </div>
                                 </div>
 
-                                <div className="flex items-center gap-3 mt-4">
+                                <div className="flex items-center gap-3 mt-3 sm:mt-4">
                                   {getItemQuantity(item) > 0 ? (
-                                    <div className="flex items-center gap-3 bg-orange-500 text-white rounded-lg px-3 py-2">
-                                      <button className="hover:bg-orange-600 rounded p-1">
+                                    <div className="flex items-center overflow-hidden text-white bg-orange-500 rounded-lg">
+                                      <button className="hover:bg-orange-600 min-w-[44px] min-h-[44px] flex items-center justify-center">
                                         <Minus className="w-4 h-4" />
                                       </button>
-                                      <span className="font-semibold">{getItemQuantity(item)}</span>
+                                      <span className="px-2 font-semibold">{getItemQuantity(item)}</span>
                                       <button
                                         onClick={() => handleAddToCart(item, category.category)}
-                                        className="hover:bg-orange-600 rounded p-1"
+                                        className="hover:bg-orange-600 min-w-[44px] min-h-[44px] flex items-center justify-center"
                                       >
                                         <Plus className="w-4 h-4" />
                                       </button>
@@ -379,7 +379,7 @@ const Menu = () => {
                                   ) : (
                                     <button
                                       onClick={() => handleAddToCart(item, category.category)}
-                                      className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                                      className="bg-orange-500 hover:bg-orange-600 text-white px-5 sm:px-6 min-h-[44px] rounded-lg flex items-center gap-2 transition-colors text-sm sm:text-base"
                                     >
                                       <Plus className="w-4 h-4" />
                                       Add to Cart
@@ -389,11 +389,11 @@ const Menu = () => {
                               </div>
 
                               {item.url && (
-                                <div className="md:w-32 md:h-32">
+                                <div className="flex-shrink-0 w-full sm:w-28 sm:h-28 md:w-32 md:h-32">
                                   <img
                                     src={item.url}
                                     alt={item.name}
-                                    className="w-full h-32 object-cover rounded-lg"
+                                    className="object-cover w-full rounded-lg h-36 sm:h-full"
                                     onError={(e) => {
                                       e.target.style.display = 'none';
                                     }}

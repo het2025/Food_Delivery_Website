@@ -190,7 +190,7 @@ export default function LoginSignup() {
       }}
     >
       <div
-        className="px-8 pt-3 pb-8 w-full max-w-md rounded-2xl drop-shadow-lg"
+        className="px-6 pt-3 pb-8 mx-4 w-full max-w-md rounded-2xl drop-shadow-lg sm:px-8 sm:mx-0"
         style={{
           background: "linear-gradient(132deg, rgba(255,255,255,0.48) 85%, rgba(255,255,255,0.24) 98%)",
           backdropFilter: "blur(22px)",
@@ -346,7 +346,7 @@ export default function LoginSignup() {
                 onClick={() => switchMode("signup")}
                 className="font-semibold text-white underline hover:text-orange-900"
                 disabled={loading}
-                style={{ background: "none", border: "none", padding: 0, margin: 0 }}
+                style={{ background: "none", border: "none", padding: "6px 4px", margin: 0 }}
               >
                 Sign up here
               </button>
@@ -359,7 +359,7 @@ export default function LoginSignup() {
                 onClick={() => switchMode("login")}
                 className="font-semibold text-white underline hover:text-orange-900"
                 disabled={loading}
-                style={{ background: "none", border: "none", padding: 0, margin: 0 }}
+                style={{ background: "none", border: "none", padding: "6px 4px", margin: 0 }}
               >
                 Log in here
               </button>

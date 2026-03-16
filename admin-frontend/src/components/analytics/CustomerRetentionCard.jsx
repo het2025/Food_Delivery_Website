@@ -2,13 +2,23 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 const CustomerRetentionCard = ({ data }) => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     if (!data) {
         return (
-            <Paper sx={{ p: 3, height: '100%', borderRadius: 3 }}>
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
+            <Paper sx={{ p: { xs: 2, sm: 3 }, height: '100%', borderRadius: 3 }}>
+                <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    gutterBottom
+                    sx={{ fontSize: { xs: '0.95rem', sm: '1.25rem' } }}
+                >
                     👥 Customer Retention
                 </Typography>
                 <Typography color="text.secondary">No data available</Typography>
@@ -18,27 +28,40 @@ const CustomerRetentionCard = ({ data }) => {
 
     const chartData = [
         { name: 'New Customers', value: data.newCustomers, color: '#3B82F6' },
-        { name: 'Returning', value: data.returningCustomers, color: '#10B981' }
+        { name: 'Returning', value: data.returningCustomers, color: '#10B981' },
     ];
 
+    const pieHeight = isMobile ? 150 : 180;
+    const innerR = isMobile ? 40 : 50;
+    const outerR = isMobile ? 62 : 75;
+
     return (
-        <Paper sx={{ p: 3, height: '100%', borderRadius: 3 }}>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
+        <Paper sx={{ p: { xs: 2, sm: 3 }, height: '100%', borderRadius: 3 }}>
+            <Typography
+                variant="h6"
+                fontWeight="bold"
+                gutterBottom
+                sx={{ fontSize: { xs: '0.95rem', sm: '1.25rem' } }}
+            >
                 👥 Customer Retention
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mb: 2, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+            >
                 New vs returning customers
             </Typography>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                <ResponsiveContainer width="100%" height={180}>
+                <ResponsiveContainer width="100%" height={pieHeight}>
                     <PieChart>
                         <Pie
                             data={chartData}
                             cx="50%"
                             cy="50%"
-                            innerRadius={50}
-                            outerRadius={75}
+                            innerRadius={innerR}
+                            outerRadius={outerR}
                             dataKey="value"
                             paddingAngle={5}
                         >
@@ -56,28 +79,52 @@ const CustomerRetentionCard = ({ data }) => {
 
             <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 2 }}>
                 <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h5" fontWeight="bold" color="#3B82F6">
+                    <Typography
+                        fontWeight="bold"
+                        color="#3B82F6"
+                        sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
+                    >
                         {data.newRate}%
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}
+                    >
                         New ({data.newCustomers})
                     </Typography>
                 </Box>
                 <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h5" fontWeight="bold" color="#10B981">
+                    <Typography
+                        fontWeight="bold"
+                        color="#10B981"
+                        sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
+                    >
                         {data.retentionRate}%
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}
+                    >
                         Returning ({data.returningCustomers})
                     </Typography>
                 </Box>
             </Box>
 
             <Box sx={{ textAlign: 'center', mt: 2, pt: 2, borderTop: '1px solid #e0e0e0' }}>
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                >
                     Total Unique Customers
                 </Typography>
-                <Typography variant="h4" fontWeight="bold" color="primary">
+                <Typography
+                    fontWeight="bold"
+                    color="primary"
+                    sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' } }}
+                >
                     {data.totalCustomers?.toLocaleString()}
                 </Typography>
             </Box>

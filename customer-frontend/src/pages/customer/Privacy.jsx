@@ -15,21 +15,21 @@ const Privacy = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Header */}
-          <div className="flex items-center mb-8">
+          <div className="flex flex-wrap items-center gap-y-2 mb-6 sm:mb-8">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center text-gray-600 hover:text-gray-800 mr-4"
+              className="flex items-center text-gray-600 hover:text-gray-800 mr-4 flex-shrink-0"
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back
+              <ArrowLeft className="w-5 h-5 mr-1 sm:mr-2" />
+              <span className="text-sm sm:text-base">Back</span>
             </button>
-            <h1 className="text-3xl font-bold text-gray-800">Privacy Policy</h1>
+            <h1 className="text-xl sm:text-3xl font-bold text-gray-800">Privacy Policy</h1>
           </div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 mb-8"
+            className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 mb-8"
           >
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-600 text-sm mb-6">Last updated: September 13, 2025</p>
@@ -38,8 +38,8 @@ const Privacy = () => {
                 Your privacy is important to us. This Privacy Policy explains how QuickBites collects, uses, discloses, and safeguards your information when you use our food delivery platform.
               </p>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Database className="w-6 h-6 text-blue-500" />
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Database className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
                 Information We Collect
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -65,8 +65,8 @@ const Privacy = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Eye className="w-6 h-6 text-green-500" />
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Eye className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />
                 How We Use Your Information
               </h2>
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
@@ -92,7 +92,7 @@ const Privacy = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Information Sharing</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Information Sharing</h2>
               <div className="space-y-4 mb-8">
                 <div className="border border-gray-200 rounded-lg p-6">
                   <h3 className="font-semibold text-green-600 mb-3">✅ What We Share</h3>
@@ -114,8 +114,8 @@ const Privacy = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Lock className="w-6 h-6 text-purple-500" />
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-purple-500" />
                 Data Security
               </h2>
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-8">
@@ -147,8 +147,8 @@ const Privacy = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Shield className="w-6 h-6 text-orange-500" />
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
                 Your Rights and Choices
               </h2>
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 mb-8">
@@ -180,7 +180,7 @@ const Privacy = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Cookies and Tracking</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Cookies and Tracking</h2>
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
                 <p className="text-gray-700 mb-4">
                   We use cookies and similar technologies to enhance your experience:
@@ -210,21 +210,21 @@ const Privacy = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Children's Privacy</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Children's Privacy</h2>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
                 <p className="text-gray-700">
                   QuickBites is intended for users aged 18 and above. We do not knowingly collect personal information from children under 18. If you believe we have collected such information, please contact us immediately.
                 </p>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Changes to This Policy</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Changes to This Policy</h2>
               <div className="border border-gray-200 rounded-lg p-6 mb-8">
                 <p className="text-gray-700">
                   We may update this Privacy Policy periodically. We will notify you of significant changes through the app, email, or by posting a notice on our website. Your continued use of our services after such modifications constitutes acceptance of the updated policy.
                 </p>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Contact Us</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Contact Us</h2>
               <div className="bg-gradient-to-r from-orange-100 to-red-100 border border-orange-200 rounded-lg p-6">
                 <p className="text-gray-700 mb-4">
                   If you have any questions about this Privacy Policy or our data practices, please contact us:

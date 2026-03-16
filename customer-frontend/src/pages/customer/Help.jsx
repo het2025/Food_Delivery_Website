@@ -141,36 +141,36 @@ const Help = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
-      <div className="pt-20 pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
+      <div className="pt-16 sm:pt-20 pb-16">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8">
+
           {/* Header */}
-          <div className="flex items-center mb-8">
+          <div className="flex flex-wrap items-center gap-2 mb-5 sm:mb-8 pt-4 sm:pt-0">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center text-gray-600 hover:text-gray-800 mr-4"
+              className="flex items-center text-gray-600 hover:text-gray-800 min-h-[44px] px-1"
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back
+              <ArrowLeft className="w-5 h-5 mr-1" />
+              <span className="text-sm sm:text-base">Back</span>
             </button>
-            <h1 className="text-3xl font-bold text-gray-800">Help & Support</h1>
+            <h1 className="text-xl sm:text-3xl font-bold text-gray-800">Help & Support</h1>
           </div>
 
           {/* Search */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-6 sm:mb-8"
           >
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 placeholder="Search for help..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-sm"
+                className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-sm text-sm sm:text-base"
               />
             </div>
           </motion.div>
@@ -180,7 +180,7 @@ const Help = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12"
+            className="grid grid-cols-3 gap-2 sm:gap-4 mb-8 sm:mb-12"
           >
             {contactOptions.map((option, index) => (
               <button
@@ -190,48 +190,48 @@ const Help = () => {
                     window.open(option.action)
                   }
                 }}
-                className={`p-6 rounded-2xl ${option.color} hover:shadow-md transition-all duration-200`}
+                className={`p-3 sm:p-6 rounded-xl sm:rounded-2xl ${option.color} hover:shadow-md transition-all duration-200 min-h-[80px] sm:min-h-auto`}
               >
-                <option.icon className="w-8 h-8 mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-1">{option.title}</h3>
-                <p className="text-sm opacity-75">{option.description}</p>
+                <option.icon className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-3" />
+                <h3 className="font-bold text-xs sm:text-lg mb-0.5 sm:mb-1 leading-tight">{option.title}</h3>
+                <p className="text-xs opacity-75 hidden sm:block">{option.description}</p>
               </button>
             ))}
           </motion.div>
 
           {/* FAQ Categories */}
-          <div className="space-y-8">
+          <div className="space-y-4 sm:space-y-8">
             {filteredFAQs.map((category, categoryIndex) => (
               <motion.div
                 key={category.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + categoryIndex * 0.1 }}
-                className="bg-white rounded-2xl shadow-lg p-6"
+                className="bg-white rounded-2xl shadow-lg p-4 sm:p-6"
               >
-                <div className="flex items-center gap-3 mb-6">
-                  <category.icon className="w-6 h-6 text-orange-500" />
-                  <h2 className="text-xl font-bold text-gray-800">{category.title}</h2>
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                  <category.icon className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 flex-shrink-0" />
+                  <h2 className="text-base sm:text-xl font-bold text-gray-800">{category.title}</h2>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {category.faqs.map((faq, faqIndex) => {
                     const globalIndex = categoryIndex * 100 + faqIndex
-                    
+
                     return (
                       <div key={faqIndex} className="border border-gray-200 rounded-lg overflow-hidden">
                         <button
                           onClick={() => toggleAccordion(globalIndex)}
-                          className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                          className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-gray-50 transition-colors min-h-[48px]"
                         >
-                          <span className="font-semibold text-gray-800 pr-4">{faq.question}</span>
+                          <span className="font-semibold text-gray-800 pr-3 text-sm sm:text-base leading-snug">{faq.question}</span>
                           {activeAccordion === globalIndex ? (
-                            <ChevronUp className="w-5 h-5 text-orange-500 flex-shrink-0" />
+                            <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 flex-shrink-0" />
                           ) : (
-                            <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
                           )}
                         </button>
-                        
+
                         {activeAccordion === globalIndex && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
@@ -239,7 +239,7 @@ const Help = () => {
                             exit={{ opacity: 0, height: 0 }}
                             className="border-t border-gray-200 bg-gray-50"
                           >
-                            <p className="p-4 text-gray-600 leading-relaxed">{faq.answer}</p>
+                            <p className="p-3 sm:p-4 text-gray-600 leading-relaxed text-sm sm:text-base">{faq.answer}</p>
                           </motion.div>
                         )}
                       </div>
@@ -254,23 +254,23 @@ const Help = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-16"
+              className="text-center py-12 sm:py-16"
             >
-              <HelpCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-600 mb-2">No results found</h3>
-              <p className="text-gray-500 mb-6">
+              <HelpCircle className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg sm:text-xl font-bold text-gray-600 mb-2">No results found</h3>
+              <p className="text-gray-500 mb-6 text-sm sm:text-base px-2">
                 Try different keywords or contact our support team
               </p>
-              <div className="flex justify-center gap-4">
+              <div className="flex flex-col sm:flex-row justify-center gap-3">
                 <button
                   onClick={() => window.open('tel:1800-123-4567')}
-                  className="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+                  className="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors min-h-[48px]"
                 >
                   Call Support
                 </button>
                 <button
                   onClick={() => window.open('mailto:support@quickbites.com')}
-                  className="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors"
+                  className="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors min-h-[48px]"
                 >
                   Email Us
                 </button>
@@ -283,22 +283,22 @@ const Help = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mt-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl p-8 text-white text-center"
+            className="mt-8 sm:mt-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl p-5 sm:p-8 text-white text-center"
           >
-            <h2 className="text-2xl font-bold mb-2">Still need help?</h2>
-            <p className="text-orange-100 mb-6">
+            <h2 className="text-lg sm:text-2xl font-bold mb-2">Still need help?</h2>
+            <p className="text-orange-100 mb-4 sm:mb-6 text-sm sm:text-base">
               Our friendly support team is available 24/7 to assist you
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <button
                 onClick={() => window.open('tel:1800-123-4567')}
-                className="bg-white text-orange-600 px-6 py-3 rounded-lg font-semibold hover:bg-orange-50 transition-colors"
+                className="bg-white text-orange-600 px-5 sm:px-6 py-3 rounded-lg font-semibold hover:bg-orange-50 transition-colors min-h-[48px] text-sm sm:text-base"
               >
                 Call: 1800-123-4567
               </button>
               <button
                 onClick={() => window.open('mailto:support@quickbites.com')}
-                className="bg-white bg-opacity-20 text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-30 transition-colors"
+                className="bg-white bg-opacity-20 text-white px-5 sm:px-6 py-3 rounded-lg font-semibold hover:bg-opacity-30 transition-colors min-h-[48px] text-sm sm:text-base"
               >
                 Email Support
               </button>

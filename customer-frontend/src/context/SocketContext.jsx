@@ -10,7 +10,7 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         // Connect to the backend URL
-        const backendUrl = 'http://localhost:5000'; // Adjust if your backend runs on a different port
+        const backendUrl = window.location.origin;
         const newSocket = io(backendUrl);
 
         setSocket(newSocket);

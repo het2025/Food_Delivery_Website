@@ -79,20 +79,20 @@ const AvailableOrders = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-      
-      <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
+
+      <div className="px-4 py-4 pb-safe-nav mx-auto max-w-7xl sm:px-6 sm:pt-8 lg:px-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4 sm:mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Available Orders</h1>
-            <p className="mt-1 text-gray-600">
-              {orders.length} order{orders.length !== 1 ? 's' : ''} available for delivery
+            <h1 className="text-2xl font-bold text-gray-800 sm:text-3xl">Available Orders</h1>
+            <p className="mt-0.5 text-sm text-gray-600 sm:mt-1">
+              {orders.length} order{orders.length !== 1 ? 's' : ''} available
             </p>
           </div>
           <button
             onClick={fetchAvailableOrders}
             disabled={refreshing}
-            className="px-4 py-2 text-white rounded-lg transition bg-primary hover:bg-opacity-90 disabled:opacity-50"
+            className="px-4 min-h-[44px] text-sm text-white transition rounded-lg bg-primary hover:bg-opacity-90 disabled:opacity-50"
           >
             {refreshing ? 'Refreshing...' : 'Refresh'}
           </button>
@@ -100,21 +100,18 @@ const AvailableOrders = () => {
 
         {/* New Order Notification */}
         {newOrderNotification && (
-          <div className="p-4 mb-6 bg-green-50 rounded-lg border-l-4 border-green-500">
+          <div className="p-3 mb-4 border-l-4 border-green-500 rounded-lg bg-green-50 sm:p-4 sm:mb-6">
             <div className="flex items-center">
-              <BellAlertIcon className="mr-3 w-6 h-6 text-green-600" />
-              <div className="flex-1">
+              <BellAlertIcon className="flex-shrink-0 w-5 h-5 mr-2 text-green-600 sm:mr-3 sm:w-6 sm:h-6" />
+              <div className="flex-1 min-w-0">
                 <h3 className="text-sm font-semibold text-green-800">New Order Available!</h3>
-                <p className="mt-1 text-sm text-green-700">
-                  Order from {newOrderNotification.restaurantName} - ₹{newOrderNotification.deliveryFee}
+                <p className="mt-0.5 text-xs text-green-700 sm:text-sm sm:mt-1 truncate">
+                  {newOrderNotification.restaurantName} — ₹{newOrderNotification.deliveryFee}
                 </p>
               </div>
               <button
-                onClick={() => {
-                  clearNotification();
-                  fetchAvailableOrders();
-                }}
-                className="ml-4 text-sm font-medium text-green-700 hover:text-green-900"
+                onClick={() => { clearNotification(); fetchAvailableOrders(); }}
+                className="flex-shrink-0 ml-3 min-h-[44px] min-w-[44px] px-2 text-xs font-medium text-green-700 hover:text-green-900"
               >
                 View
               </button>
@@ -124,27 +121,27 @@ const AvailableOrders = () => {
 
         {/* Orders List */}
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="w-12 h-12 rounded-full border-b-2 animate-spin border-primary"></div>
+          <div className="flex items-center justify-center h-64">
+            <div className="w-12 h-12 border-b-2 rounded-full animate-spin border-primary"></div>
           </div>
         ) : orders.length === 0 ? (
-          <div className="p-12 text-center bg-white rounded-lg shadow">
-            <div className="inline-block p-4 mb-4 bg-gray-100 rounded-full">
-              <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="p-8 text-center bg-white shadow rounded-xl sm:p-12">
+            <div className="inline-block p-3 mb-4 bg-gray-100 rounded-full sm:p-4">
+              <svg className="w-12 h-12 text-gray-400 sm:w-16 sm:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
             </div>
-            <h3 className="mb-2 text-xl font-semibold text-gray-800">No Orders Available</h3>
-            <p className="mb-4 text-gray-600">New orders will appear here when restaurants prepare them</p>
+            <h3 className="mb-2 text-lg font-semibold text-gray-800 sm:text-xl">No Orders Available</h3>
+            <p className="mb-4 text-sm text-gray-600 sm:text-base">New orders will appear here when restaurants prepare them</p>
             <button
               onClick={fetchAvailableOrders}
-              className="px-6 py-2 text-white rounded-lg transition bg-primary hover:bg-opacity-90"
+              className="px-6 py-2.5 text-white rounded-lg transition bg-primary hover:bg-opacity-90"
             >
               Refresh
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
             {orders.map((order) => (
               <OrderCard
                 key={order._id}

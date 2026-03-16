@@ -6,7 +6,7 @@ const HeroSection = () => {
   return (
     <div className="relative overflow-hidden">
       {/* --- Color backdrop --- */}
-      <div className="bg-gradient-to-br from-orange-500/90 via-red-500/90 to-pink-600/90 text-white py-20 px-6 shadow-2xl mb-16 w-full relative">
+      <div className="bg-gradient-to-br from-orange-500/90 via-red-500/90 to-pink-600/90 text-white py-12 md:py-20 px-6 shadow-2xl mb-16 w-full relative">
         {/* --- LEFT decorative poster --- */}
         <img
           src="https://res.cloudinary.com/dovlhkyrr/image/upload/v1758114495/poster1_h2cjpw.png"
@@ -37,7 +37,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight"
+            className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight"
           >
             Delicious Food
             <br />

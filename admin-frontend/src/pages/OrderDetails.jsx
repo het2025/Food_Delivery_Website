@@ -88,71 +88,71 @@ const OrderDetails = () => {
   const { order, customer } = data;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Back Button */}
       <button
         onClick={() => navigate('/orders')}
-        className="flex items-center text-gray-600 hover:text-gray-900"
+        className="flex items-center py-1 text-gray-600 hover:text-gray-900"
       >
         <ArrowLeftIcon className="w-5 h-5 mr-2" />
         Back to Orders
       </button>
 
       {/* Order Header */}
-      <div className="p-6 bg-white rounded-lg shadow">
-        <div className="flex items-start justify-between">
+      <div className="p-4 sm:p-6 bg-white rounded-lg shadow">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">Order #{order.orderNumber || order._id.slice(-8)}</h2>
-            <p className="mt-1 text-gray-600">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Order #{order.orderNumber || order._id.slice(-8)}</h2>
+            <p className="mt-1 text-sm text-gray-600">
               Placed on {new Date(order.createdAt || order.orderTime).toLocaleString()}
             </p>
           </div>
-          <div className="text-right">
-            <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
+          <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-0">
+            <span className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm font-semibold ${
               order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
               order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
               'bg-blue-100 text-blue-800'
             }`}>
               {order.status}
             </span>
-            <p className="mt-2 text-2xl font-bold text-gray-800">₹{order.total || order.totalAmount}</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-800 sm:mt-2">₹{order.total || order.totalAmount}</p>
           </div>
         </div>
       </div>
 
       {/* Customer & Restaurant Info */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
         {/* Customer */}
-        <div className="p-6 bg-white rounded-lg shadow">
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Customer Details</h3>
+        <div className="p-4 sm:p-6 bg-white rounded-lg shadow">
+          <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold text-gray-800">Customer Details</h3>
           {customer ? (
             <div className="space-y-2">
-              <p className="text-gray-600"><span className="font-medium">Name:</span> {customer.name}</p>
-              <p className="text-gray-600"><span className="font-medium">Email:</span> {customer.email}</p>
-              <p className="text-gray-600"><span className="font-medium">Phone:</span> {customer.phone || 'N/A'}</p>
+              <p className="text-sm sm:text-base text-gray-600"><span className="font-medium">Name:</span> {customer.name}</p>
+              <p className="text-sm sm:text-base text-gray-600 break-all"><span className="font-medium">Email:</span> {customer.email}</p>
+              <p className="text-sm sm:text-base text-gray-600"><span className="font-medium">Phone:</span> {customer.phone || 'N/A'}</p>
             </div>
           ) : (
-            <p className="text-gray-500">Customer information not available</p>
+            <p className="text-sm text-gray-500">Customer information not available</p>
           )}
         </div>
 
         {/* Restaurant */}
-        <div className="p-6 bg-white rounded-lg shadow">
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Restaurant Details</h3>
+        <div className="p-4 sm:p-6 bg-white rounded-lg shadow">
+          <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold text-gray-800">Restaurant Details</h3>
           <div className="space-y-2">
-            <p className="text-gray-600"><span className="font-medium">Name:</span> {order.restaurantName || 'N/A'}</p>
-            <p className="text-gray-600"><span className="font-medium">Payment:</span> {order.paymentMethod || 'N/A'}</p>
-            <p className="text-gray-600"><span className="font-medium">Payment Status:</span> {order.paymentStatus || 'N/A'}</p>
+            <p className="text-sm sm:text-base text-gray-600"><span className="font-medium">Name:</span> {order.restaurantName || 'N/A'}</p>
+            <p className="text-sm sm:text-base text-gray-600"><span className="font-medium">Payment:</span> {order.paymentMethod || 'N/A'}</p>
+            <p className="text-sm sm:text-base text-gray-600"><span className="font-medium">Payment Status:</span> {order.paymentStatus || 'N/A'}</p>
           </div>
         </div>
       </div>
 
       {/* Delivery Address */}
       {order.deliveryAddress && (
-        <div className="p-6 bg-white rounded-lg shadow">
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Delivery Address</h3>
-          <p className="text-gray-600">
-            {order.deliveryAddress.street}, {order.deliveryAddress.city}, 
+        <div className="p-4 sm:p-6 bg-white rounded-lg shadow">
+          <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold text-gray-800">Delivery Address</h3>
+          <p className="text-sm sm:text-base text-gray-600">
+            {order.deliveryAddress.street}, {order.deliveryAddress.city},
             {order.deliveryAddress.state} - {order.deliveryAddress.pincode}
           </p>
         </div>
@@ -160,44 +160,44 @@ const OrderDetails = () => {
 
       {/* Order Items */}
       <div className="bg-white rounded-lg shadow">
-        <div className="p-6 border-b">
-          <h3 className="text-lg font-semibold text-gray-800">Order Items</h3>
+        <div className="p-4 sm:p-6 border-b">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-800">Order Items</h3>
         </div>
-        <div className="p-6">
-          <div className="space-y-4">
+        <div className="p-4 sm:p-6">
+          <div className="space-y-3 sm:space-y-4">
             {order.items?.map((item, index) => (
-              <div key={index} className="flex items-center justify-between pb-4 border-b last:border-b-0">
-                <div className="flex-1">
-                  <p className="font-medium text-gray-800">{item.name}</p>
-                  <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+              <div key={index} className="flex items-center justify-between pb-3 sm:pb-4 border-b last:border-b-0">
+                <div className="flex-1 pr-3">
+                  <p className="text-sm sm:text-base font-medium text-gray-800">{item.name}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Qty: {item.quantity}</p>
                   {item.extras && item.extras.length > 0 && (
-                    <p className="text-sm text-gray-500">Extras: {item.extras.join(', ')}</p>
+                    <p className="text-xs text-gray-500">Extras: {item.extras.join(', ')}</p>
                   )}
                 </div>
-                <p className="font-semibold text-gray-800">₹{item.price * item.quantity}</p>
+                <p className="text-sm sm:text-base font-semibold text-gray-800 whitespace-nowrap">₹{item.price * item.quantity}</p>
               </div>
             ))}
           </div>
 
           {/* Order Summary */}
-          <div className="pt-6 mt-6 space-y-2 border-t">
-            <div className="flex justify-between text-gray-600">
+          <div className="pt-4 sm:pt-6 mt-4 sm:mt-6 space-y-2 border-t">
+            <div className="flex justify-between text-sm sm:text-base text-gray-600">
               <span>Subtotal</span>
               <span>₹{order.subtotal || (order.total - (order.deliveryFee || 0))}</span>
             </div>
             {order.deliveryFee > 0 && (
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-sm sm:text-base text-gray-600">
                 <span>Delivery Fee</span>
                 <span>₹{order.deliveryFee}</span>
               </div>
             )}
             {order.discount > 0 && (
-              <div className="flex justify-between text-green-600">
+              <div className="flex justify-between text-sm sm:text-base text-green-600">
                 <span>Discount</span>
                 <span>-₹{order.discount}</span>
               </div>
             )}
-            <div className="flex justify-between pt-2 text-lg font-bold text-gray-800 border-t">
+            <div className="flex justify-between pt-2 text-base sm:text-lg font-bold text-gray-800 border-t">
               <span>Total</span>
               <span>₹{order.total || order.totalAmount}</span>
             </div>
@@ -207,41 +207,41 @@ const OrderDetails = () => {
 
       {/* Admin Actions */}
       {order.status !== 'Delivered' && order.status !== 'Cancelled' && (
-        <div className="p-6 bg-white rounded-lg shadow">
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Admin Actions</h3>
-          <div className="flex flex-wrap gap-3">
+        <div className="p-4 sm:p-6 bg-white rounded-lg shadow">
+          <h3 className="mb-4 text-base sm:text-lg font-semibold text-gray-800">Admin Actions</h3>
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3">
             <button
               onClick={() => handleStatusUpdate('Confirmed')}
               disabled={updating}
-              className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 text-sm sm:text-base text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
             >
               Mark as Confirmed
             </button>
             <button
               onClick={() => handleStatusUpdate('Preparing')}
               disabled={updating}
-              className="px-4 py-2 text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 text-sm sm:text-base text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 disabled:opacity-50"
             >
               Mark as Preparing
             </button>
             <button
               onClick={() => handleStatusUpdate('Out for Delivery')}
               disabled={updating}
-              className="px-4 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 text-sm sm:text-base text-white bg-purple-600 rounded-lg hover:bg-purple-700 disabled:opacity-50"
             >
               Out for Delivery
             </button>
             <button
               onClick={() => handleStatusUpdate('Delivered')}
               disabled={updating}
-              className="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 text-sm sm:text-base text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50"
             >
               Mark as Delivered
             </button>
             <button
               onClick={handleCancelOrder}
               disabled={updating}
-              className="flex items-center px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50"
+              className="w-full sm:w-auto flex items-center justify-center px-4 py-2.5 sm:py-2 text-sm sm:text-base text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50"
             >
               <XCircleIcon className="w-5 h-5 mr-2" />
               Cancel Order

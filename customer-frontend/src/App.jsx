@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Loading from './components/Loading';
 import ProtectedRoute from './components/ProtectedRoute';
 import AIChatBot from './components/AIChatBot';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 
 // Context Providers
 import { CartProvider } from './context/CartContext';
@@ -263,6 +264,7 @@ const AppContent = () => {
 
       {/* AI Chatbot Widget - Available on all pages */}
       <AIChatBot />
+      <PWAInstallPrompt />
     </>
   );
 

@@ -23,6 +23,7 @@ import PayoutsPage from './components/pages/PayoutsPage'; // ✅ NEW
 import WithApprovalCheck from './components/WithApprovalCheck'; // ✅ NEW: Approval check wrapper
 // Protected route
 import ProtectedRestaurantOwnerRoute from './routes/ProtectedVendorRoute';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 import './index.css';
 
 function AppRoutes({ toggleModal, toggleLoginModal }) {
@@ -116,6 +117,7 @@ function App() {
             />
           )}
         </AnimatePresence>
+        <PWAInstallPrompt />
       </div>
     </Router>
   );

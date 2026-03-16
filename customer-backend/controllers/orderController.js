@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Order from '../models/Order.js';
 import User from '../models/User.js';
 import Coupon from '../models/Coupon.js';
@@ -59,6 +60,10 @@ export const createOrder = async (req, res) => {
     const random = crypto.randomBytes(3).toString('hex').toUpperCase();
     const orderNumber = `ORD-${date}-${random}`;
 
+    // Only use restaurant if it's a valid ObjectId, otherwise null
+    const restaurantObjectId = restaurant && mongoose.Types.ObjectId.isValid(restaurant) ? restaurant : null;
+    console.log('📦 Restaurant ObjectId (after validation):', restaurantObjectId);
+
     // ✅ FIXED: Create order with STRING customization
     const order = new Order({
       customer: customerId,
@@ -84,7 +89,7 @@ export const createOrder = async (req, res) => {
           customization: customizationStr // ✅ Always STRING
         };
       }),
-      restaurant: restaurant,
+      restaurant: restaurantObjectId,
       restaurantName: restaurantName,
       restaurantImage: restaurantImage || 'placeholder.jpg',
       deliveryAddress: deliveryAddress,

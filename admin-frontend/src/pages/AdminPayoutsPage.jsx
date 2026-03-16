@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { adminAPI } from '../api/adminApi';
 import { Check, X, Building2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-
-const API_BASE_URL = 'http://localhost:5002/api/admin';
 
 const AdminPayoutsPage = () => {
     const [pendingBanks, setPendingBanks] = useState([]);
@@ -33,10 +31,7 @@ const AdminPayoutsPage = () => {
     const fetchPendingBanks = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('adminToken');
-            const res = await axios.get(`${API_BASE_URL}/payouts/bank-accounts/pending`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await adminAPI.get('/payouts/bank-accounts/pending');
             if (res.data.success) {
                 setPendingBanks(res.data.data);
             }
@@ -53,10 +48,9 @@ const AdminPayoutsPage = () => {
 
         try {
             const token = localStorage.getItem('adminToken');
-            await axios.put(
-                `${API_BASE_URL}/payouts/bank-accounts/${id}/status`,
-                { status, rejectionReason: reason },
-                { headers: { Authorization: `Bearer ${token}` } }
+            await adminAPI.put(
+                `/payouts/bank-accounts/${id}/status`,
+                { status, rejectionReason: reason }
             );
             toast.success(`Bank account ${status} successfully`);
             fetchPendingBanks(); // Refresh list
@@ -74,14 +68,14 @@ const AdminPayoutsPage = () => {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Pending Bank Approvals</h1>
+        <div className="space-y-4 sm:space-y-6">
+            <h1 className="text-xl sm:text-2xl font-bold">Pending Bank Approvals</h1>
 
-            {/* ✅ Search Bar */}
-            <div className="mb-6">
+            {/* Search Bar */}
+            <div>
                 <input
                     type="text"
-                    placeholder="Search by restaurant name, bank name, account holder, or owner..."
+                    placeholder="Search by restaurant, bank, account holder..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -95,16 +89,16 @@ const AdminPayoutsPage = () => {
                     {searchTerm ? `No results found for "${searchTerm}"` : 'No pending bank approvals.'}
                 </div>
             ) : (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {filteredBanks.map((bank) => (
-                        <div key={bank._id} className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <div key={bank._id} className="bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-100">
                             <div className="flex items-center gap-2 mb-4 text-gray-700">
-                                <Building2 size={24} />
-                                <h3 className="font-bold text-lg">{bank.bankName}</h3>
+                                <Building2 size={22} />
+                                <h3 className="font-bold text-base sm:text-lg truncate">{bank.bankName}</h3>
                             </div>
 
-                            <div className="space-y-2 mb-6 text-sm text-gray-600">
-                                {/* ✅ Restaurant Details */}
+                            <div className="space-y-2 mb-4 text-sm text-gray-600">
+                                {/* Restaurant Details */}
                                 <div className="border-b pb-2 mb-2">
                                     <p className="font-semibold text-black mb-1">Restaurant Information</p>
                                     <p><span className="font-semibold text-black">Name:</span> {bank.restaurantId?.name || 'N/A'}</p>
@@ -113,11 +107,11 @@ const AdminPayoutsPage = () => {
                                     <p><span className="font-semibold text-black">GST:</span> {bank.restaurantId?.gstNumber || 'N/A'}</p>
                                 </div>
 
-                                {/* ✅ Owner Details */}
+                                {/* Owner Details */}
                                 <div className="border-b pb-2 mb-2">
                                     <p className="font-semibold text-black mb-1">Owner Information</p>
                                     <p><span className="font-semibold text-black">Name:</span> {bank.restaurantId?.owner?.name || 'N/A'}</p>
-                                    <p><span className="font-semibold text-black">Email:</span> {bank.restaurantId?.owner?.email || 'N/A'}</p>
+                                    <p className="break-all"><span className="font-semibold text-black">Email:</span> {bank.restaurantId?.owner?.email || 'N/A'}</p>
                                     <p><span className="font-semibold text-black">Phone:</span> {bank.restaurantId?.owner?.phone || 'N/A'}</p>
                                 </div>
 
@@ -125,23 +119,23 @@ const AdminPayoutsPage = () => {
                                 <div>
                                     <p className="font-semibold text-black mb-1">Bank Account Details</p>
                                     <p><span className="font-semibold text-black">Account Holder:</span> {bank.accountHolderName}</p>
-                                    <p><span className="font-semibold text-black">Account No:</span> {bank.accountNumber}</p>
+                                    <p className="break-all"><span className="font-semibold text-black">Account No:</span> {bank.accountNumber}</p>
                                     <p><span className="font-semibold text-black">IFSC Code:</span> {bank.ifscCode}</p>
                                 </div>
                             </div>
 
-                            <div className="flex gap-3">
+                            <div className="flex gap-2 sm:gap-3">
                                 <button
                                     onClick={() => handleStatusUpdate(bank._id, 'Approved')}
-                                    className="flex-1 bg-green-600 text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-green-700 transition"
+                                    className="flex-1 bg-green-600 text-white py-2 rounded-lg flex items-center justify-center gap-1 sm:gap-2 hover:bg-green-700 transition text-sm"
                                 >
-                                    <Check size={18} /> Approve
+                                    <Check size={16} /> Approve
                                 </button>
                                 <button
                                     onClick={() => handleReject(bank._id)}
-                                    className="flex-1 bg-red-100 text-red-600 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-red-200 transition"
+                                    className="flex-1 bg-red-100 text-red-600 py-2 rounded-lg flex items-center justify-center gap-1 sm:gap-2 hover:bg-red-200 transition text-sm"
                                 >
-                                    <X size={18} /> Reject
+                                    <X size={16} /> Reject
                                 </button>
                             </div>
                         </div>

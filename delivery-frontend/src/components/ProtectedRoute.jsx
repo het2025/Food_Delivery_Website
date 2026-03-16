@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useDelivery } from '../context/DeliveryContext';
+import BottomNav from './BottomNav';
 
 const ProtectedRoute = () => {
   const { isAuthenticated, loading } = useDelivery();
@@ -13,7 +14,14 @@ const ProtectedRoute = () => {
     );
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  return (
+    <>
+      <Outlet />
+      <BottomNav />
+    </>
+  );
 };
 
 export default ProtectedRoute;

@@ -8,71 +8,71 @@ import {
 
 const OrderCard = ({ order, onAccept, onReject, showActions = true }) => {
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md transition hover:shadow-lg">
+    <div className="p-4 bg-white rounded-xl shadow-md transition hover:shadow-lg sm:p-5">
       {/* Header */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex items-center">
-          <div className="flex justify-center items-center w-12 h-12 text-white rounded-full bg-primary">
-            <BuildingStorefrontIcon className="w-6 h-6" />
+      <div className="flex justify-between items-start mb-3 sm:mb-4">
+        <div className="flex items-center min-w-0">
+          <div className="flex flex-shrink-0 justify-center items-center w-10 h-10 text-white rounded-full bg-primary">
+            <BuildingStorefrontIcon className="w-5 h-5" />
           </div>
-          <div className="ml-4">
-            <h3 className="text-lg font-bold text-gray-800">{order.restaurantName}</h3>
-            <p className="text-sm text-gray-600">Order #{order.orderNumber}</p>
+          <div className="ml-3 min-w-0">
+            <h3 className="text-sm font-bold text-gray-800 truncate sm:text-base">{order.restaurantName}</h3>
+            <p className="text-xs text-gray-500">#{order.orderNumber}</p>
           </div>
         </div>
-        <div className="text-right">
-          <p className="text-2xl font-bold text-primary">₹{order.deliveryFee}</p>
-          <p className="text-xs text-gray-600">Delivery Fee</p>
+        <div className="flex-shrink-0 ml-2 text-right">
+          <p className="text-lg font-bold text-primary sm:text-xl">₹{order.deliveryFee}</p>
+          <p className="text-xs text-gray-500">Delivery Fee</p>
         </div>
       </div>
 
       {/* Details */}
-      <div className="mb-4 space-y-3">
+      <div className="mb-3 space-y-2 sm:mb-4">
         {/* Pickup Location */}
         <div className="flex items-start">
-          <MapPinIcon className="h-5 w-5 text-green-600 mr-2 mt-0.5" />
-          <div className="flex-1">
-            <p className="text-sm font-medium text-gray-700">Pickup</p>
-            <p className="text-sm text-gray-600">{order.restaurantLocation?.address}</p>
+          <MapPinIcon className="flex-shrink-0 h-4 w-4 text-green-600 mr-2 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Pickup</p>
+            <p className="text-xs text-gray-700 leading-snug line-clamp-2">{order.restaurantLocation?.address}</p>
           </div>
         </div>
 
         {/* Delivery Location */}
         <div className="flex items-start">
-          <MapPinIcon className="h-5 w-5 text-red-600 mr-2 mt-0.5" />
-          <div className="flex-1">
-            <p className="text-sm font-medium text-gray-700">Delivery</p>
-            <p className="text-sm text-gray-600">
+          <MapPinIcon className="flex-shrink-0 h-4 w-4 text-red-500 mr-2 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Delivery</p>
+            <p className="text-xs text-gray-700 leading-snug line-clamp-2">
               {order.deliveryAddress?.street}, {order.deliveryAddress?.area}
             </p>
           </div>
         </div>
 
         {/* Distance & Amount */}
-        <div className="flex justify-between items-center pt-2 border-t">
-          <div className="flex items-center text-sm text-gray-600">
-            <ClockIcon className="mr-1 w-4 h-4" />
-            {order.distance ? `${order.distance} km` : 'Calculating...'}
+        <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+          <div className="flex items-center gap-1 text-xs text-gray-500">
+            <ClockIcon className="w-3.5 h-3.5" />
+            <span>{order.distance ? `${order.distance} km` : 'Calculating...'}</span>
           </div>
-          <div className="flex items-center text-sm font-medium text-gray-800">
-            <CurrencyRupeeIcon className="w-4 h-4" />
-            {order.orderAmount}
+          <div className="flex items-center text-xs font-semibold text-gray-700">
+            <CurrencyRupeeIcon className="w-3.5 h-3.5" />
+            <span>{order.orderAmount}</span>
           </div>
         </div>
       </div>
 
       {/* Actions */}
       {showActions && (
-        <div className="flex space-x-3">
+        <div className="flex gap-3">
           <button
             onClick={() => onReject(order._id)}
-            className="flex-1 px-4 py-2 font-medium text-red-600 rounded-lg border border-red-600 transition hover:bg-red-50"
+            className="flex-1 min-h-[48px] px-3 text-sm font-semibold text-red-600 rounded-xl border border-red-200 bg-red-50 transition hover:bg-red-100 active:scale-95"
           >
             Reject
           </button>
           <button
             onClick={() => onAccept(order._id)}
-            className="flex-1 px-4 py-2 font-medium text-white bg-green-600 rounded-lg transition hover:bg-green-700"
+            className="flex-1 min-h-[48px] px-3 text-sm font-semibold text-white bg-green-600 rounded-xl transition hover:bg-green-700 active:scale-95"
           >
             Accept
           </button>

@@ -74,14 +74,22 @@ const Analysis = () => {
     const { overview, orderStatus, ordersTrend, paymentSplit, peakHours, topRestaurants, popularDishes, customerRetention } = data;
 
     return (
-        <Box sx={{ p: 3, bgcolor: '#F3F4F6', minHeight: '100vh' }}>
-            <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', color: '#1F2937' }}>
+        <Box sx={{ pb: { xs: 2, sm: 3 } }}>
+            <Typography
+                variant="h4"
+                sx={{
+                    mb: { xs: 2, sm: 3, md: 4 },
+                    fontWeight: 'bold',
+                    color: '#1F2937',
+                    fontSize: { xs: '1.2rem', sm: '1.5rem', md: '2rem' },
+                }}
+            >
                 Analytics Dashboard
             </Typography>
 
             {/* Row 1: Key Metrics (3 cols) */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} md={6} lg={4}>
+            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+                <Grid item xs={12} sm={6} md={6} lg={4}>
                     <KPICard
                         title="Total Revenue"
                         value={`₹${(overview?.totalRevenue || 0).toLocaleString()}`}
@@ -89,7 +97,7 @@ const Analysis = () => {
                         data={overview?.monthlyStats?.revenue}
                     />
                 </Grid>
-                <Grid item xs={12} md={6} lg={4}>
+                <Grid item xs={12} sm={6} md={6} lg={4}>
                     <KPICard
                         title="Total Orders"
                         value={overview?.totalOrders?.toLocaleString()}
@@ -97,7 +105,7 @@ const Analysis = () => {
                         data={overview?.monthlyStats?.orders}
                     />
                 </Grid>
-                <Grid item xs={12} md={6} lg={4}>
+                <Grid item xs={12} sm={6} md={6} lg={4}>
                     <KPICard
                         title="Active Users"
                         value={overview?.totalUsers?.toLocaleString()}
@@ -108,8 +116,8 @@ const Analysis = () => {
             </Grid>
 
             {/* Row 2: Restaurants & Distribution (3 cols) */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} md={4} lg={4}>
+            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+                <Grid item xs={12} sm={6} md={4} lg={4}>
                     <KPICard
                         title="Active Restaurants"
                         value={overview?.totalRestaurants?.toLocaleString()}
@@ -117,17 +125,16 @@ const Analysis = () => {
                         data={overview?.monthlyStats?.restaurants}
                     />
                 </Grid>
-                <Grid item xs={12} md={4} lg={4}>
+                <Grid item xs={12} sm={6} md={4} lg={4}>
                     <PaymentPieChart data={paymentSplit} />
                 </Grid>
-                <Grid item xs={12} md={4} lg={4}>
+                <Grid item xs={12} sm={6} md={4} lg={4}>
                     <StatusDonutChart data={orderStatus} />
                 </Grid>
-
             </Grid>
 
             {/* Row 3: Trends & Leaderboard */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                 <Grid item xs={12} lg={8}>
                     <RevenueAreaChart data={ordersTrend} />
                 </Grid>
@@ -137,7 +144,7 @@ const Analysis = () => {
             </Grid>
 
             {/* Row 4: Popular Dishes & Customer Retention */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                 <Grid item xs={12} lg={8}>
                     <PopularDishesChart data={popularDishes} />
                 </Grid>
@@ -147,7 +154,7 @@ const Analysis = () => {
             </Grid>
 
             {/* Heatmap Row */}
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, sm: 3 }}>
                 <Grid item xs={12}>
                     <ActivityHeatmap data={peakHours} />
                 </Grid>

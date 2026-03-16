@@ -278,10 +278,10 @@ const Home = () => {
 
   if (loading && restaurants.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
         <div className="text-center">
-          <Loader className="w-12 h-12 mx-auto mb-4 text-orange-500 animate-spin" />
-          <p className="text-gray-600">Loading delicious restaurants...</p>
+          <Loader className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-orange-500 animate-spin" />
+          <p className="text-gray-600 text-sm sm:text-base">Loading delicious restaurants...</p>
         </div>
       </div>
     );
@@ -301,12 +301,12 @@ const Home = () => {
       <main>
         {/* Error Message */}
         {error && (
-          <div className="container px-4 py-4 mx-auto">
-            <div className="px-4 py-3 mb-6 text-red-600 border border-red-200 rounded-lg bg-red-50">
-              {error}
+          <div className="container px-3 sm:px-4 py-3 sm:py-4 mx-auto">
+            <div className="px-3 sm:px-4 py-3 mb-4 sm:mb-6 text-red-600 border border-red-200 rounded-lg bg-red-50 text-sm sm:text-base flex flex-wrap items-center gap-2">
+              <span>{error}</span>
               <button
                 onClick={loadRestaurants}
-                className="ml-4 text-red-600 underline hover:text-red-800"
+                className="text-red-600 underline hover:text-red-800"
               >
                 Try Again
               </button>
@@ -319,9 +319,9 @@ const Home = () => {
 
 
         {/* Food Categories Section */}
-        <div className="container px-4 py-8 mx-auto">
+        <div className="container px-3 sm:px-4 py-4 sm:py-8 mx-auto">
           <div className="overflow-x-auto scrollbar-hide">
-            <div className="flex pb-6 space-x-4" style={{ width: 'max-content' }}>
+            <div className="flex pb-4 sm:pb-6 space-x-2 sm:space-x-4" style={{ width: 'max-content' }}>
 
               {/* All Option */}
               <div
@@ -331,12 +331,12 @@ const Home = () => {
                 <img
                   src="https://res.cloudinary.com/dovlhkyrr/image/upload/v1757903263/All_mehgwt.png"
                   alt="All"
-                  className="object-cover w-48 h-40 mx-auto"
+                  className="object-cover w-16 h-14 sm:w-28 sm:h-24 md:w-40 md:h-32 mx-auto"
                   onError={(e) => {
                     e.target.src = 'https://via.placeholder.com/128x128/f59e0b/white?text=All';
                   }}
                 />
-                <p className={`text-sm font-medium mt-3 ${selectedDish === 'All' ? 'text-orange-500' : 'text-gray-700'}`}>
+                <p className={`text-xs sm:text-sm font-medium mt-1 sm:mt-3 ${selectedDish === 'All' ? 'text-orange-500' : 'text-gray-700'}`}>
                   All
                 </p>
               </div>
@@ -355,12 +355,12 @@ const Home = () => {
                   <img
                     src={dish.image}
                     alt={dish.name}
-                    className="object-cover w-48 h-40 mx-auto"
+                    className="object-cover w-16 h-14 sm:w-28 sm:h-24 md:w-40 md:h-32 mx-auto"
                     onError={(e) => {
                       e.target.src = `https://via.placeholder.com/128x128/f59e0b/white?text=${dish.name.charAt(0)}`;
                     }}
                   />
-                  <p className={`text-sm font-medium mt-3 max-w-[8rem] mx-auto leading-tight ${selectedDish === dish.name ? 'text-orange-500' : 'text-gray-700'}`}>
+                  <p className={`text-xs sm:text-sm font-medium mt-1 sm:mt-3 max-w-[4rem] sm:max-w-[8rem] mx-auto leading-tight ${selectedDish === dish.name ? 'text-orange-500' : 'text-gray-700'}`}>
                     {dish.name}
                   </p>
                 </motion.div>
@@ -371,13 +371,13 @@ const Home = () => {
 
 
         {/* Restaurants Grid - Fixed Height Cards */}
-        <div className="container px-4 py-8 mx-auto">
+        <div className="container px-3 sm:px-4 py-4 sm:py-8 mx-auto">
           {loading ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="overflow-hidden bg-white shadow-md rounded-3xl animate-pulse">
-                  <div className="h-48 bg-gray-200"></div>
-                  <div className="p-5 space-y-3">
+                  <div className="h-40 sm:h-48 bg-gray-200"></div>
+                  <div className="p-4 sm:p-5 space-y-3">
                     <div className="h-5 bg-gray-200 rounded"></div>
                     <div className="w-3/4 h-4 bg-gray-200 rounded"></div>
                     <div className="flex gap-2">
@@ -389,14 +389,14 @@ const Home = () => {
               ))}
             </div>
           ) : restaurants.length === 0 ? (
-            <div className="py-12 text-center">
-              <h3 className="mb-2 text-xl font-semibold text-gray-700">
+            <div className="py-10 sm:py-12 text-center px-4">
+              <h3 className="mb-2 text-lg sm:text-xl font-semibold text-gray-700">
                 {selectedDish === 'All' ? 'No restaurants found' : `No restaurants found serving ${selectedDish}`}
               </h3>
-              <p className="text-gray-500">Try selecting a different dish or search option.</p>
+              <p className="text-gray-500 text-sm sm:text-base">Try selecting a different dish or search option.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {restaurants.map((restaurant, index) => (
                 <RestaurantCard restaurant={restaurant} index={index} key={restaurant._id} />
               ))}
@@ -406,12 +406,12 @@ const Home = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center mt-12">
-              <div className="flex space-x-2">
+            <div className="flex justify-center mt-8 sm:mt-12 px-2">
+              <div className="flex flex-wrap justify-center gap-2">
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-5 py-2.5 bg-white rounded-xl border-2 border-gray-200 font-semibold text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:border-orange-500 hover:text-orange-600 transition-all duration-200"
+                  className="px-3 sm:px-5 py-2 sm:py-2.5 bg-white rounded-xl border-2 border-gray-200 font-semibold text-xs sm:text-sm text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:border-orange-500 hover:text-orange-600 transition-all duration-200 min-h-[40px]"
                 >
                   Previous
                 </button>
@@ -422,7 +422,7 @@ const Home = () => {
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 ${currentPage === page
+                      className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-semibold transition-all duration-200 text-xs sm:text-sm min-h-[40px] min-w-[40px] ${currentPage === page
                           ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg scale-105'
                           : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-orange-500 hover:text-orange-600'
                         }`}
@@ -435,7 +435,7 @@ const Home = () => {
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-5 py-2.5 bg-white rounded-xl border-2 border-gray-200 font-semibold text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:border-orange-500 hover:text-orange-600 transition-all duration-200"
+                  className="px-3 sm:px-5 py-2 sm:py-2.5 bg-white rounded-xl border-2 border-gray-200 font-semibold text-xs sm:text-sm text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:border-orange-500 hover:text-orange-600 transition-all duration-200 min-h-[40px]"
                 >
                   Next
                 </button>
@@ -446,18 +446,18 @@ const Home = () => {
 
 
         {/* Call to Action */}
-        <div className="py-16 text-white bg-gradient-to-r from-orange-500 to-red-500">
+        <div className="py-10 sm:py-16 text-white bg-gradient-to-r from-orange-500 to-red-500">
           <div className="container px-4 mx-auto text-center">
-            <h2 className="mb-4 text-3xl font-bold">Ready to Order?</h2>
-            <p className="mb-8 text-xl opacity-90">
+            <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl font-bold">Ready to Order?</h2>
+            <p className="mb-6 sm:mb-8 text-base sm:text-xl opacity-90">
               Choose from 100+ restaurants in your area
             </p>
             <Link
               to="/restaurants"
-              className="inline-flex items-center gap-2 px-8 py-3 font-semibold text-orange-600 transition-all duration-200 bg-white rounded-full shadow-lg hover:bg-gray-100 hover:scale-105"
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 font-semibold text-orange-600 transition-all duration-200 bg-white rounded-full shadow-lg hover:bg-gray-100 hover:scale-105 text-sm sm:text-base"
             >
               Browse All Restaurants
-              <Plus className="w-5 h-5" />
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             </Link>
           </div>
         </div>

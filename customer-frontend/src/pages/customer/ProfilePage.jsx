@@ -26,7 +26,7 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 
 const ProfilePage = () => {
@@ -159,39 +159,39 @@ const ProfilePage = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-8 mb-8 text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl"
+            className="p-4 sm:p-8 mb-6 sm:mb-8 text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl"
           >
-            <div className="flex flex-col gap-6 items-center md:flex-row">
-              <div className="relative">
-                <div className="flex justify-center items-center w-24 h-24 rounded-full backdrop-blur-sm bg-white/20">
-                  <User className="w-12 h-12 text-white" />
+            <div className="flex flex-col gap-4 sm:gap-6 items-center md:flex-row">
+              <div className="relative flex-shrink-0">
+                <div className="flex justify-center items-center w-20 h-20 sm:w-24 sm:h-24 rounded-full backdrop-blur-sm bg-white/20">
+                  <User className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
                 </div>
-                <div className="flex absolute right-0 bottom-0 justify-center items-center w-8 h-8 bg-green-500 rounded-full border-4 border-white">
+                <div className="flex absolute right-0 bottom-0 justify-center items-center w-7 h-7 sm:w-8 sm:h-8 bg-green-500 rounded-full border-4 border-white">
                   <div className="w-2 h-2 bg-white rounded-full"></div>
                 </div>
               </div>
 
-              <div className="flex-1 text-center md:text-left">
-                <h1 className="mb-2 text-3xl font-bold">{profileData.name}</h1>
-                <p className="mb-2 text-orange-100">{profileData.email}</p>
-                <div className="flex gap-2 justify-center items-center text-orange-100 md:justify-start">
-                  <Calendar className="w-4 h-4" />
+              <div className="flex-1 text-center md:text-left min-w-0">
+                <h1 className="mb-1 sm:mb-2 text-xl sm:text-3xl font-bold truncate">{profileData.name}</h1>
+                <p className="mb-1 sm:mb-2 text-orange-100 text-sm sm:text-base truncate">{profileData.email}</p>
+                <div className="flex gap-1 sm:gap-2 justify-center items-center text-orange-100 md:justify-start text-xs sm:text-sm">
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                   <span>Member since {new Date(profileData.joinDate).toLocaleDateString()}</span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-6 text-center">
+              <div className="grid grid-cols-3 gap-3 sm:gap-6 text-center w-full md:w-auto">
                 <div>
-                  <div className="text-2xl font-bold">{totalOrders}</div>
-                  <div className="text-sm text-orange-100">Orders</div>
+                  <div className="text-xl sm:text-2xl font-bold">{totalOrders}</div>
+                  <div className="text-xs sm:text-sm text-orange-100">Orders</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">★ {calculateAverageRating()}</div>
-                  <div className="text-sm text-orange-100">Rating</div>
+                  <div className="text-xl sm:text-2xl font-bold">★ {calculateAverageRating()}</div>
+                  <div className="text-xs sm:text-sm text-orange-100">Rating</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">{totalOrders * 10}</div>
-                  <div className="text-sm text-orange-100">Points</div>
+                  <div className="text-xl sm:text-2xl font-bold">{totalOrders * 10}</div>
+                  <div className="text-xs sm:text-sm text-orange-100">Points</div>
                 </div>
               </div>
             </div>
@@ -206,7 +206,7 @@ const ProfilePage = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="p-6 mb-6 bg-white rounded-2xl shadow-lg"
+                className="p-4 sm:p-6 mb-4 sm:mb-6 bg-white rounded-2xl shadow-lg"
               >
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-bold text-gray-800">Profile Information</h2>
@@ -303,7 +303,7 @@ const ProfilePage = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
-                className="p-6 bg-white rounded-2xl shadow-lg"
+                className="p-4 sm:p-6 bg-white rounded-2xl shadow-lg"
               >
                 <h3 className="mb-4 text-lg font-bold text-gray-800">Quick Actions</h3>
                 <div className="space-y-3">
@@ -346,7 +346,7 @@ const ProfilePage = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="p-6 bg-white rounded-2xl shadow-lg"
+                className="p-4 sm:p-6 bg-white rounded-2xl shadow-lg"
               >
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-bold text-gray-800">Recent Orders</h2>
@@ -375,25 +375,24 @@ const ProfilePage = () => {
                         transition={{ delay: 0.1 * index }}
                         className="p-4 rounded-lg border border-gray-200 transition-shadow hover:shadow-md"
                       >
-                        <div className="flex justify-between items-center mb-3">
-                          <div className="flex gap-3 items-center">
-                            <div className="flex justify-center items-center w-12 h-12 bg-gradient-to-br from-orange-100 to-red-100 rounded-lg">
-                              <Store className="w-6 h-6 text-orange-600" />
+                        <div className="flex justify-between items-start mb-3 gap-2">
+                          <div className="flex gap-2 sm:gap-3 items-center flex-1 min-w-0">
+                            <div className="flex justify-center items-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-100 to-red-100 rounded-lg flex-shrink-0">
+                              <Store className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
                             </div>
-                            <div>
-                              <h3 className="font-semibold text-gray-800">{order.restaurantName}</h3>
-                              <p className="text-sm text-gray-600">Order #{order.orderId}</p>
+                            <div className="min-w-0">
+                              <h3 className="font-semibold text-gray-800 text-sm sm:text-base truncate">{order.restaurantName}</h3>
+                              <p className="text-xs sm:text-sm text-gray-600">Order #{order.orderId}</p>
                             </div>
                           </div>
-                          <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(order.status)}`}>
+                          <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold flex-shrink-0 ${getStatusColor(order.status)}`}>
                             {getStatusIcon(order.status)}
-                            {order.status}
+                            <span>{order.status}</span>
                           </div>
                         </div>
 
-
-                        <div className="flex justify-between items-center text-sm text-gray-600">
-                          <div className="flex gap-4 items-center">
+                        <div className="flex flex-wrap justify-between items-center text-xs sm:text-sm text-gray-600 gap-y-1">
+                          <div className="flex flex-wrap gap-2 sm:gap-4 items-center">
                             <span>{order.items?.length || 0} items</span>
                             <span className="font-semibold text-gray-800">₹{order.total}</span>
                             <span>{new Date(order.orderTime).toLocaleDateString('en-IN', {
@@ -404,7 +403,7 @@ const ProfilePage = () => {
                           </div>
                           {order.rating && (
                             <div className="flex gap-1 items-center">
-                              <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                              <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 fill-current" />
                               <span className="font-semibold">{order.rating}</span>
                             </div>
                           )}

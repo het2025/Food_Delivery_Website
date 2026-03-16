@@ -11,7 +11,7 @@ const ReviewList = ({ restaurantId }) => {
     const fetchReviews = async (pageNum) => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:5000/api/reviews/restaurant/${restaurantId}?pageNumber=${pageNum}`);
+            const response = await fetch(`/api/reviews/restaurant/${restaurantId}?pageNumber=${pageNum}`);
             const data = await response.json();
 
             if (pageNum === 1) {

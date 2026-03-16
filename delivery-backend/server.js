@@ -23,9 +23,9 @@ const httpServer = createServer(app);
 // Setup Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: [
-      'http://localhost:5176', // Delivery frontend
-      'http://localhost:5177', // Delivery frontend (alternative port)
+    origin: process.env.NODE_ENV === 'development' ? true : [
+      'http://localhost:5176',
+      'http://localhost:5177',
       'http://localhost:3000',
       process.env.FRONTEND_URL
     ].filter(Boolean),
@@ -44,9 +44,9 @@ connectDB();
 
 // CORS Configuration
 const corsOptions = {
-  origin: [
-    'http://localhost:5176', // Delivery frontend
-    'http://localhost:5177', // Delivery frontend (alternative port)
+  origin: process.env.NODE_ENV === 'development' ? true : [
+    'http://localhost:5176',
+    'http://localhost:5177',
     'http://localhost:3000',
     'http://localhost:5173',
     process.env.FRONTEND_URL

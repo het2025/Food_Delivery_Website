@@ -12,14 +12,14 @@ import {
 
 const StatCard = ({ title, value, icon: Icon, color, link }) => (
   <Link to={link} className="block">
-    <div className="p-6 transition bg-white rounded-lg shadow hover:shadow-lg">
+    <div className="p-3 transition bg-white rounded-lg shadow sm:p-4 md:p-6 hover:shadow-lg">
       <div className="flex items-center justify-between">
-        <div>
-          <p className="mb-1 text-sm text-gray-600">{title}</p>
-          <p className="text-3xl font-bold text-gray-800">{value}</p>
+        <div className="flex-1 min-w-0 pr-2">
+          <p className="mb-1 text-xs text-gray-600 truncate sm:text-sm">{title}</p>
+          <p className="text-lg font-bold text-gray-800 truncate sm:text-2xl md:text-3xl">{value}</p>
         </div>
-        <div className={`p-3 rounded-full ${color}`}>
-          <Icon className="w-8 h-8 text-white" />
+        <div className={`p-2 sm:p-3 rounded-full flex-shrink-0 ${color}`}>
+          <Icon className="w-5 h-5 text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
         </div>
       </div>
     </div>
@@ -84,17 +84,17 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Welcome Section */}
-      <div className="p-6 text-white rounded-lg bg-gradient-to-r from-primary to-secondary">
-        <h1 className="mb-2 text-3xl font-bold">Welcome Back, Admin! 👋</h1>
-        <p className="text-white text-opacity-90">
+      <div className="p-4 text-white rounded-lg sm:p-6 bg-gradient-to-r from-primary to-secondary">
+        <h1 className="mb-1 text-lg font-bold sm:mb-2 sm:text-2xl md:text-3xl">Welcome Back, Admin! 👋</h1>
+        <p className="text-xs text-white sm:text-sm md:text-base text-opacity-90">
           Here's what's happening with your platform today
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:grid-cols-4">
         <StatCard
           title="Total Users"
           value={stats?.overview?.totalUsers || 0}
@@ -148,7 +148,7 @@ const Dashboard = () => {
 
       {/* Recent Orders */}
       <div className="overflow-hidden bg-white rounded-lg shadow">
-        <div className="p-6 border-b">
+        <div className="p-4 border-b sm:p-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-800">Recent Orders</h3>
             <Link to="/orders" className="text-sm font-medium text-primary hover:text-opacity-80">
@@ -156,7 +156,32 @@ const Dashboard = () => {
             </Link>
           </div>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Mobile Card View */}
+        <div className="divide-y divide-gray-200 sm:hidden">
+          {stats?.recentOrders?.slice(0, 10).map((order) => (
+            <div key={order.id} className="p-4 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-900">{order.orderNumber}</span>
+                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                  order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
+                  order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                  order.status === 'Preparing' ? 'bg-yellow-100 text-yellow-800' :
+                  'bg-blue-100 text-blue-800'
+                }`}>{order.status}</span>
+              </div>
+              <p className="text-sm text-gray-600">{order.restaurantName}</p>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500">{order.customerName}</span>
+                <span className="text-sm font-medium text-gray-900">₹{order.total}</span>
+              </div>
+              <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleString()}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="hidden overflow-x-auto sm:block">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -204,10 +229,10 @@ const Dashboard = () => {
 
       {/* Recent Activity */}
       <div className="bg-white rounded-lg shadow">
-        <div className="p-6 border-b">
+        <div className="p-4 border-b sm:p-6">
           <h3 className="text-lg font-semibold text-gray-800">Recent Activity</h3>
         </div>
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="flow-root">
             <ul className="-mb-8">
               {activity.slice(0, 10).map((item, index) => (
@@ -222,11 +247,11 @@ const Dashboard = () => {
                           <ClockIcon className="w-5 h-5 text-white" />
                         </span>
                       </div>
-                      <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                      <div className="min-w-0 flex-1 pt-1.5 flex flex-col sm:flex-row sm:justify-between sm:space-x-4 gap-1">
                         <div>
                           <p className="text-sm text-gray-800">{item.description}</p>
                         </div>
-                        <div className="text-sm text-right text-gray-500 whitespace-nowrap">
+                        <div className="text-xs text-gray-500 sm:text-sm whitespace-nowrap">
                           <time>{new Date(item.timestamp).toLocaleString()}</time>
                         </div>
                       </div>

@@ -253,7 +253,7 @@ const AIChatBot = () => {
                 instructions: 'Order placed via QuickBites AI chat'
             };
 
-            const response = await fetch('http://localhost:5000/api/orders', {
+            const response = await fetch('/api/orders', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -336,7 +336,7 @@ const AIChatBot = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/ai/chat', {
+            const response = await fetch('/api/ai/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -574,7 +574,7 @@ const AIChatBot = () => {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+        <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end pointer-events-none">
             {/* Chat Window */}
             <AnimatePresence>
                 {isOpen && (
@@ -582,7 +582,7 @@ const AIChatBot = () => {
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="w-[90vw] sm:w-[380px] h-[580px] bg-white rounded-2xl shadow-2xl mb-4 overflow-hidden flex flex-col pointer-events-auto"
+        className="w-[92vw] sm:w-[380px] h-[calc(100vh-120px)] max-h-[580px] bg-white rounded-2xl shadow-2xl mb-4 overflow-hidden flex flex-col pointer-events-auto"
                     >
                         {/* Header */}
                         <div className="bg-gradient-to-r from-orange-500 to-red-600 p-4 pt-5 pb-5 text-white flex justify-between items-center shadow-md">

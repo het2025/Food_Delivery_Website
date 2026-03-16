@@ -18,13 +18,15 @@ const server = http.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5175', // Admin Frontend
-      'http://localhost:3174'
-    ],
+    origin: process.env.NODE_ENV === 'development'
+      ? true  // Allow all origins in development (needed for mobile/LAN access)
+      : [
+          'http://localhost:3000',
+          'http://localhost:5173',
+          'http://localhost:5174',
+          'http://localhost:5175',
+          'http://localhost:3174'
+        ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
   }
@@ -52,13 +54,15 @@ app.use((req, res, next) => {
 
 // CORS
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:5175', // Admin Frontend
-    'http://localhost:3174'
-  ],
+  origin: process.env.NODE_ENV === 'development'
+    ? true  // Allow all origins in development (needed for mobile/LAN access)
+    : [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:5175',
+        'http://localhost:3174'
+      ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']

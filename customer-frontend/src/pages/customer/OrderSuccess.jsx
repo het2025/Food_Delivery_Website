@@ -54,7 +54,7 @@ const OrderSuccess = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <div className="flex justify-center items-center pt-20">
+        <div className="flex justify-center items-center pt-20 px-4">
           <div className="text-center">
             <p className="mb-4 text-gray-600">No order information found</p>
             <button
@@ -101,60 +101,60 @@ const OrderSuccess = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <div className="pt-20 pb-16">
-        <div className="px-4 mx-auto max-w-2xl sm:px-6 lg:px-8">
+      <div className="pt-16 sm:pt-20 pb-8 sm:pb-16">
+        <div className="px-3 mx-auto max-w-2xl sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="p-8 text-center bg-white rounded-2xl shadow-lg"
+            className="p-4 sm:p-8 text-center bg-white rounded-2xl shadow-lg"
           >
             {/* Success Icon */}
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring' }}
-              className="flex justify-center items-center mx-auto mb-6 w-24 h-24 bg-green-100 rounded-full"
+              className="flex justify-center items-center mx-auto mb-4 sm:mb-6 w-20 h-20 sm:w-24 sm:h-24 bg-green-100 rounded-full"
             >
-              <CheckCircle className="w-16 h-16 text-green-500" />
+              <CheckCircle className="w-12 h-12 sm:w-16 sm:h-16 text-green-500" />
             </motion.div>
 
             {/* Success Message */}
-            <h1 className="mb-2 text-3xl font-bold text-gray-800">
+            <h1 className="mb-1 sm:mb-2 text-xl sm:text-3xl font-bold text-gray-800">
               Order Placed Successfully! 🎉
             </h1>
-            <p className="mb-8 text-gray-600">
+            <p className="mb-4 sm:mb-8 text-sm sm:text-base text-gray-600">
               Thank you for your order. We're preparing your delicious food!
             </p>
 
             {/* Order Details */}
-            <div className="p-6 mb-6 text-left bg-gray-50 rounded-lg">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-600">Order Number</span>
-                  <span className="text-lg font-bold text-orange-500">
+            <div className="p-3 sm:p-6 mb-4 sm:mb-6 text-left bg-gray-50 rounded-lg">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex justify-between items-start gap-2">
+                  <span className="font-medium text-gray-600 text-sm sm:text-base shrink-0">Order Number</span>
+                  <span className="text-base sm:text-lg font-bold text-orange-500 text-right break-all">
                     #{orderNumber}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-600">Total Amount</span>
-                  <span className="text-lg font-bold text-gray-800">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="font-medium text-gray-600 text-sm sm:text-base shrink-0">Total Amount</span>
+                  <span className="text-base sm:text-lg font-bold text-gray-800">
                     ₹{Number(total).toFixed(2)}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-600">Payment Method</span>
-                  <span className="font-semibold text-gray-800 capitalize">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="font-medium text-gray-600 text-sm sm:text-base shrink-0">Payment Method</span>
+                  <span className="font-semibold text-gray-800 capitalize text-sm sm:text-base text-right">
                     {paymentMethod}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-600">
+                <div className="flex justify-between items-start gap-2">
+                  <span className="font-medium text-gray-600 text-sm sm:text-base shrink-0">
                     {orderData.isScheduled ? 'Scheduled For' : 'Estimated Delivery'}
                   </span>
-                  <span className="font-semibold text-gray-800">
+                  <span className="font-semibold text-gray-800 text-sm sm:text-base text-right">
                     {orderData.isScheduled && orderData.scheduledFor
                       ? new Date(orderData.scheduledFor).toLocaleString('en-IN', {
                         weekday: 'short',
@@ -176,15 +176,15 @@ const OrderSuccess = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row">
               <button
                 onClick={() => {
                   // Navigate directly to tracking page
                   navigate(`/track-order/${orderId}`)
                 }}
-                className="flex flex-1 gap-2 justify-center items-center px-6 py-3 font-semibold text-white bg-orange-500 rounded-lg transition-colors hover:bg-orange-600"
+                className="flex flex-1 gap-2 justify-center items-center px-4 sm:px-6 py-3 font-semibold text-white bg-orange-500 rounded-lg transition-colors hover:bg-orange-600 text-sm sm:text-base"
               >
-                <Package className="w-5 h-5" />
+                <Package className="w-5 h-5 shrink-0" />
                 Track Order
               </button>
 
@@ -193,15 +193,15 @@ const OrderSuccess = () => {
                   localStorage.removeItem('lastOrder')
                   navigate('/home')
                 }}
-                className="flex-1 px-6 py-3 font-semibold text-gray-700 bg-gray-200 rounded-lg transition-colors hover:bg-gray-300"
+                className="flex-1 px-4 sm:px-6 py-3 font-semibold text-gray-700 bg-gray-200 rounded-lg transition-colors hover:bg-gray-300 text-sm sm:text-base"
               >
                 Continue Shopping
               </button>
             </div>
 
             {/* Info */}
-            <div className="pt-6 mt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-500">
+            <div className="pt-4 sm:pt-6 mt-4 sm:mt-6 border-t border-gray-200">
+              <p className="text-xs sm:text-sm text-gray-500">
                 📧 Order confirmation has been sent to your email
               </p>
             </div>

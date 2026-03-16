@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5003';
+const SOCKET_URL = `http://${window.location.hostname}:5003`;
 
 let socket = null;
 

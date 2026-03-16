@@ -45,7 +45,7 @@ const ReviewForm = ({ restaurantId, orderId, onReviewSubmitted }) => {
             // Get token from localStorage (assuming auth is implemented)
             const token = localStorage.getItem('token');
 
-            const response = await fetch('http://localhost:5000/api/reviews', {
+            const response = await fetch('/api/reviews', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -17,6 +17,7 @@ import Analysis from './pages/Analysis'; // ✅ NEW: Analytics
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           {/* 404 Route */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
+        <PWAInstallPrompt />
       </AdminProvider>
     </Router>
   );

@@ -87,47 +87,47 @@ const Settings = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
-      <div className="pt-20 pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
+      <div className="pt-16 sm:pt-20 pb-20 sm:pb-16">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8">
+
           {/* Header */}
-          <div className="flex items-center mb-8">
+          <div className="flex items-center gap-2 mb-6 sm:mb-8 flex-wrap">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center text-gray-600 hover:text-gray-800 mr-4"
+              className="flex items-center text-gray-600 hover:text-gray-800 min-h-[44px] px-1"
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back
+              <ArrowLeft className="w-5 h-5 mr-1" />
+              <span className="text-sm sm:text-base">Back</span>
             </button>
-            <h1 className="text-3xl font-bold text-gray-800">Settings</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Settings</h1>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-5 sm:space-y-8">
             {settingsGroups.map((group, groupIndex) => (
               <motion.div
                 key={group.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: groupIndex * 0.1 }}
-                className="bg-white rounded-2xl shadow-lg p-6"
+                className="bg-white rounded-2xl shadow-lg p-4 sm:p-6"
               >
-                <div className="flex items-center gap-3 mb-6">
-                  <group.icon className="w-6 h-6 text-orange-500" />
-                  <h2 className="text-xl font-bold text-gray-800">{group.title}</h2>
+                <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                  <group.icon className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 flex-shrink-0" />
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-800">{group.title}</h2>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-1 sm:space-y-2">
                   {group.items.map((item) => (
-                    <div key={item.key} className="flex items-center justify-between py-3">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-800">{item.label}</h3>
-                        <p className="text-sm text-gray-600">{item.description}</p>
+                    <div key={item.key} className="flex items-center justify-between py-3 border-b border-gray-50 last:border-0">
+                      <div className="flex-1 min-w-0 pr-3">
+                        <h3 className="font-semibold text-gray-800 text-sm sm:text-base leading-tight">{item.label}</h3>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-0.5 leading-snug">{item.description}</p>
                       </div>
-                      
-                      <div className="ml-4">
+
+                      <div className="flex-shrink-0">
                         {item.type === 'select' ? (
-                          <select className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                          <select className="border border-gray-300 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 max-w-[110px] sm:max-w-none bg-white">
                             {item.key === 'language' && (
                               <>
                                 <option>English</option>
@@ -151,16 +151,16 @@ const Settings = () => {
                         ) : (
                           <button
                             onClick={() => handleToggle(group.title.toLowerCase(), item.key)}
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                              settings[group.title.toLowerCase()]?.[item.key] 
-                                ? 'bg-orange-500' 
+                            className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors flex-shrink-0 ${
+                              settings[group.title.toLowerCase()]?.[item.key]
+                                ? 'bg-orange-500'
                                 : 'bg-gray-300'
                             }`}
                           >
                             <span
-                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                settings[group.title.toLowerCase()]?.[item.key] 
-                                  ? 'translate-x-6' 
+                              className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow-sm ${
+                                settings[group.title.toLowerCase()]?.[item.key]
+                                  ? 'translate-x-6'
                                   : 'translate-x-1'
                               }`}
                             />
@@ -178,44 +178,44 @@ const Settings = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="bg-white rounded-2xl shadow-lg p-6"
+              className="bg-white rounded-2xl shadow-lg p-4 sm:p-6"
             >
-              <h2 className="text-xl font-bold text-gray-800 mb-6">Account</h2>
-              
-              <div className="space-y-4">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">Account</h2>
+
+              <div className="space-y-1">
                 <button
                   onClick={() => navigate('/profile')}
-                  className="w-full flex items-center justify-between py-3 text-left hover:bg-gray-50 rounded-lg px-3 transition-colors"
+                  className="w-full flex items-center justify-between min-h-[52px] text-left hover:bg-gray-50 rounded-xl px-3 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <User className="w-5 h-5 text-gray-400" />
-                    <span className="font-semibold text-gray-800">Edit Profile</span>
+                    <User className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800 text-sm sm:text-base">Edit Profile</span>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                  <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
                 </button>
 
                 <button
                   onClick={() => navigate('/payment-methods')}
-                  className="w-full flex items-center justify-between py-3 text-left hover:bg-gray-50 rounded-lg px-3 transition-colors"
+                  className="w-full flex items-center justify-between min-h-[52px] text-left hover:bg-gray-50 rounded-xl px-3 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <CreditCard className="w-5 h-5 text-gray-400" />
-                    <span className="font-semibold text-gray-800">Payment Methods</span>
+                    <CreditCard className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800 text-sm sm:text-base">Payment Methods</span>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                  <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 py-3 text-left hover:bg-red-50 rounded-lg px-3 transition-colors text-red-600"
+                  className="w-full flex items-center gap-3 min-h-[52px] text-left hover:bg-red-50 rounded-xl px-3 transition-colors text-red-600"
                 >
-                  <LogOut className="w-5 h-5" />
-                  <span className="font-semibold">Sign Out</span>
+                  <LogOut className="w-5 h-5 flex-shrink-0" />
+                  <span className="font-semibold text-sm sm:text-base">Sign Out</span>
                 </button>
 
-                <button className="w-full flex items-center gap-3 py-3 text-left hover:bg-red-50 rounded-lg px-3 transition-colors text-red-600">
-                  <Trash2 className="w-5 h-5" />
-                  <span className="font-semibold">Delete Account</span>
+                <button className="w-full flex items-center gap-3 min-h-[52px] text-left hover:bg-red-50 rounded-xl px-3 transition-colors text-red-600">
+                  <Trash2 className="w-5 h-5 flex-shrink-0" />
+                  <span className="font-semibold text-sm sm:text-base">Delete Account</span>
                 </button>
               </div>
             </motion.div>

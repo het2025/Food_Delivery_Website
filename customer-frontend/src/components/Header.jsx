@@ -6,19 +6,20 @@ import HelpModal from './HelpModal'
 import { useCart } from '../context/CartContext'
 import { Sparkles } from 'lucide-react'
 import NotificationDropdown from './NotificationDropdown'
-import { 
-  ShoppingCart, 
-  Search, 
-  X, 
-  Menu, 
-  LogOut, 
-  User, 
-  UserCircle, 
-  Heart, 
-  Clock, 
+import {
+  ShoppingCart,
+  Search,
+  X,
+  Menu,
+  LogOut,
+  User,
+  UserCircle,
+  Heart,
+  Clock,
   Settings,
   Home,
-  Store
+  Store,
+  MapPin
 } from 'lucide-react'
 import { useUser } from '../context/UserContext'
 
@@ -397,6 +398,26 @@ const Header = () => {
                   </div>
                 </button>
 
+                {/* Home */}
+                <Link
+                  to="/home"
+                  onClick={toggleMobileMenu}
+                  className="flex gap-3 items-center p-3 w-full text-gray-700 rounded-lg hover:bg-orange-50"
+                >
+                  <Home className="w-5 h-5 text-orange-500" />
+                  <span className="font-medium">Home</span>
+                </Link>
+
+                {/* Restaurants */}
+                <Link
+                  to="/restaurants"
+                  onClick={toggleMobileMenu}
+                  className="flex gap-3 items-center p-3 w-full text-gray-700 rounded-lg hover:bg-orange-50"
+                >
+                  <Store className="w-5 h-5 text-orange-500" />
+                  <span className="font-medium">Restaurants</span>
+                </Link>
+
                 {/* Newly Registered */}
                 <Link
                   to="/newly-registered"
@@ -459,6 +480,24 @@ const Header = () => {
                       >
                         <Clock className="w-5 h-5" />
                         <span>My Orders</span>
+                      </Link>
+
+                      <Link
+                        to="/addresses"
+                        onClick={toggleMobileMenu}
+                        className="flex gap-3 items-center p-3 w-full text-gray-700 rounded-lg hover:bg-gray-100"
+                      >
+                        <MapPin className="w-5 h-5" />
+                        <span>Addresses</span>
+                      </Link>
+
+                      <Link
+                        to="/settings"
+                        onClick={toggleMobileMenu}
+                        className="flex gap-3 items-center p-3 w-full text-gray-700 rounded-lg hover:bg-gray-100"
+                      >
+                        <Settings className="w-5 h-5" />
+                        <span>Settings</span>
                       </Link>
 
                       <button
