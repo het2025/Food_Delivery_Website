@@ -15,6 +15,13 @@ import { useCart } from '../../context/CartContext'
 import { useUser } from '../../context/UserContext'
 import Header from '../../components/Header'
 
+// --- 🍑 WARM PEACH THEME (With Clean White Cards) ---
+// bgMain: '#FFF3E8'
+// borderOrange: '#E85D04'
+// accentAmber: '#F48C06'
+// textDark: '#2C1810'
+// textMuted: '#5C3D2E'
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 const Payment = () => {
@@ -240,63 +247,63 @@ const Payment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FFF3E8] font-['Inter',_sans-serif]">
       <Header />
 
       <div className="pt-16 pb-6 sm:pt-20 sm:pb-8">
         <div className="max-w-4xl px-3 mx-auto sm:px-6 lg:px-8">
           <button
             onClick={() => navigate('/cart')}
-            className="flex items-center mb-4 text-gray-600 transition-colors sm:mb-6 hover:text-gray-800"
+            className="flex items-center mb-4 font-semibold text-[#5C3D2E] hover:text-[#E85D04] transition-colors sm:mb-6"
           >
             <ArrowLeft className="w-5 h-5 mr-2 shrink-0" />
             <span className="text-sm sm:text-base">Back to Cart</span>
           </button>
 
-          <h1 className="mb-4 text-lg font-bold text-gray-800 sm:mb-8 sm:text-3xl">Complete Your Payment</h1>
+          <h1 className="mb-4 text-xl font-extrabold text-[#2C1810] sm:mb-8 sm:text-3xl" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Complete Your Payment</h1>
 
           {/* Error Message */}
           {error && (
-            <div className="px-3 py-3 mb-4 text-red-700 bg-red-100 border border-red-400 rounded-lg sm:px-4 sm:mb-6">
-              <p className="text-sm font-semibold sm:text-base">Error:</p>
-              <p className="text-sm sm:text-base">{error}</p>
+            <div className="px-3 py-3 mb-4 text-[#C1440E] bg-red-50 border border-red-200 rounded-xl sm:px-4 sm:mb-6 shadow-sm">
+              <p className="text-sm font-bold sm:text-base">Error:</p>
+              <p className="text-sm font-medium sm:text-base">{error}</p>
             </div>
           )}
 
           <div className="grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3">
-            {/* Payment Methods */}
-            <div className="lg:col-span-2">
-              <div className="p-4 mb-4 bg-white border border-gray-200 shadow-sm sm:p-6 sm:mb-6 rounded-2xl">
-                <h2 className="mb-4 text-base font-semibold text-gray-800 sm:mb-6 sm:text-xl">Select Payment Method</h2>
+            {/* Payment Methods & Schedule */}
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+              <div className="p-4 bg-white border border-[rgba(44,24,16,0.05)] shadow-[0_8px_30px_rgba(44,24,16,0.04)] sm:p-6 rounded-3xl">
+                <h2 className="mb-4 text-base font-extrabold text-[#2C1810] sm:mb-6 sm:text-xl" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Select Payment Method</h2>
 
                 <div className="space-y-3 sm:space-y-4">
                   {paymentMethods.map((method) => (
                     <motion.div
                       key={method.id}
-                      whileHover={{ scale: 1.02 }}
+                      whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setSelectedPaymentMethod(method.id)}
-                      className={`p-3 sm:p-4 border-2 rounded-xl cursor-pointer transition-all ${selectedPaymentMethod === method.id
-                        ? 'border-orange-500 bg-orange-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                      className={`p-3 sm:p-4 border-2 rounded-2xl cursor-pointer transition-all ${selectedPaymentMethod === method.id
+                        ? 'border-[#E85D04] bg-[#FFF3E8]'
+                        : 'border-[rgba(44,24,16,0.05)] hover:border-[#E85D04]/30'
                         }`}
                     >
                       <div className="flex items-center gap-3 sm:gap-4">
-                        <div className={`p-2 sm:p-3 rounded-lg shrink-0 ${selectedPaymentMethod === method.id
-                          ? 'bg-orange-500 text-white'
-                          : 'bg-gray-100 text-gray-600'
+                        <div className={`p-2.5 sm:p-3 rounded-xl shrink-0 transition-colors ${selectedPaymentMethod === method.id
+                          ? 'bg-[#E85D04] text-white shadow-md'
+                          : 'bg-gray-50 text-[#5C3D2E]'
                           }`}>
                           <method.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-sm font-semibold text-gray-800 sm:text-base">{method.name}</h3>
+                          <div className="flex items-center justify-between gap-2">
+                            <h3 className="text-sm font-bold text-[#2C1810] sm:text-base">{method.name}</h3>
                             {selectedPaymentMethod === method.id && (
-                              <CheckCircle className="w-4 h-4 text-orange-500 sm:w-5 sm:h-5 shrink-0" />
+                              <CheckCircle className="w-4 h-4 text-[#E85D04] sm:w-5 sm:h-5 shrink-0" />
                             )}
                           </div>
-                          <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm text-gray-600">{method.description}</p>
+                          <p className="mt-0.5 sm:mt-1 text-xs font-medium sm:text-sm text-[#5C3D2E]/80">{method.description}</p>
                         </div>
                       </div>
                     </motion.div>
@@ -305,40 +312,38 @@ const Payment = () => {
               </div>
 
               {/* Delivery Address */}
-              {selectedAddress && (
-                <div className="p-4 bg-white border border-gray-200 shadow-sm sm:p-6 rounded-2xl">
+              {selectedAddress ? (
+                <div className="p-4 bg-white border border-[rgba(44,24,16,0.05)] shadow-[0_8px_30px_rgba(44,24,16,0.04)] sm:p-6 rounded-3xl">
                   <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <h2 className="text-base font-semibold text-gray-800 sm:text-xl">Delivery Address</h2>
+                    <h2 className="text-base font-extrabold text-[#2C1810] sm:text-xl" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Delivery Address</h2>
                     <button
                       onClick={() => navigate('/addresses')}
-                      className="text-xs font-semibold text-orange-500 sm:text-sm hover:text-orange-600"
+                      className="text-xs font-bold text-[#E85D04] sm:text-sm hover:text-[#C1440E] transition-colors"
                     >
                       Change
                     </button>
                   </div>
-                  <div className="p-3 rounded-lg sm:p-4 bg-gray-50">
-                    <p className="text-sm font-semibold text-gray-800 capitalize sm:text-base">{selectedAddress.type}</p>
-                    <p className="mt-1 text-sm text-gray-600 sm:mt-2 sm:text-base">
+                  <div className="p-3 rounded-2xl sm:p-4 bg-[#FFF3E8]/50 border border-[rgba(44,24,16,0.05)]">
+                    <p className="text-sm font-bold text-[#2C1810] capitalize sm:text-base">{selectedAddress.type}</p>
+                    <p className="mt-1 text-sm font-medium text-[#5C3D2E] sm:mt-2 sm:text-base">
                       {selectedAddress.street}
                     </p>
-                    <p className="text-sm text-gray-600 sm:text-base">
+                    <p className="text-sm font-medium text-[#5C3D2E] sm:text-base">
                       {selectedAddress.city}, {selectedAddress.state} - {selectedAddress.pincode}
                     </p>
                     {selectedAddress.landmark && (
-                      <p className="mt-1 text-xs text-gray-600 sm:text-sm">
+                      <p className="mt-1 text-xs font-medium text-[#5C3D2E]/80 sm:text-sm">
                         Landmark: {selectedAddress.landmark}
                       </p>
                     )}
                   </div>
                 </div>
-              )}
-
-              {!selectedAddress && (
-                <div className="px-3 py-3 text-yellow-700 bg-yellow-100 border border-yellow-400 rounded-lg sm:px-4">
-                  <p className="text-sm font-semibold sm:text-base">No delivery address selected</p>
+              ) : (
+                <div className="px-4 py-4 text-[#C1440E] bg-[#FFF3E8] border border-[#E85D04]/30 rounded-2xl shadow-sm">
+                  <p className="text-sm font-bold sm:text-base">No delivery address selected</p>
                   <button
                     onClick={() => navigate('/addresses')}
-                    className="mt-2 text-sm font-semibold text-orange-500 sm:text-base hover:text-orange-600"
+                    className="mt-2 text-sm font-bold text-[#E85D04] sm:text-base hover:text-[#C1440E]"
                   >
                     Add Delivery Address →
                   </button>
@@ -348,121 +353,120 @@ const Payment = () => {
 
             {/* Right column: Schedule + Order Summary */}
             <div className="space-y-4 sm:space-y-6">
-              <div className="p-4 bg-white border border-gray-200 shadow-sm sm:p-6 rounded-2xl">
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 bg-orange-100 rounded-lg shrink-0">
-                      <Clock className="w-4 h-4 text-orange-600 sm:w-5 sm:h-5" />
+              <div className="p-4 bg-white border border-[rgba(44,24,16,0.05)] shadow-[0_8px_30px_rgba(44,24,16,0.04)] sm:p-6 rounded-3xl lg:sticky lg:top-24">
+
+                {/* Schedule Delivery */}
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-4">
+                    <div className="p-2 bg-[#FFF3E8] rounded-xl shrink-0">
+                      <Clock className="w-5 h-5 text-[#E85D04]" />
                     </div>
                     <div>
-                      <h2 className="text-base font-bold text-gray-800 sm:text-lg">Schedule Delivery</h2>
-                      <p className="text-xs text-gray-500 sm:text-sm">Choose when you want your food</p>
+                      <h2 className="text-base font-extrabold text-[#2C1810] sm:text-lg" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Schedule Delivery</h2>
+                      <p className="text-xs font-medium text-[#5C3D2E] sm:text-sm">Choose when you want your food</p>
                     </div>
                   </div>
+
+                  <div className="flex p-1 mb-4 bg-gray-50 border border-[rgba(44,24,16,0.05)] sm:mb-6 rounded-xl">
+                    <button
+                      onClick={() => setIsScheduled(false)}
+                      className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 ${!isScheduled
+                        ? 'bg-white text-[#2C1810] shadow-sm'
+                        : 'text-[#5C3D2E] hover:text-[#2C1810]'
+                        }`}
+                    >
+                      Deliver Now
+                    </button>
+                    <button
+                      onClick={() => setIsScheduled(true)}
+                      className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 ${isScheduled
+                        ? 'bg-white text-[#2C1810] shadow-sm'
+                        : 'text-[#5C3D2E] hover:text-[#2C1810]'
+                        }`}
+                    >
+                      Schedule Later
+                    </button>
+                  </div>
+
+                  <motion.div
+                    initial={false}
+                    animate={{ height: isScheduled ? 'auto' : 0, opacity: isScheduled ? 1 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mb-2">
+                      <label className="block mb-2 text-xs font-bold text-[#2C1810] sm:text-sm">
+                        Select Date & Time
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="datetime-local"
+                          min={new Date(Date.now() + 30 * 60000).toISOString().slice(0, 16)}
+                          value={scheduledTime}
+                          onChange={(e) => setScheduledTime(e.target.value)}
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-[#2C1810] bg-[#FFF3E8]/50 border border-[rgba(44,24,16,0.1)] rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#E85D04] transition-colors"
+                        />
+                      </div>
+                      <div className="flex items-start gap-2 mt-2 text-xs font-medium text-[#5C3D2E] sm:mt-3">
+                        <div className="mt-1 min-w-[4px] h-1 bg-[#E85D04] rounded-full shrink-0" />
+                        <p>Please select a time at least 30 mins from now</p>
+                      </div>
+                    </div>
+                  </motion.div>
                 </div>
 
-                <div className="flex p-1 mb-4 bg-gray-100 sm:mb-6 rounded-xl">
-                  <button
-                    onClick={() => setIsScheduled(false)}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${!isScheduled
-                      ? 'bg-white text-gray-800 shadow-sm'
-                      : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                  >
-                    Deliver Now
-                  </button>
-                  <button
-                    onClick={() => setIsScheduled(true)}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${isScheduled
-                      ? 'bg-white text-gray-800 shadow-sm'
-                      : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                  >
-                    Schedule Later
-                  </button>
-                </div>
+                <hr className="border-[rgba(44,24,16,0.05)] mb-6" />
 
-                <motion.div
-                  initial={false}
-                  animate={{ height: isScheduled ? 'auto' : 0, opacity: isScheduled ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className="mb-2">
-                    <label className="block mb-2 text-xs font-semibold text-gray-700 sm:text-sm">
-                      Select Date & Time
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="datetime-local"
-                        min={new Date(Date.now() + 30 * 60000).toISOString().slice(0, 16)}
-                        value={scheduledTime}
-                        onChange={(e) => setScheduledTime(e.target.value)}
-                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-gray-700 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
-                      />
-                    </div>
-                    <div className="flex items-start gap-2 mt-2 text-xs text-gray-500 sm:mt-3">
-                      <div className="mt-0.5 min-w-[4px] h-1 bg-orange-500 rounded-full shrink-0" />
-                      <p>Please select a time at least 30 mins from now</p>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
+                {/* Order Summary */}
+                <h3 className="mb-4 text-base font-extrabold text-[#2C1810] sm:mb-5 sm:text-lg" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Order Summary</h3>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="p-4 bg-white border border-gray-200 shadow-sm sm:p-6 rounded-2xl"
-              >
-                <h3 className="mb-3 text-base font-semibold text-gray-800 sm:mb-4 sm:text-lg">Order Summary</h3>
-
-                <div className="space-y-2 sm:space-y-3">
+                <div className="space-y-3 sm:space-y-3 font-medium text-[#5C3D2E]">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 sm:text-base">Items ({cartItems.length})</span>
-                    <span className="text-sm font-semibold sm:text-base">₹{subtotal}</span>
+                    <span className="text-sm sm:text-base">Items ({cartItems.length})</span>
+                    <span className="text-sm font-bold text-[#2C1810] sm:text-base">₹{subtotal}</span>
                   </div>
 
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 sm:text-base">Taxes & Fees</span>
-                    <span className="text-sm font-semibold sm:text-base">₹{taxes}</span>
+                    <span className="text-sm sm:text-base">Taxes & Fees</span>
+                    <span className="text-sm font-bold text-[#2C1810] sm:text-base">₹{taxes}</span>
                   </div>
 
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 sm:text-base">Delivery Fee</span>
-                    <span className="text-sm font-semibold sm:text-base">
+                    <span className="text-sm sm:text-base">Delivery Fee</span>
+                    <span className="text-sm font-bold text-[#2C1810] sm:text-base">
                       {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
                     </span>
                   </div>
 
                   {deliveryDistance > 0 && (
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-[#5C3D2E]/80">
                       Distance: {deliveryDistance} km • Time: {deliveryTime} mins
                     </div>
                   )}
 
                   {discountAmount > 0 && (
-                    <div className="flex justify-between text-green-600">
+                    <div className="flex justify-between text-green-600 font-bold">
                       <span className="text-sm sm:text-base">Discount</span>
-                      <span className="text-sm font-semibold sm:text-base">-₹{discountAmount}</span>
+                      <span className="text-sm sm:text-base">-₹{discountAmount}</span>
                     </div>
                   )}
 
-                  <hr className="border-gray-200" />
+                  <hr className="border-[rgba(44,24,16,0.05)] my-2" />
 
-                  <div className="flex justify-between text-base font-bold sm:text-lg">
+                  <div className="flex justify-between text-base font-extrabold text-[#2C1810] sm:text-xl">
                     <span>Total</span>
-                    <span>₹{Math.round(total)}</span>
+                    <span className="text-[#E85D04]">₹{Math.round(total)}</span>
                   </div>
                 </div>
 
                 <button
                   onClick={handlePayment}
                   disabled={processing || !selectedAddress}
-                  className="flex gap-2 justify-center items-center py-3.5 sm:py-4 mt-4 sm:mt-6 w-full font-semibold text-sm sm:text-base text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-lg shadow-lg transition-all duration-200 hover:from-orange-600 hover:to-red-600 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex gap-2 justify-center items-center py-3.5 sm:py-4 mt-6 w-full font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#E85D04] to-[#F48C06] rounded-xl shadow-lg transition-transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   {processing ? (
                     <>
-                      <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin shrink-0" />
+                      <Loader className="w-5 h-5 animate-spin shrink-0" />
                       Processing Payment...
                     </>
                   ) : (
@@ -473,22 +477,22 @@ const Payment = () => {
                 </button>
 
                 {selectedPaymentMethod === 'COD' && (
-                  <p className="mt-2 text-xs text-center text-gray-500 sm:mt-3">
+                  <p className="mt-3 text-xs font-medium text-center text-[#5C3D2E]">
                     💵 Cash on Delivery - Pay when your order arrives
                   </p>
                 )}
 
                 {selectedPaymentMethod === 'online' && (
-                  <p className="mt-2 text-xs text-center text-gray-500 sm:mt-3">
+                  <p className="mt-3 text-xs font-medium text-center text-[#5C3D2E]">
                     🔒 Secure payment powered by Razorpay
                   </p>
                 )}
-              </motion.div>
+              </div>
 
               {/* Safety Info */}
-              <div className="p-3 border border-blue-200 rounded-lg sm:p-4 bg-blue-50">
-                <p className="text-xs text-blue-800 sm:text-sm">
-                  <span className="font-semibold">Safe & Secure:</span> Your payment information is encrypted and secure.
+              <div className="p-3 border border-blue-200 rounded-xl sm:p-4 bg-blue-50 shadow-sm">
+                <p className="text-xs text-blue-800 sm:text-sm font-medium">
+                  <span className="font-bold">Safe & Secure:</span> Your payment information is encrypted and secure.
                 </p>
               </div>
             </div>

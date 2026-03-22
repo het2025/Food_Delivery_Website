@@ -6,16 +6,26 @@ import StarIcon from '@mui/icons-material/Star';
 // IMPORTANT: adjust this import to point to your real API/service file
 import { restaurantService } from '../services/api'; // <-- change path if necessary
 
-// Color palette for new dark theme
-const primaryOrange = '#ff8d86';
-const secondaryOrange = '#fd761a';
-const tertiaryOrange = '#ffa765';
-const darkBg = '#0f1930';
-const surfaceContainer = '#141f38';
-const surfaceContainerHigh = '#1a2540';
-const onSurface = '#dee5ff';
-const onSurfaceVariant = '#a3aac4';
-const outlineVariant = '#40485d';
+// --- 🍑 WARM PEACH & DEEP WARM DARK THEME COLORS ---
+const bgMain = '#FFF3E8';          // Section BG (warm peach light)
+const bgCard = '#1C1410';          // Card BG (deep warm dark)
+const borderOrange = '#E85D04';    // Card Border & Quote Mark
+const accentAmber = '#F48C06';     // Top Accent & Stars
+const glowOrange = 'rgba(232, 93, 4, 0.15)';
+const glowOrangeHover = 'rgba(232, 93, 4, 0.25)';
+
+// Typography for Light Background (Main Page)
+const textOnMain = '#2C1810';      // Deep espresso for readability on peach
+const textMutedOnMain = '#5C3D2E'; // Muted brown for subtext on peach
+const outlineLight = 'rgba(44, 24, 16, 0.15)'; // Subtle border for light elements
+
+// Typography for Dark Background (Cards)
+const textOnCardName = '#FFE8D6';  // Name Text (warm cream white)
+const textOnCardReview = '#EDCFB8';// Review Text (soft warm beige)
+const textOnCardRole = '#A07850';  // Role Text (muted warm brown)
+
+// Avatar colors for testimonials
+const avatarColors = ['#E85D04', '#C1440E', '#8B5E3C'];
 
 // Sample data
 const cuisines = [
@@ -26,7 +36,6 @@ const cuisines = [
   { emoji: '🍜', name: 'Thai' },
   { emoji: '🥗', name: 'Healthy' },
   { emoji: '🍦', name: 'Desserts' },
-  { emoji: '🥟', name: 'Dim Sum' },
 ];
 
 const testimonials = [
@@ -60,11 +69,16 @@ export default function Homepage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Refs for scroll navigation
+  // Scroll Tracking State
+  const [activeSection, setActiveSection] = useState('explore');
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
+
+  // Refs for scroll navigation & tracking
   const heroRef = useRef(null);
   const offersRef = useRef(null);
   const restaurantsRef = useRef(null);
   const appRef = useRef(null);
+  const navRefs = useRef({}); // To store nav link elements for slider calculation
 
   // State for copy code button
   const [isCopied, setIsCopied] = useState(false);
@@ -77,6 +91,44 @@ export default function Homepage() {
   const scrollToSection = (ref) => {
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
+  // Setup Intersection Observer for scroll tracking
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-50% 0px -50% 0px', // Triggers when section is halfway in viewport
+      threshold: 0
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    if (heroRef.current) observer.observe(heroRef.current);
+    if (restaurantsRef.current) observer.observe(restaurantsRef.current);
+    if (offersRef.current) observer.observe(offersRef.current);
+    if (appRef.current) observer.observe(appRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Update sliding indicator position
+  useEffect(() => {
+    const activeElement = navRefs.current[activeSection];
+    if (activeElement) {
+      setIndicatorStyle({
+        left: activeElement.offsetLeft,
+        width: activeElement.offsetWidth,
+        opacity: 1
+      });
+    }
+  }, [activeSection]);
 
   // Copy code to clipboard
   const handleCopyCode = async () => {
@@ -106,10 +158,10 @@ export default function Homepage() {
               response.success && response.data
                 ? response.data
                 : response.data
-                ? response.data
-                : Array.isArray(response)
-                ? response
-                : null;
+                  ? response.data
+                  : Array.isArray(response)
+                    ? response
+                    : null;
 
             if (data && Array.isArray(data)) {
               setRestaurants(data);
@@ -144,8 +196,8 @@ export default function Homepage() {
   return (
     <div style={{
       fontFamily: "'Inter', sans-serif",
-      backgroundColor: darkBg,
-      color: onSurface,
+      backgroundColor: bgMain,
+      color: textOnMain,
       minHeight: '100vh',
       overflowX: 'hidden'
     }}>
@@ -165,11 +217,11 @@ export default function Homepage() {
         }
 
         .ignite-gradient {
-          background: linear-gradient(135deg, #ff8d86 0%, #fd761a 100%);
+          background: linear-gradient(135deg, ${borderOrange} 0%, ${accentAmber} 100%);
         }
 
         .ignite-text {
-          background: linear-gradient(135deg, #ff8d86 0%, #fd761a 100%);
+          background: linear-gradient(135deg, ${borderOrange} 0%, ${accentAmber} 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -182,9 +234,9 @@ export default function Homepage() {
         top: 0,
         width: '100%',
         zIndex: 50,
-        backgroundColor: 'rgba(15, 25, 48, 0.6)',
+        backgroundColor: 'rgba(255, 243, 232, 0.85)', // translucent peach
         backdropFilter: 'blur(20px)',
-        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4)'
+        boxShadow: `0 4px 30px rgba(0, 0, 0, 0.05)`
       }}>
         <div style={{
           display: 'flex',
@@ -214,62 +266,54 @@ export default function Homepage() {
             />
             <span>
               <span className="ignite-text">Quick</span>
-              <span style={{ color: onSurface }}>Bite</span>
+              <span style={{ color: textOnMain }}>Bite</span>
             </span>
           </div>
 
           {/* Desktop Navigation */}
-          <div style={{ display: 'none', gap: '32px', alignItems: 'center' }} className="desktop-nav">
-            <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); scrollToSection(heroRef); }}
+          <div style={{ display: 'none', gap: '32px', alignItems: 'center', position: 'relative' }} className="desktop-nav">
+            {/* Sliding Underline Indicator */}
+            <div
               style={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: '14px',
-              fontWeight: 500,
-              color: secondaryOrange,
-              borderBottom: `2px solid ${secondaryOrange}`,
-              paddingBottom: '4px',
-              textDecoration: 'none',
-              transition: 'all 0.2s',
-              cursor: 'pointer'
-            }}>Explore</a>
-            <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); scrollToSection(offersRef); }}
-              style={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: '14px',
-              fontWeight: 500,
-              color: onSurfaceVariant,
-              textDecoration: 'none',
-              transition: 'color 0.2s',
-              cursor: 'pointer'
-            }}>Offers</a>
-            <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); scrollToSection(restaurantsRef); }}
-              style={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: '14px',
-              fontWeight: 500,
-              color: onSurfaceVariant,
-              textDecoration: 'none',
-              transition: 'color 0.2s',
-              cursor: 'pointer'
-            }}>Restaurants</a>
-            <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); scrollToSection(appRef); }}
-              style={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: '14px',
-              fontWeight: 500,
-              color: onSurfaceVariant,
-              textDecoration: 'none',
-              transition: 'color 0.2s',
-              cursor: 'pointer'
-            }}>App</a>
+                position: 'absolute',
+                bottom: '-4px',
+                height: '2px',
+                backgroundColor: accentAmber,
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                left: indicatorStyle.left,
+                width: indicatorStyle.width,
+                opacity: indicatorStyle.opacity,
+              }}
+            />
+
+            {[
+              { id: 'explore', label: 'Explore', ref: heroRef },
+              { id: 'restaurants', label: 'Restaurants', ref: restaurantsRef },
+              { id: 'offers', label: 'Offers', ref: offersRef },
+              { id: 'app', label: 'App', ref: appRef }
+            ].map((item) => (
+              <a
+                key={item.id}
+                ref={(el) => (navRefs.current[item.id] = el)}
+                href={`#${item.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(item.ref);
+                }}
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: activeSection === item.id ? accentAmber : textMutedOnMain,
+                  textDecoration: 'none',
+                  transition: 'color 0.3s',
+                  cursor: 'pointer',
+                  paddingBottom: '4px'
+                }}
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
 
           {/* Auth Buttons */}
@@ -279,8 +323,8 @@ export default function Homepage() {
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontSize: '14px',
-                fontWeight: 500,
-                color: onSurfaceVariant,
+                fontWeight: 600,
+                color: textOnMain,
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
@@ -298,9 +342,10 @@ export default function Homepage() {
                 padding: '10px 24px',
                 borderRadius: '9999px',
                 border: 'none',
-                color: '#000',
+                color: '#fff',
                 cursor: 'pointer',
-                transition: 'all 0.2s'
+                transition: 'all 0.2s',
+                boxShadow: `0 4px 15px ${glowOrange}`
               }}
             >
               Sign Up
@@ -314,7 +359,7 @@ export default function Homepage() {
                 border: 'none',
                 cursor: 'pointer',
                 fontSize: '24px',
-                color: onSurface,
+                color: textOnMain,
                 display: 'none'
               }}
               className="mobile-menu-btn"
@@ -346,26 +391,27 @@ export default function Homepage() {
               right: 0,
               width: '260px',
               height: '100%',
-              background: surfaceContainer,
+              background: bgMain,
               padding: '24px 20px',
               display: 'flex',
               flexDirection: 'column',
               gap: '8px',
+              boxShadow: '-10px 0 30px rgba(0,0,0,0.1)'
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <span style={{ fontWeight: 700, fontSize: '18px', color: onSurface }}>Menu</span>
-              <button onClick={() => setIsMobileNavOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: onSurface }}>✕</button>
+              <span style={{ fontWeight: 700, fontSize: '18px', color: textOnMain }}>Menu</span>
+              <button onClick={() => setIsMobileNavOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: textOnMain }}>✕</button>
             </div>
             {[
-              { label: 'Explore', ref: heroRef },
-              { label: 'Offers', ref: offersRef },
-              { label: 'Restaurants', ref: restaurantsRef },
-              { label: 'App', ref: appRef }
+              { id: 'explore', label: 'Explore', ref: heroRef },
+              { id: 'restaurants', label: 'Restaurants', ref: restaurantsRef },
+              { id: 'offers', label: 'Offers', ref: offersRef },
+              { id: 'app', label: 'App', ref: appRef }
             ].map((item) => (
               <button
-                key={item.label}
+                key={item.id}
                 onClick={() => { setIsMobileNavOpen(false); scrollToSection(item.ref); }}
                 style={{
                   background: 'none',
@@ -373,8 +419,8 @@ export default function Homepage() {
                   textAlign: 'left',
                   padding: '12px 8px',
                   fontSize: '16px',
-                  fontWeight: 500,
-                  color: onSurface,
+                  fontWeight: 600,
+                  color: activeSection === item.id ? accentAmber : textOnMain,
                   cursor: 'pointer',
                   borderRadius: '8px',
                   width: '100%',
@@ -383,14 +429,14 @@ export default function Homepage() {
                 {item.label}
               </button>
             ))}
-            <div style={{ marginTop: 'auto', paddingTop: '24px', borderTop: `1px solid ${outlineVariant}` }}>
+            <div style={{ marginTop: 'auto', paddingTop: '24px', borderTop: `1px solid ${outlineLight}` }}>
               <button
                 onClick={() => { setIsMobileNavOpen(false); handleLoginClick(); }}
                 className="ignite-gradient"
                 style={{
                   width: '100%',
                   padding: '12px 24px',
-                  color: '#000',
+                  color: '#fff',
                   border: 'none',
                   borderRadius: '9999px',
                   fontWeight: 600,
@@ -407,7 +453,7 @@ export default function Homepage() {
 
       <main style={{ paddingTop: '96px', overflowX: 'hidden' }}>
         {/* Hero Section */}
-        <section ref={heroRef} style={{
+        <section id="explore" ref={heroRef} style={{
           position: 'relative',
           minHeight: '600px',
           display: 'flex',
@@ -415,20 +461,20 @@ export default function Homepage() {
           padding: '48px',
           maxWidth: '1400px',
           margin: '0 auto',
-          background: 'radial-gradient(circle at center, rgba(253, 118, 26, 0.15) 0%, transparent 70%)'
+          background: `radial-gradient(circle at center, ${glowOrangeHover} 0%, transparent 70%)`
         }}>
           <div style={{ zIndex: 10, maxWidth: '600px' }}>
             <span style={{
               display: 'inline-block',
               padding: '4px 16px',
               borderRadius: '9999px',
-              backgroundColor: surfaceContainerHigh,
-              color: primaryOrange,
+              backgroundColor: bgCard,
+              color: accentAmber,
               fontSize: '12px',
               fontWeight: 'bold',
               letterSpacing: '0.2em',
               marginBottom: '24px',
-              border: `1px solid ${outlineVariant}`,
+              border: `1px solid ${borderOrange}`,
               textTransform: 'uppercase'
             }}>
               Premium Food Delivery
@@ -439,14 +485,15 @@ export default function Homepage() {
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 800,
               lineHeight: 0.9,
-              marginBottom: '32px'
+              marginBottom: '32px',
+              color: textOnMain
             }}>
-              Cravings <br/>
+              Cravings <br />
               <span className="ignite-text">Delivered Fast</span>
             </h1>
 
             <p style={{
-              color: onSurfaceVariant,
+              color: textMutedOnMain,
               fontSize: '18px',
               maxWidth: '500px',
               marginBottom: '48px',
@@ -462,14 +509,14 @@ export default function Homepage() {
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: surfaceContainer,
+                backgroundColor: '#ffffff',
                 padding: '8px',
                 borderRadius: '9999px',
-                border: `1px solid ${outlineVariant}`,
-                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
+                border: `1px solid ${outlineLight}`,
+                boxShadow: `0 10px 40px ${glowOrange}`
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', flex: 1, padding: '0 24px' }}>
-                  <span className="material-symbols-outlined" style={{ color: primaryOrange, marginRight: '12px' }}>
+                  <span className="material-symbols-outlined" style={{ color: borderOrange, marginRight: '12px' }}>
                     location_on
                   </span>
                   <input
@@ -479,7 +526,7 @@ export default function Homepage() {
                       backgroundColor: 'transparent',
                       border: 'none',
                       outline: 'none',
-                      color: onSurface,
+                      color: textOnMain,
                       width: '100%',
                       fontSize: '16px'
                     }}
@@ -495,9 +542,10 @@ export default function Homepage() {
                     padding: '16px 40px',
                     borderRadius: '9999px',
                     border: 'none',
-                    color: '#000',
+                    color: '#fff',
                     cursor: 'pointer',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s',
+                    boxShadow: `0 4px 15px ${glowOrangeHover}`
                   }}
                 >
                   Find Food
@@ -519,10 +567,10 @@ export default function Homepage() {
               <div style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(135deg, #ff8d86 0%, #fd761a 100%)',
+                background: `linear-gradient(135deg, ${borderOrange} 0%, ${accentAmber} 100%)`,
                 borderRadius: '50%',
                 filter: 'blur(120px)',
-                opacity: 0.2
+                opacity: 0.25
               }}></div>
               <img
                 style={{
@@ -530,8 +578,8 @@ export default function Homepage() {
                   height: '100%',
                   objectFit: 'cover',
                   borderRadius: '50%',
-                  border: `8px solid ${surfaceContainer}`,
-                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)'
+                  border: `8px solid ${bgCard}`,
+                  boxShadow: `0 20px 60px rgba(0, 0, 0, 0.2)`
                 }}
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6YsOLPBQKQ64mNG6Y001vIAsRGm84ZQVr0ImoGa3B7askZTTzv7G0R4b6nfH5JTHfEDODCyyjd_2ZBRwWBit2D9WUQiCTsBglCoxHSJ6Kbl5xYlcjeB_JVXFqjpBg67T8iDiJyMK8xR15mc8SpMEKhlxJY0G81Gkzoj8ubcGU5szilLNhPb9Nm-M4kShaOoqKs0gqJHgeRkMCFUoAKbYKOCzs4HkBpxvtyObK6cXuhk5N_zPBrM_uoQnTI6QsdHrS70kEGv0kqjAi"
                 alt="Gourmet food"
@@ -554,27 +602,28 @@ export default function Homepage() {
               { value: '4.9', label: 'User Rating' }
             ].map((stat, idx) => (
               <div key={idx} style={{
-                backgroundColor: surfaceContainer,
-                border: `1px solid ${outlineVariant}`,
+                backgroundColor: bgCard,
+                border: `1px solid ${borderOrange}`,
+                borderTop: `3px solid ${accentAmber}`,
                 padding: '32px',
                 borderRadius: '24px',
                 textAlign: 'center',
-                transition: 'border-color 0.3s',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
+                transition: 'transform 0.3s',
+                boxShadow: `0 10px 30px ${glowOrange}`
               }}>
                 <div style={{
                   fontSize: '36px',
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   fontWeight: 800,
-                  color: tertiaryOrange,
+                  color: accentAmber,
                   marginBottom: '8px'
                 }}>
                   {stat.value}
                 </div>
                 <div style={{
-                  color: onSurfaceVariant,
+                  color: textOnCardReview,
                   fontSize: '12px',
-                  fontWeight: 500,
+                  fontWeight: 600,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase'
                 }}>
@@ -591,9 +640,10 @@ export default function Homepage() {
             <h2 style={{
               fontSize: '30px',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              color: textOnMain
             }}>
-              Cuisines for <span style={{ color: primaryOrange }}>Every Mood</span>
+              Cuisines for <span style={{ color: borderOrange }}>Every Mood</span>
             </h2>
           </div>
           <div style={{
@@ -607,69 +657,50 @@ export default function Homepage() {
             {cuisines.map((cuisine, idx) => (
               <div key={idx} style={{
                 flexShrink: 0,
-                backgroundColor: surfaceContainerHigh,
+                backgroundColor: bgCard,
                 padding: '16px 32px',
                 borderRadius: '9999px',
-                border: `1px solid ${outlineVariant}`,
+                border: `1px solid ${borderOrange}`,
+                borderTop: `3px solid ${accentAmber}`,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
                 cursor: 'pointer',
-                transition: 'all 0.3s'
+                transition: 'all 0.3s',
+                boxShadow: `0 4px 15px ${glowOrange}`
               }}>
                 <span style={{ fontSize: '24px' }}>{cuisine.emoji}</span>
-                <span style={{ fontWeight: 500 }}>{cuisine.name}</span>
+                <span style={{ fontWeight: 600, color: textOnCardName }}>{cuisine.name}</span>
               </div>
             ))}
           </div>
         </section>
 
         {/* Featured Section (Staff Picks) - Dynamic Restaurants */}
-        <section ref={restaurantsRef} style={{
+        <section id="restaurants" ref={restaurantsRef} style={{
           padding: '96px 48px',
           maxWidth: '1400px',
-          margin: '0 auto',
-          backgroundColor: surfaceContainer,
-          borderRadius: '48px'
+          margin: '0 auto'
         }}>
           <div style={{
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
             marginBottom: '64px'
           }}>
-            <div>
-              <h2 style={{
-                fontSize: '36px',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 'bold',
-                marginBottom: '16px'
-              }}>
-                Restaurants
-              </h2>
-              <p style={{ color: onSurfaceVariant }}>
-                Hand-picked selections from the local culinary masters.
-              </p>
-            </div>
-            <button
-              onClick={() => navigate('/restaurants')}
-              style={{
-                color: primaryOrange,
-                fontWeight: 'bold',
-                borderBottom: `2px solid ${primaryOrange}`,
-                paddingBottom: '4px',
-                background: 'none',
-                border: 'none',
-                borderBottom: `2px solid ${primaryOrange}`,
-                cursor: 'pointer',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                fontSize: '12px',
-                transition: 'all 0.2s'
-              }}
-            >
-              View All
-            </button>
+            <h2 style={{
+              fontSize: '36px',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontWeight: 'bold',
+              marginBottom: '16px',
+              color: textOnMain
+            }}>
+              Restaurants
+            </h2>
+            <p style={{ color: textMutedOnMain }}>
+              Hand-picked selections from the local culinary masters.
+            </p>
           </div>
 
           {/* Loading State */}
@@ -682,8 +713,8 @@ export default function Homepage() {
               gap: '16px',
               flexDirection: 'column'
             }}>
-              <CircularProgress style={{ color: primaryOrange }} />
-              <p style={{ color: onSurfaceVariant, fontSize: '18px' }}>Loading restaurants...</p>
+              <CircularProgress style={{ color: borderOrange }} />
+              <p style={{ color: textMutedOnMain, fontSize: '18px' }}>Loading restaurants...</p>
             </div>
           )}
 
@@ -692,11 +723,11 @@ export default function Homepage() {
             <div style={{
               textAlign: 'center',
               padding: '40px',
-              backgroundColor: 'rgba(255, 115, 81, 0.1)',
+              backgroundColor: 'rgba(232, 93, 4, 0.1)',
               borderRadius: '16px',
               marginBottom: '32px'
             }}>
-              <p style={{ color: primaryOrange, fontSize: '16px', marginBottom: '16px' }}>{error}</p>
+              <p style={{ color: borderOrange, fontSize: '16px', marginBottom: '16px' }}>{error}</p>
             </div>
           )}
 
@@ -712,10 +743,9 @@ export default function Homepage() {
                 const name = restaurant.name || 'Restaurant';
                 const image = restaurant.image || 'https://via.placeholder.com/400x300?text=Restaurant';
                 const cuisines = Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(', ') : (restaurant.cuisine || 'Multi-Cuisine');
-                const priceRange = restaurant.priceRange || restaurant.price || '₹₹';
                 const rating = restaurant.rating || 4.5;
                 const deliveryTime = restaurant.deliveryTime || '30-45 min';
-                const minOrder = restaurant.minOrder || 'Min $15';
+                const minOrder = restaurant.minOrder;
 
                 return (
                   <div
@@ -723,21 +753,29 @@ export default function Homepage() {
                     onClick={() => navigate(`/menu/${id}`)}
                     style={{
                       position: 'relative',
-                      backgroundColor: surfaceContainer,
+                      backgroundColor: bgCard,
                       borderRadius: '32px',
+                      border: `1px solid ${borderOrange}`,
+                      borderTop: `3px solid ${accentAmber}`,
                       overflow: 'hidden',
                       cursor: 'pointer',
-                      transition: 'transform 0.3s ease',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+                      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                      boxShadow: `0 10px 30px ${glowOrange}`
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-8px)'}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-8px)';
+                      e.currentTarget.style.boxShadow = `0 20px 40px ${glowOrangeHover}`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = `0 10px 30px ${glowOrange}`;
+                    }}
                   >
                     <div style={{ height: '256px', position: 'relative', overflow: 'hidden' }}>
                       <div style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
+                        background: `linear-gradient(to top, ${bgCard}, transparent 70%)`,
                         zIndex: 1
                       }}></div>
                       <img
@@ -752,7 +790,7 @@ export default function Homepage() {
                         onError={(e) => { e.target.src = 'https://via.placeholder.com/400x300?text=Restaurant'; }}
                       />
                     </div>
-                    <div style={{ padding: '32px' }}>
+                    <div style={{ padding: '32px', position: 'relative', zIndex: 2 }}>
                       <div style={{
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -764,22 +802,24 @@ export default function Homepage() {
                             fontSize: '18px',
                             fontWeight: 'bold',
                             fontFamily: "'Plus Jakarta Sans', sans-serif",
-                            marginBottom: '4px'
+                            marginBottom: '4px',
+                            color: textOnCardName
                           }}>
                             {name}
                           </h3>
-                          <p style={{ color: onSurfaceVariant, fontSize: '14px' }}>{cuisines}</p>
+                          <p style={{ color: textOnCardReview, fontSize: '14px' }}>{cuisines}</p>
                         </div>
                         <div style={{
                           display: 'flex',
                           alignItems: 'center',
                           gap: '4px',
-                          backgroundColor: surfaceContainerHigh,
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
                           padding: '4px 12px',
                           borderRadius: '9999px',
-                          fontSize: '14px'
+                          fontSize: '14px',
+                          color: textOnCardName
                         }}>
-                          <StarIcon style={{ color: tertiaryOrange, fontSize: '18px' }} />
+                          <StarIcon style={{ color: accentAmber, fontSize: '18px' }} />
                           <span style={{ fontWeight: 'bold' }}>{rating}</span>
                         </div>
                       </div>
@@ -788,14 +828,14 @@ export default function Homepage() {
                         alignItems: 'center',
                         gap: '24px',
                         fontSize: '14px',
-                        color: onSurfaceVariant
+                        color: textOnCardReview
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>schedule</span>
+                          <span className="material-symbols-outlined" style={{ fontSize: '18px', color: borderOrange }}>schedule</span>
                           {deliveryTime}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>restaurant</span>
+                          <span className="material-symbols-outlined" style={{ fontSize: '18px', color: borderOrange }}>restaurant</span>
                           {minOrder}
                         </div>
                       </div>
@@ -813,7 +853,7 @@ export default function Homepage() {
               padding: '80px 40px'
             }}>
               <p style={{
-                color: onSurfaceVariant,
+                color: textMutedOnMain,
                 fontSize: '18px'
               }}>
                 No restaurants found. Please add restaurants to your database.
@@ -829,11 +869,12 @@ export default function Homepage() {
               fontSize: '48px',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 800,
-              marginBottom: '24px'
+              marginBottom: '24px',
+              color: textOnMain
             }}>
               Your Journey to <span className="ignite-text">Great Taste</span>
             </h2>
-            <p style={{ color: onSurfaceVariant, fontSize: '18px' }}>
+            <p style={{ color: textMutedOnMain, fontSize: '18px' }}>
               Simplified for the modern connoisseur.
             </p>
           </div>
@@ -848,14 +889,16 @@ export default function Homepage() {
               { icon: 'moped', title: 'Doorstep Bliss', desc: 'Track your delivery in real-time as our logistics network brings your meal fresh to your door.' }
             ].map((step, idx) => (
               <div key={idx} style={{
-                backgroundColor: surfaceContainer,
+                backgroundColor: bgCard,
                 padding: '48px',
                 borderRadius: '40px',
-                border: `1px solid ${outlineVariant}`,
+                border: `1px solid ${borderOrange}`,
+                borderTop: `3px solid ${accentAmber}`,
                 textAlign: 'center',
                 position: 'relative',
                 overflow: 'hidden',
-                transition: 'background-color 0.3s'
+                transition: 'transform 0.3s',
+                boxShadow: `0 10px 30px ${glowOrange}`
               }}>
                 <div className="ignite-gradient" style={{
                   width: '80px',
@@ -865,9 +908,9 @@ export default function Homepage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   margin: '0 auto 32px',
-                  boxShadow: '0 0 30px rgba(253, 118, 26, 0.3)'
+                  boxShadow: `0 10px 20px ${glowOrange}`
                 }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#000' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#fff' }}>
                     {step.icon}
                   </span>
                 </div>
@@ -875,11 +918,12 @@ export default function Homepage() {
                   fontSize: '24px',
                   fontWeight: 'bold',
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  marginBottom: '16px'
+                  marginBottom: '16px',
+                  color: textOnCardName
                 }}>
                   {step.title}
                 </h3>
-                <p style={{ color: onSurfaceVariant, lineHeight: 1.6 }}>
+                <p style={{ color: textOnCardReview, lineHeight: 1.6 }}>
                   {step.desc}
                 </p>
               </div>
@@ -888,10 +932,10 @@ export default function Homepage() {
         </section>
 
         {/* Premium Offer */}
-        <section ref={offersRef} style={{ padding: '48px', maxWidth: '1400px', margin: '0 auto' }}>
+        <section id="offers" ref={offersRef} style={{ padding: '48px', maxWidth: '1400px', margin: '0 auto' }}>
           <div style={{
             position: 'relative',
-            background: 'linear-gradient(to right, #f97316, #ef4444, #ec4899)',
+            background: `linear-gradient(to right, ${borderOrange}, ${accentAmber})`,
             borderRadius: '48px',
             padding: '64px',
             overflow: 'hidden',
@@ -899,18 +943,19 @@ export default function Homepage() {
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '48px',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
+            boxShadow: `0 20px 40px ${glowOrangeHover}`
           }}>
             <div style={{
               position: 'absolute',
               inset: 0,
-              opacity: 0.1,
+              opacity: 0.15,
               mixBlendMode: 'overlay',
               pointerEvents: 'none',
-              backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)',
-              backgroundSize: '20px 20px'
+              backgroundImage: 'radial-gradient(#fff 2px, transparent 2px)',
+              backgroundSize: '24px 24px'
             }}></div>
-            <div style={{ position: 'relative', zIndex: 10, maxWidth: '500px', color: 'white' }}>
+            <div style={{ position: 'relative', zIndex: 10, maxWidth: '500px', color: '#fff' }}>
               <h2 style={{
                 fontSize: '48px',
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -918,10 +963,10 @@ export default function Homepage() {
                 marginBottom: '24px',
                 lineHeight: 1.2
               }}>
-                Join the Elite <br/>Get 50% Off First Order
+                Join the Elite <br />Get 50% Off First Order
               </h2>
               <p style={{
-                color: 'rgba(255, 255, 255, 0.8)',
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '18px',
                 marginBottom: '32px'
               }}>
@@ -930,22 +975,22 @@ export default function Homepage() {
               <div
                 onClick={handleCopyCode}
                 style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                backgroundColor: 'white',
-                borderRadius: '9999px',
-                padding: '8px',
-                paddingRight: '32px',
-                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-                cursor: 'pointer',
-                transition: 'transform 0.2s',
-              }}
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  backgroundColor: '#ffffff',
+                  borderRadius: '9999px',
+                  padding: '8px',
+                  paddingRight: '32px',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s',
+                }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
                 <div style={{
-                  backgroundColor: '#1f2937',
-                  color: 'white',
+                  backgroundColor: bgCard,
+                  color: accentAmber,
                   fontWeight: 'bold',
                   padding: '12px 32px',
                   borderRadius: '9999px',
@@ -957,7 +1002,7 @@ export default function Homepage() {
                   QUICKSTART50
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ color: '#1f2937', fontWeight: 'bold', fontSize: '14px' }}>
+                  <span style={{ color: bgCard, fontWeight: 'bold', fontSize: '14px' }}>
                     {isCopied ? 'Copied!' : 'Copy Code'}
                   </span>
                   {isCopied && (
@@ -978,18 +1023,21 @@ export default function Homepage() {
           }}>
             {testimonials.map((testimonial, idx) => (
               <div key={idx} style={{
-                backgroundColor: surfaceContainer,
+                backgroundColor: bgCard,
                 padding: '48px',
                 borderRadius: '40px',
-                position: 'relative'
+                border: `1px solid ${borderOrange}`,
+                borderTop: `3px solid ${accentAmber}`,
+                position: 'relative',
+                boxShadow: `0 10px 30px ${glowOrange}`
               }}>
                 <span className="material-symbols-outlined" style={{
-                  color: primaryOrange,
+                  color: borderOrange,
                   fontSize: '64px',
                   position: 'absolute',
-                  top: '-16px',
+                  top: '-20px',
                   left: '-16px',
-                  opacity: 0.5
+                  opacity: 0.9
                 }}>
                   format_quote
                 </span>
@@ -998,29 +1046,31 @@ export default function Homepage() {
                   fontStyle: 'italic',
                   marginBottom: '40px',
                   lineHeight: 1.6,
-                  color: onSurface
+                  color: textOnCardReview
                 }}>
                   "{testimonial.quote}"
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div className="ignite-gradient" style={{
+                  <div style={{
                     width: '56px',
                     height: '56px',
                     borderRadius: '50%',
+                    backgroundColor: avatarColors[idx % avatarColors.length],
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 'bold',
                     fontSize: '18px',
-                    color: '#000'
+                    color: '#fff',
+                    boxShadow: '0 4px 10px rgba(0,0,0,0.3)'
                   }}>
                     {testimonial.initials}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 'bold', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                    <div style={{ fontWeight: 'bold', fontFamily: "'Plus Jakarta Sans', sans-serif", color: textOnCardName }}>
                       {testimonial.name}
                     </div>
-                    <div style={{ color: onSurfaceVariant, fontSize: '14px' }}>
+                    <div style={{ color: textOnCardRole, fontSize: '14px', opacity: 0.9 }}>
                       {testimonial.role}
                     </div>
                   </div>
@@ -1031,7 +1081,7 @@ export default function Homepage() {
         </section>
 
         {/* App Section */}
-        <section ref={appRef} style={{
+        <section id="app" ref={appRef} style={{
           padding: '96px 48px',
           maxWidth: '1400px',
           margin: '0 auto',
@@ -1045,12 +1095,13 @@ export default function Homepage() {
               fontSize: '48px',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 800,
-              marginBottom: '32px'
+              marginBottom: '32px',
+              color: textOnMain
             }}>
               Cuisine in your <span className="ignite-text">Pocket</span>
             </h2>
             <p style={{
-              color: onSurfaceVariant,
+              color: textMutedOnMain,
               fontSize: '18px',
               marginBottom: '48px',
               lineHeight: 1.6
@@ -1064,15 +1115,16 @@ export default function Homepage() {
               gap: '16px'
             }}>
               <button style={{
-                backgroundColor: '#1f2937',
-                border: `1px solid ${outlineVariant}`,
+                backgroundColor: bgCard,
+                border: `1px solid ${borderOrange}`,
                 padding: '16px 32px',
                 borderRadius: '16px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '16px',
                 cursor: 'pointer',
-                transition: 'border-color 0.3s'
+                transition: 'border-color 0.3s',
+                boxShadow: `0 4px 15px ${glowOrange}`
               }}>
                 <img
                   src="/appstore.svg"
@@ -1084,25 +1136,26 @@ export default function Homepage() {
                     fontSize: '10px',
                     textTransform: 'uppercase',
                     letterSpacing: '0.1em',
-                    color: onSurfaceVariant
+                    color: textOnCardReview
                   }}>
                     Download on the
                   </div>
-                  <div style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: 1, color: onSurface }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: 1, color: textOnCardName }}>
                     App Store
                   </div>
                 </div>
               </button>
               <button style={{
-                backgroundColor: '#1f2937',
-                border: `1px solid ${outlineVariant}`,
+                backgroundColor: bgCard,
+                border: `1px solid ${borderOrange}`,
                 padding: '16px 32px',
                 borderRadius: '16px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '16px',
                 cursor: 'pointer',
-                transition: 'border-color 0.3s'
+                transition: 'border-color 0.3s',
+                boxShadow: `0 4px 15px ${glowOrange}`
               }}>
                 <img
                   src="/playstore.svg"
@@ -1114,11 +1167,11 @@ export default function Homepage() {
                     fontSize: '10px',
                     textTransform: 'uppercase',
                     letterSpacing: '0.1em',
-                    color: onSurfaceVariant
+                    color: textOnCardReview
                   }}>
                     Get it on
                   </div>
-                  <div style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: 1, color: onSurface }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: 1, color: textOnCardName }}>
                     Google Play
                   </div>
                 </div>
@@ -1130,10 +1183,10 @@ export default function Homepage() {
             <div style={{
               width: '300px',
               height: '600px',
-              backgroundColor: '#0a0e1a',
+              backgroundColor: bgCard,
               borderRadius: '48px',
-              border: `8px solid ${outlineVariant}`,
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+              border: `8px solid ${bgMain}`,
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
               position: 'relative',
               overflow: 'hidden'
             }}>
@@ -1149,7 +1202,7 @@ export default function Homepage() {
                 <div style={{
                   width: '96px',
                   height: '20px',
-                  backgroundColor: outlineVariant,
+                  backgroundColor: bgMain,
                   borderBottomLeftRadius: '12px',
                   borderBottomRightRadius: '12px'
                 }}></div>
@@ -1158,14 +1211,14 @@ export default function Homepage() {
                 <div style={{
                   height: '128px',
                   borderRadius: '16px',
-                  background: 'linear-gradient(to bottom right, #f97316, #ef4444)',
+                  background: `linear-gradient(to bottom right, ${borderOrange}, ${accentAmber})`,
                   padding: '16px',
                   marginBottom: '24px',
                   position: 'relative',
                   overflow: 'hidden'
                 }}>
                   <div style={{
-                    color: 'white',
+                    color: '#fff',
                     fontSize: '12px',
                     fontWeight: 'bold',
                     marginBottom: '4px',
@@ -1175,12 +1228,12 @@ export default function Homepage() {
                     Special Deal
                   </div>
                   <div style={{
-                    color: 'white',
+                    color: '#fff',
                     fontSize: '20px',
                     fontWeight: 'bold',
                     lineHeight: 1.2
                   }}>
-                    30% OFF <br/>Your Lunch
+                    30% OFF <br />Your Lunch
                   </div>
                 </div>
               </div>
@@ -1192,11 +1245,9 @@ export default function Homepage() {
       {/* Footer */}
       <footer style={{
         width: '100%',
-        background: 'rgba(0, 0, 0, 0.7)',
-        backdropFilter: 'blur(20px)',
-        border: `1px solid ${outlineVariant}`,
-        boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.3)',
-        color: '#fff',
+        background: bgCard,
+        borderTop: `3px solid ${accentAmber}`,
+        color: textOnCardName,
         textAlign: 'center',
         padding: '80px 48px 32px'
       }}>
@@ -1226,11 +1277,11 @@ export default function Homepage() {
               />
               <span>
                 <span className="ignite-text">Quick</span>
-                <span style={{ color: '#fff' }}>Bite</span>
+                <span style={{ color: textOnCardName }}>Bite</span>
               </span>
             </div>
             <p style={{
-              color: 'rgba(255, 255, 255, 0.6)',
+              color: textOnCardReview,
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontSize: '14px',
               lineHeight: 1.6,
@@ -1242,7 +1293,7 @@ export default function Homepage() {
 
           <div>
             <h4 style={{
-              color: '#fff',
+              color: textOnCardName,
               fontWeight: 'bold',
               marginBottom: '32px',
               textTransform: 'uppercase',
@@ -1254,12 +1305,15 @@ export default function Homepage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {['About', 'Careers', 'Press', 'Investors'].map((item) => (
                 <a key={item} href="#" style={{
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: textOnCardReview,
                   fontWeight: 500,
                   textDecoration: 'none',
                   fontSize: '14px',
                   transition: 'color 0.2s'
-                }}>
+                }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = accentAmber}
+                  onMouseLeave={(e) => e.currentTarget.style.color = textOnCardReview}
+                >
                   {item}
                 </a>
               ))}
@@ -1268,7 +1322,7 @@ export default function Homepage() {
 
           <div>
             <h4 style={{
-              color: '#fff',
+              color: textOnCardName,
               fontWeight: 'bold',
               marginBottom: '32px',
               textTransform: 'uppercase',
@@ -1280,12 +1334,15 @@ export default function Homepage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {['Help Center', 'Safety', 'Privacy', 'Terms'].map((item) => (
                 <a key={item} href="#" style={{
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: textOnCardReview,
                   fontWeight: 500,
                   textDecoration: 'none',
                   fontSize: '14px',
                   transition: 'color 0.2s'
-                }}>
+                }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = accentAmber}
+                  onMouseLeave={(e) => e.currentTarget.style.color = textOnCardReview}
+                >
                   {item}
                 </a>
               ))}
@@ -1297,7 +1354,7 @@ export default function Homepage() {
           maxWidth: '1200px',
           margin: '0 auto',
           paddingTop: '32px',
-          borderTop: `1px solid ${outlineVariant}`,
+          borderTop: `1px solid rgba(255,255,255,0.05)`,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -1305,27 +1362,36 @@ export default function Homepage() {
           gap: '16px'
         }}>
           <p style={{
-            color: 'rgba(255, 255, 255, 0.5)',
+            color: textOnCardReview,
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: '14px'
+            fontSize: '14px',
+            opacity: 0.7
           }}>
             © 2024 QuickBite. Crafted for excellence.
           </p>
           <div style={{ display: 'flex', gap: '32px' }}>
             <a href="#" style={{
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: textOnCardReview,
               fontSize: '14px',
               textDecoration: 'none',
-              transition: 'color 0.2s'
-            }}>
+              transition: 'color 0.2s',
+              opacity: 0.7
+            }}
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = accentAmber; }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.color = textOnCardReview; }}
+            >
               Privacy Policy
             </a>
             <a href="#" style={{
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: textOnCardReview,
               fontSize: '14px',
               textDecoration: 'none',
-              transition: 'color 0.2s'
-            }}>
+              transition: 'color 0.2s',
+              opacity: 0.7
+            }}
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = accentAmber; }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.color = textOnCardReview; }}
+            >
               Cookies
             </a>
           </div>

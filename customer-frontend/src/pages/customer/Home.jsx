@@ -8,7 +8,6 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import RestaurantCard from '../../components/RestaurantCard';
 
-
 const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +16,6 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-
 
   // Dish keywords mapping from your JSON data
   const dishKeywords = {
@@ -128,7 +126,6 @@ const Home = () => {
     ]
   };
 
-
   // Food dishes array with clean image URLs
   const foodDishes = [
     { name: 'Pizza', image: 'https://res.cloudinary.com/dovlhkyrr/image/upload/v1757866246/Pizza_wevg85.png' },
@@ -153,12 +150,10 @@ const Home = () => {
     { name: 'Waffle', image: 'https://res.cloudinary.com/dovlhkyrr/image/upload/v1757865807/Waffle_wu2trr.png' }
   ];
 
-
   // Load restaurants from API
   useEffect(() => {
     loadRestaurants();
   }, [selectedDish, currentPage]);
-
 
   const loadRestaurants = async () => {
     try {
@@ -190,7 +185,6 @@ const Home = () => {
       setLoading(false);
     }
   };
-
 
   const searchRestaurantsByCategory = async (dishName) => {
     try {
@@ -238,7 +232,6 @@ const Home = () => {
     }
   };
 
-
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
 
@@ -256,7 +249,6 @@ const Home = () => {
     }
   };
 
-
   const handleDishChange = (dishName) => {
     setSelectedDish(dishName);
     setCurrentPage(1);
@@ -268,28 +260,24 @@ const Home = () => {
     }
   };
 
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-
-
   if (loading && restaurants.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+      <div className="flex items-center justify-center min-h-screen bg-[#FFF3E8] px-4">
         <div className="text-center">
-          <Loader className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-orange-500 animate-spin" />
-          <p className="text-gray-600 text-sm sm:text-base">Loading delicious restaurants...</p>
+          <Loader className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-[#E85D04] animate-spin" />
+          <p className="text-[#5C3D2E] text-sm sm:text-base font-medium">Loading delicious restaurants...</p>
         </div>
       </div>
     );
   }
 
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FFF3E8]">
       <Header />
 
       {/* Hero Section */}
@@ -297,26 +285,21 @@ const Home = () => {
         <HeroSection />
       </div>
 
-
       <main>
         {/* Error Message */}
         {error && (
           <div className="container px-3 sm:px-4 py-3 sm:py-4 mx-auto">
-            <div className="px-3 sm:px-4 py-3 mb-4 sm:mb-6 text-red-600 border border-red-200 rounded-lg bg-red-50 text-sm sm:text-base flex flex-wrap items-center gap-2">
+            <div className="px-3 sm:px-4 py-3 mb-4 sm:mb-6 text-[#E85D04] border border-[#E85D04]/30 rounded-lg bg-[#E85D04]/10 text-sm sm:text-base flex flex-wrap items-center gap-2 font-medium">
               <span>{error}</span>
               <button
                 onClick={loadRestaurants}
-                className="text-red-600 underline hover:text-red-800"
+                className="text-[#E85D04] underline hover:text-[#C1440E]"
               >
                 Try Again
               </button>
             </div>
           </div>
         )}
-
-
-
-
 
         {/* Food Categories Section */}
         <div className="container px-3 sm:px-4 py-4 sm:py-8 mx-auto">
@@ -331,16 +314,15 @@ const Home = () => {
                 <img
                   src="https://res.cloudinary.com/dovlhkyrr/image/upload/v1757903263/All_mehgwt.png"
                   alt="All"
-                  className="object-cover w-16 h-14 sm:w-28 sm:h-24 md:w-40 md:h-32 mx-auto"
+                  className="object-cover w-16 h-14 sm:w-28 sm:h-24 md:w-40 md:h-32 mx-auto transition-transform hover:scale-105"
                   onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/128x128/f59e0b/white?text=All';
+                    e.target.src = 'https://via.placeholder.com/128x128/E85D04/white?text=All';
                   }}
                 />
-                <p className={`text-xs sm:text-sm font-medium mt-1 sm:mt-3 ${selectedDish === 'All' ? 'text-orange-500' : 'text-gray-700'}`}>
+                <p className={`text-xs sm:text-sm font-semibold mt-1 sm:mt-3 transition-colors ${selectedDish === 'All' ? 'text-[#E85D04]' : 'text-[#2C1810]'}`}>
                   All
                 </p>
               </div>
-
 
               {/* Food Dishes */}
               {foodDishes.map((dish, index) => (
@@ -349,18 +331,18 @@ const Home = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="flex-shrink-0 text-center cursor-pointer"
+                  className="flex-shrink-0 text-center cursor-pointer group"
                   onClick={() => handleDishChange(dish.name)}
                 >
                   <img
                     src={dish.image}
                     alt={dish.name}
-                    className="object-cover w-16 h-14 sm:w-28 sm:h-24 md:w-40 md:h-32 mx-auto"
+                    className="object-cover w-16 h-14 sm:w-28 sm:h-24 md:w-40 md:h-32 mx-auto transition-transform group-hover:scale-105"
                     onError={(e) => {
-                      e.target.src = `https://via.placeholder.com/128x128/f59e0b/white?text=${dish.name.charAt(0)}`;
+                      e.target.src = `https://via.placeholder.com/128x128/E85D04/white?text=${dish.name.charAt(0)}`;
                     }}
                   />
-                  <p className={`text-xs sm:text-sm font-medium mt-1 sm:mt-3 max-w-[4rem] sm:max-w-[8rem] mx-auto leading-tight ${selectedDish === dish.name ? 'text-orange-500' : 'text-gray-700'}`}>
+                  <p className={`text-xs sm:text-sm font-semibold mt-1 sm:mt-3 max-w-[4rem] sm:max-w-[8rem] mx-auto leading-tight transition-colors ${selectedDish === dish.name ? 'text-[#E85D04]' : 'text-[#2C1810]'}`}>
                     {dish.name}
                   </p>
                 </motion.div>
@@ -369,20 +351,20 @@ const Home = () => {
           </div>
         </div>
 
-
         {/* Restaurants Grid - Fixed Height Cards */}
         <div className="container px-3 sm:px-4 py-4 sm:py-8 mx-auto">
           {loading ? (
             <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="overflow-hidden bg-white shadow-md rounded-3xl animate-pulse">
-                  <div className="h-40 sm:h-48 bg-gray-200"></div>
+                // Changed background to bgCard (#1C1410), removed border formatting here
+                <div key={i} className="overflow-hidden bg-[#1C1410] shadow-xl rounded-3xl animate-pulse">
+                  <div className="h-40 sm:h-48 bg-[#2C1810]"></div>
                   <div className="p-4 sm:p-5 space-y-3">
-                    <div className="h-5 bg-gray-200 rounded"></div>
-                    <div className="w-3/4 h-4 bg-gray-200 rounded"></div>
+                    <div className="h-5 bg-[#3D2A20] rounded w-1/2"></div>
+                    <div className="w-3/4 h-4 bg-[#3D2A20] rounded"></div>
                     <div className="flex gap-2">
-                      <div className="w-1/3 h-4 bg-gray-200 rounded"></div>
-                      <div className="w-1/3 h-4 bg-gray-200 rounded"></div>
+                      <div className="w-1/3 h-4 bg-[#3D2A20] rounded"></div>
+                      <div className="w-1/3 h-4 bg-[#3D2A20] rounded"></div>
                     </div>
                   </div>
                 </div>
@@ -390,10 +372,10 @@ const Home = () => {
             </div>
           ) : restaurants.length === 0 ? (
             <div className="py-10 sm:py-12 text-center px-4">
-              <h3 className="mb-2 text-lg sm:text-xl font-semibold text-gray-700">
+              <h3 className="mb-2 text-lg sm:text-xl font-bold text-[#2C1810]">
                 {selectedDish === 'All' ? 'No restaurants found' : `No restaurants found serving ${selectedDish}`}
               </h3>
-              <p className="text-gray-500 text-sm sm:text-base">Try selecting a different dish or search option.</p>
+              <p className="text-[#5C3D2E] text-sm sm:text-base font-medium">Try selecting a different dish or search option.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -403,7 +385,6 @@ const Home = () => {
             </div>
           )}
 
-
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-center mt-8 sm:mt-12 px-2">
@@ -411,7 +392,7 @@ const Home = () => {
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-3 sm:px-5 py-2 sm:py-2.5 bg-white rounded-xl border-2 border-gray-200 font-semibold text-xs sm:text-sm text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:border-orange-500 hover:text-orange-600 transition-all duration-200 min-h-[40px]"
+                  className="px-3 sm:px-5 py-2 sm:py-2.5 bg-[#FFF3E8] rounded-xl border-2 border-[rgba(44,24,16,0.1)] font-bold text-xs sm:text-sm text-[#2C1810] disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#E85D04] hover:text-[#E85D04] transition-all duration-200 min-h-[40px]"
                 >
                   Previous
                 </button>
@@ -422,9 +403,9 @@ const Home = () => {
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-semibold transition-all duration-200 text-xs sm:text-sm min-h-[40px] min-w-[40px] ${currentPage === page
-                          ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg scale-105'
-                          : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-orange-500 hover:text-orange-600'
+                      className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold transition-all duration-200 text-xs sm:text-sm min-h-[40px] min-w-[40px] ${currentPage === page
+                        ? 'bg-gradient-to-r from-[#E85D04] to-[#F48C06] text-[#FFE8D6] shadow-lg scale-105 border-none'
+                        : 'bg-[#FFF3E8] border-2 border-[rgba(44,24,16,0.1)] text-[#2C1810] hover:border-[#E85D04] hover:text-[#E85D04]'
                         }`}
                     >
                       {page}
@@ -435,7 +416,7 @@ const Home = () => {
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-3 sm:px-5 py-2 sm:py-2.5 bg-white rounded-xl border-2 border-gray-200 font-semibold text-xs sm:text-sm text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:border-orange-500 hover:text-orange-600 transition-all duration-200 min-h-[40px]"
+                  className="px-3 sm:px-5 py-2 sm:py-2.5 bg-[#FFF3E8] rounded-xl border-2 border-[rgba(44,24,16,0.1)] font-bold text-xs sm:text-sm text-[#2C1810] disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#E85D04] hover:text-[#E85D04] transition-all duration-200 min-h-[40px]"
                 >
                   Next
                 </button>
@@ -444,17 +425,16 @@ const Home = () => {
           )}
         </div>
 
-
         {/* Call to Action */}
-        <div className="py-10 sm:py-16 text-white bg-gradient-to-r from-orange-500 to-red-500">
+        <div className="py-10 sm:py-16 text-[#FFE8D6] bg-gradient-to-r from-[#E85D04] to-[#F48C06] shadow-[0_10px_30px_rgba(232,93,4,0.2)]">
           <div className="container px-4 mx-auto text-center">
-            <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl font-bold">Ready to Order?</h2>
-            <p className="mb-6 sm:mb-8 text-base sm:text-xl opacity-90">
+            <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to Order?</h2>
+            <p className="mb-6 sm:mb-8 text-base sm:text-xl font-medium text-[#FFE8D6]/90">
               Choose from 100+ restaurants in your area
             </p>
             <Link
               to="/restaurants"
-              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 font-semibold text-orange-600 transition-all duration-200 bg-white rounded-full shadow-lg hover:bg-gray-100 hover:scale-105 text-sm sm:text-base"
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 font-bold text-[#E85D04] transition-all duration-200 bg-[#FFF3E8] rounded-full shadow-lg hover:bg-white hover:scale-105 text-sm sm:text-base"
             >
               Browse All Restaurants
               <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -463,11 +443,9 @@ const Home = () => {
         </div>
       </main>
 
-
       <Footer />
     </div>
   );
 };
-
 
 export default Home;

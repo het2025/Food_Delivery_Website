@@ -4,6 +4,22 @@ import { useUser } from "../../context/UserContext";
 import { authService } from "../../services/api";
 import { Loader, Eye, EyeOff } from "lucide-react";
 
+// --- 🍑 WARM PEACH & DEEP WARM DARK THEME COLORS ---
+const bgMain = '#FFF3E8';          // Page BG (warm peach light)
+const bgCard = '#1C1410';          // Card BG (deep warm dark)
+const borderOrange = '#E85D04';    // Primary Accent / Borders
+const accentAmber = '#F48C06';     // Secondary Accent / Glows
+const glowOrange = 'rgba(232, 93, 4, 0.15)';
+
+// Typography for inside the dark card
+const textName = '#FFE8D6';        // Primary text (warm cream white)
+const textReview = '#EDCFB8';      // Subtext / Labels (soft warm beige)
+const textRole = '#A07850';        // Muted details / Placeholders (muted warm brown)
+
+// Input specific styling
+const inputBg = '#261C16';         // Slightly lighter than card BG for contrast
+const outlineVariant = '#3D2A20';  // Subtle border for inputs
+
 // Helper: Prevent XSS/injection in inputs
 const safeValue = s => (typeof s === "string" ? s.replace(/[<>\"'`]/g, "") : "");
 
@@ -41,7 +57,7 @@ export default function LoginSignup() {
     isValidLength: false
   });
 
-  // ✅ NEW: Handle browser back button - redirect to home page
+  // ✅ Handle browser back button - redirect to home page
   useEffect(() => {
     // Push current state to history
     window.history.pushState(null, "", window.location.href);
@@ -68,7 +84,7 @@ export default function LoginSignup() {
   }, [navigate, user]);
 
   // Password: at least 8 chars, upper, lower, number, special
-  const isStrongPassword = pass => 
+  const isStrongPassword = pass =>
     /[A-Z]/.test(pass) &&
     /[a-z]/.test(pass) &&
     /[0-9]/.test(pass) &&
@@ -225,66 +241,146 @@ export default function LoginSignup() {
 
   return (
     <div
-      className="flex items-center justify-center min-h-screen"
+      className="flex items-center justify-center min-h-screen relative"
       style={{
-        backgroundImage: `url('/login_background.jpg')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundColor: bgMain,
+        fontFamily: "'Inter', sans-serif"
       }}
     >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+        
+        .ignite-gradient {
+          background: linear-gradient(135deg, ${borderOrange} 0%, ${accentAmber} 100%);
+        }
+
+        .dark-input::placeholder {
+          color: ${textRole};
+          opacity: 0.8;
+        }
+
+        /* Prevent autofill from ruining the dark theme background */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px ${inputBg} inset !important;
+            -webkit-text-fill-color: ${textName} !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+      `}</style>
+
+      {/* Optional subtle background glow matching the warm peach aesthetic */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '600px',
+        height: '600px',
+        background: `radial-gradient(circle at center, rgba(232, 93, 4, 0.08) 0%, transparent 70%)`,
+        pointerEvents: 'none',
+        zIndex: 0
+      }}></div>
+
       <div
-        className="w-full max-w-md px-6 pt-3 pb-8 mx-4 rounded-2xl drop-shadow-lg sm:px-8 sm:mx-0"
+        className="w-full max-w-md px-6 pt-6 pb-8 mx-4 rounded-3xl sm:px-8 sm:mx-0 relative z-10"
         style={{
-          background: "linear-gradient(132deg, rgba(255,255,255,0.48) 85%, rgba(255,255,255,0.24) 98%)",
-          backdropFilter: "blur(22px)",
-          WebkitBackdropFilter: "blur(22px)",
-          border: "1px solid rgba(255,255,255,0.18)"
+          backgroundColor: bgCard,
+          border: `1px solid ${borderOrange}`,
+          borderTop: `3px solid ${accentAmber}`,
+          boxShadow: `0 20px 60px rgba(28, 20, 16, 0.4)` // Deep warm shadow
         }}
       >
-        <div className="mb-3 text-center">
-          <img src="/quickbite_logo.svg" alt="QuickBite" className="object-contain w-12 h-12 mx-auto mb-1" />
-          <h1 className="mb-2 text-3xl font-bold text-gray-800">
-            {mode === "login" ? "" : "Create Account"}
+        <div className="mb-6 text-center">
+          <img
+            src="/quickbite_logo.svg"
+            alt="QuickBite"
+            className="object-contain w-12 h-12 mx-auto mb-2 cursor-pointer transition-transform hover:scale-105"
+            onClick={() => navigate('/')}
+          />
+          <h1
+            className="mb-1 text-2xl font-bold tracking-tight"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: textName }}
+          >
+            {mode === "login" ? "Welcome Back" : "Create Account"}
           </h1>
-          <p className="mb-1 text-gray-600">
+          <p style={{ color: textReview, fontSize: '14px' }}>
             {mode === "login"
               ? "Sign in to your QuickBite account"
               : "Join QuickBite and discover amazing food"}
           </p>
         </div>
+
         {success && (
-          <div className="flex items-center justify-center gap-2 px-4 py-3 mb-4 text-center text-green-600 border border-green-200 rounded-lg bg-green-50">
-              {success}
+          <div
+            className="flex items-center justify-center gap-2 px-4 py-2 mb-4 text-center rounded-xl text-sm"
+            style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', color: '#34d399' }}
+          >
+            {success}
           </div>
         )}
         {error && (
-          <div className="flex items-center justify-center gap-2 px-4 py-3 mb-4 text-center text-red-600 border border-red-200 rounded-lg bg-red-50">
-              {error}
+          <div
+            className="flex items-center justify-center gap-2 px-4 py-2 mb-4 text-center rounded-xl text-sm"
+            style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#f87171' }}
+          >
+            {error}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="space-y-5" autoComplete="off">
+
+        <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
           {mode === "signup" && (
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">Full Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                autoComplete="name"
-                disabled={loading}
-                onChange={handleChange}
-                required
-                maxLength={128}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                placeholder="Your name"
-              />
-              <p className="mt-1 text-xs text-gray-500">
-                {formData.name.length}/128 characters
-              </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-1.5 text-sm font-medium" style={{ color: textName }}>Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  autoComplete="name"
+                  disabled={loading}
+                  onChange={handleChange}
+                  required
+                  maxLength={128}
+                  className="w-full px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 transition-all dark-input"
+                  style={{
+                    backgroundColor: inputBg,
+                    border: `1px solid ${outlineVariant}`,
+                    color: textName,
+                    outlineColor: accentAmber,
+                    '--tw-ring-color': accentAmber
+                  }}
+                  placeholder="Your name"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1.5 text-sm font-medium" style={{ color: textName }}>Phone <span style={{ color: textRole }}>(optional)</span></label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  autoComplete="off"
+                  disabled={loading}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 transition-all dark-input"
+                  style={{
+                    backgroundColor: inputBg,
+                    border: `1px solid ${outlineVariant}`,
+                    color: textName,
+                    '--tw-ring-color': accentAmber
+                  }}
+                  placeholder="10-digit phone"
+                  maxLength={10}
+                  pattern="\d{10}"
+                />
+              </div>
             </div>
           )}
+
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Email Address</label>
+            <label className="block mb-1.5 text-sm font-medium" style={{ color: textName }}>Email Address</label>
             <input
               type="email"
               name="email"
@@ -294,147 +390,158 @@ export default function LoginSignup() {
               onChange={handleChange}
               required
               maxLength={100}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 transition-all dark-input"
+              style={{
+                backgroundColor: inputBg,
+                border: `1px solid ${outlineVariant}`,
+                color: textName,
+                '--tw-ring-color': accentAmber
+              }}
               placeholder="Enter your email"
               spellCheck={false}
             />
           </div>
-          {mode === "signup" && (
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">Phone Number (optional)</label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                autoComplete="off"
-                disabled={loading}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                placeholder="Your 10-digit phone"
-                maxLength={10}
-                pattern="\d{10}"
-              />
-              <p className="mt-1 text-xs text-gray-500">
-                Only numeric input allowed ({formData.phone.length}/10 digits)
-              </p>
-            </div>
-          )}
-          <div className="relative">
-            <label className="block mb-2 text-sm font-medium text-gray-700">Password</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={formData.password}
-              autoComplete={mode === "login" ? "current-password" : "new-password"}
-              disabled={loading}
-              onChange={handleChange}
-              onFocus={() => mode === "signup" && setShowPasswordHints(true)}
-              onBlur={() => mode === "signup" && setShowPasswordHints(false)}
-              required
-              minLength={8}
-              maxLength={32}
-              className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder={mode === "login" ? "Enter your password" : "Create a strong password"}
-            />
-            <button
-              type="button"
-              tabIndex={-1}
-              className="absolute text-gray-400 right-4 top-9 hover:text-orange-400"
-              onClick={() => setShowPassword(s => !s)}
-              style={{ background: "none", border: "none" }}
-              disabled={loading}
-            >
-              {showPassword ? (
-                <EyeOff className="w-6 h-6" />
-              ) : (
-                <Eye className="w-6 h-6" />
-              )}
-            </button>
-            {mode === "signup" && (showPasswordHints || formData.password.length > 0) && (
-              <div className="p-3 mt-2 space-y-1 border border-gray-200 rounded-lg bg-gray-50">
-                <p className="mb-2 text-xs font-semibold text-gray-700">Password must contain:</p>
-                <p className={`text-xs flex items-center gap-2 ${passwordValidation.hasUpperCase ? 'text-green-600' : 'text-gray-500'}`}>
-                  <span>{passwordValidation.hasUpperCase ? '✓' : '○'}</span>
-                  At least one capital letter (A-Z)
-                </p>
-                <p className={`text-xs flex items-center gap-2 ${passwordValidation.hasNumber ? 'text-green-600' : 'text-gray-500'}`}>
-                  <span>{passwordValidation.hasNumber ? '✓' : '○'}</span>
-                  At least one number (0-9)
-                </p>
-                <p className={`text-xs flex items-center gap-2 ${passwordValidation.hasSpecialChar ? 'text-green-600' : 'text-gray-500'}`}>
-                  <span>{passwordValidation.hasSpecialChar ? '✓' : '○'}</span>
-                  At least one special character (@$!%*?&)
-                </p>
-                <p className={`text-xs flex items-center gap-2 ${passwordValidation.isValidLength ? 'text-green-600' : 'text-gray-500'}`}>
-                  <span>{passwordValidation.isValidLength ? '✓' : '○'}</span>
-                  8-32 characters ({formData.password.length}/32)
-                </p>
-              </div>
-            )}
-          </div>
-          {mode === "signup" && (
+
+          <div>
+            <label className="block mb-1.5 text-sm font-medium" style={{ color: textName }}>Password</label>
             <div className="relative">
-              <label className="block mb-2 text-sm font-medium text-gray-700">Confirm Password</label>
               <input
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                autoComplete="new-password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
                 disabled={loading}
                 onChange={handleChange}
+                onFocus={() => mode === "signup" && setShowPasswordHints(true)}
+                onBlur={() => mode === "signup" && setShowPasswordHints(false)}
                 required
                 minLength={8}
                 maxLength={32}
-                className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                placeholder="Confirm your password"
+                className="w-full px-4 py-2.5 pr-12 rounded-xl focus:outline-none focus:ring-2 transition-all dark-input"
+                style={{
+                  backgroundColor: inputBg,
+                  border: `1px solid ${outlineVariant}`,
+                  color: textName,
+                  '--tw-ring-color': accentAmber
+                }}
+                placeholder={mode === "login" ? "Enter your password" : "Create a strong password"}
               />
               <button
                 type="button"
                 tabIndex={-1}
-                className="absolute text-gray-400 right-4 top-9 hover:text-orange-400"
-                onClick={() => setShowConfirmPassword(s => !s)}
-                style={{ background: "none", border: "none" }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors flex items-center justify-center"
+                onClick={() => setShowPassword(s => !s)}
+                style={{ color: textReview, background: "none", border: "none" }}
+                onMouseEnter={(e) => e.currentTarget.style.color = accentAmber}
+                onMouseLeave={(e) => e.currentTarget.style.color = textReview}
                 disabled={loading}
               >
-                {showConfirmPassword ? (
-                  <EyeOff className="w-6 h-6" />
-                ) : (
-                  <Eye className="w-6 h-6" />
-                )}
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
+            </div>
+
+            {mode === "signup" && (showPasswordHints || formData.password.length > 0) && (
+              <div
+                className="p-3 mt-2 rounded-xl"
+                style={{ backgroundColor: inputBg, border: `1px solid ${outlineVariant}` }}
+              >
+                <p className="mb-1.5 text-xs font-semibold" style={{ color: textName }}>Password must contain:</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                  <p className={`text-xs flex items-center gap-1.5 ${passwordValidation.hasUpperCase ? 'text-[#34d399]' : ''}`} style={{ color: passwordValidation.hasUpperCase ? '' : textReview }}>
+                    <span>{passwordValidation.hasUpperCase ? '✓' : '○'}</span>
+                    One capital letter
+                  </p>
+                  <p className={`text-xs flex items-center gap-1.5 ${passwordValidation.hasNumber ? 'text-[#34d399]' : ''}`} style={{ color: passwordValidation.hasNumber ? '' : textReview }}>
+                    <span>{passwordValidation.hasNumber ? '✓' : '○'}</span>
+                    One number (0-9)
+                  </p>
+                  <p className={`text-xs flex items-center gap-1.5 ${passwordValidation.hasSpecialChar ? 'text-[#34d399]' : ''}`} style={{ color: passwordValidation.hasSpecialChar ? '' : textReview }}>
+                    <span>{passwordValidation.hasSpecialChar ? '✓' : '○'}</span>
+                    One special char
+                  </p>
+                  <p className={`text-xs flex items-center gap-1.5 ${passwordValidation.isValidLength ? 'text-[#34d399]' : ''}`} style={{ color: passwordValidation.isValidLength ? '' : textReview }}>
+                    <span>{passwordValidation.isValidLength ? '✓' : '○'}</span>
+                    8-32 chars ({formData.password.length})
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {mode === "signup" && (
+            <div>
+              <label className="block mb-1.5 text-sm font-medium" style={{ color: textName }}>Confirm Password</label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  autoComplete="new-password"
+                  disabled={loading}
+                  onChange={handleChange}
+                  required
+                  minLength={8}
+                  maxLength={32}
+                  className="w-full px-4 py-2.5 pr-12 rounded-xl focus:outline-none focus:ring-2 transition-all dark-input"
+                  style={{
+                    backgroundColor: inputBg,
+                    border: `1px solid ${outlineVariant}`,
+                    color: textName,
+                    '--tw-ring-color': accentAmber
+                  }}
+                  placeholder="Confirm your password"
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors flex items-center justify-center"
+                  onClick={() => setShowConfirmPassword(s => !s)}
+                  style={{ color: textReview, background: "none", border: "none" }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = accentAmber}
+                  onMouseLeave={(e) => e.currentTarget.style.color = textReview}
+                  disabled={loading}
+                >
+                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
               {formData.confirmPassword.length > 0 && (
-                <p className={`mt-1 text-xs flex items-center gap-1 ${
-                  formData.password === formData.confirmPassword
-                    ? 'text-green-600'
-                    : 'text-red-500'
-                }`}>
+                <p className={`mt-2 text-xs flex items-center gap-1.5 ${formData.password === formData.confirmPassword ? 'text-[#34d399]' : 'text-[#f87171]'
+                  }`}>
                   <span>{formData.password === formData.confirmPassword ? '✓' : '✗'}</span>
-                  {formData.password === formData.confirmPassword
-                    ? 'Passwords match'
-                    : 'Passwords do not match'}
+                  {formData.password === formData.confirmPassword ? 'Passwords match' : 'Passwords do not match'}
                 </p>
               )}
             </div>
           )}
+
           <button
             type="submit"
             disabled={loading || throttle}
-            className="flex items-center justify-center w-full gap-2 py-3 font-semibold text-white transition-all duration-200 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="ignite-gradient flex items-center justify-center w-full gap-2 py-3 mt-4 text-base font-bold transition-all duration-200 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              marginTop: '24px',
+              color: bgCard, // High contrast text on orange button
+              boxShadow: `0 4px 15px ${glowOrange}`
+            }}
           >
             {loading && <Loader className="w-5 h-5 animate-spin" />}
             {mode === "login" ? "Sign In" : "Create Account"}
           </button>
         </form>
-        <div className="mt-6 text-center text-gray-600">
+
+        <div className="mt-6 text-center text-sm" style={{ color: textReview }}>
           {mode === "login" ? (
             <>
               Don't have an account?{" "}
               <button
                 type="button"
                 onClick={() => switchMode("signup")}
-                className="font-semibold text-white underline hover:text-orange-900"
+                className="font-semibold transition-colors"
                 disabled={loading}
-                style={{ background: "none", border: "none", padding: "6px 4px", margin: 0 }}
+                style={{ color: borderOrange, background: "none", border: "none", padding: "0 4px", margin: 0, textDecoration: 'underline' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = accentAmber}
+                onMouseLeave={(e) => e.currentTarget.style.color = borderOrange}
               >
                 Sign up here
               </button>
@@ -445,9 +552,11 @@ export default function LoginSignup() {
               <button
                 type="button"
                 onClick={() => switchMode("login")}
-                className="font-semibold text-white underline hover:text-orange-900"
+                className="font-semibold transition-colors"
                 disabled={loading}
-                style={{ background: "none", border: "none", padding: "6px 4px", margin: 0 }}
+                style={{ color: borderOrange, background: "none", border: "none", padding: "0 4px", margin: 0, textDecoration: 'underline' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = accentAmber}
+                onMouseLeave={(e) => e.currentTarget.style.color = borderOrange}
               >
                 Log in here
               </button>

@@ -1,16 +1,24 @@
-import { Gift, Copy, Check } from 'lucide-react'; // Only need Gift, Copy, Check
-import { useState, useEffect } from 'react'; // Add useEffect
+import { Gift, Copy, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { useUser } from '../../context/UserContext'; // Import useUser
+import { useUser } from '../../context/UserContext';
+import { motion } from 'framer-motion';
+
+// --- 🍑 WARM PEACH THEME (With Clean White Cards) ---
+// bgMain: '#FFF3E8'
+// borderOrange: '#E85D04'
+// accentAmber: '#F48C06'
+// textDark: '#2C1810'
+// textMuted: '#5C3D2E'
 
 const dynamicRewardsTiers = [
-  { orders: 5, discount: 20, code: 'ORDER20-5', description: '20% off on your next order!', bgColor: 'bg-blue-500' },
-  { orders: 10, discount: 25, code: 'ORDER25-10', description: '25% off on your next order!', bgColor: 'bg-green-500' },
-  { orders: 15, discount: 30, code: 'ORDER30-15', description: '30% off on your next order!', bgColor: 'bg-purple-500' },
-  { orders: 20, discount: 35, code: 'ORDER35-20', description: '35% off on your next order!', bgColor: 'bg-yellow-500' },
-  { orders: 30, discount: 40, code: 'ORDER40-30', description: '40% off on your next order!', bgColor: 'bg-red-500' },
-  { orders: 40, discount: 50, code: 'ORDER50-40', description: '50% off on your next order!', bgColor: 'bg-pink-500' },
+  { orders: 5, discount: 20, code: 'ORDER20-5', description: '20% off on your next order!', bgGradient: 'bg-gradient-to-r from-[#F48C06] to-[#E85D04]' },
+  { orders: 10, discount: 25, code: 'ORDER25-10', description: '25% off on your next order!', bgGradient: 'bg-gradient-to-r from-[#E85D04] to-[#C1440E]' },
+  { orders: 15, discount: 30, code: 'ORDER30-15', description: '30% off on your next order!', bgGradient: 'bg-gradient-to-r from-[#C1440E] to-[#A07850]' },
+  { orders: 20, discount: 35, code: 'ORDER35-20', description: '35% off on your next order!', bgGradient: 'bg-gradient-to-r from-[#F48C06] to-[#C1440E]' },
+  { orders: 30, discount: 40, code: 'ORDER40-30', description: '40% off on your next order!', bgGradient: 'bg-gradient-to-r from-[#E85D04] to-[#A07850]' },
+  { orders: 40, discount: 50, code: 'ORDER50-40', description: '50% off on your next order!', bgGradient: 'bg-gradient-to-r from-[#C1440E] to-[#5C3D2E]' },
 ];
 
 const Rewards = () => {
@@ -21,7 +29,6 @@ const Rewards = () => {
   useEffect(() => {
     refreshUser(true); // Silent refresh to avoid global loading flicker/unmount
   }, []); // Refresh user data on mount to get latest order count
-
 
   const handleCopy = (code) => {
     navigator.clipboard.writeText(code);
@@ -53,32 +60,34 @@ const Rewards = () => {
   const nextTier = getNextTierInfo();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FFF3E8] font-['Inter',_sans-serif]">
       <Header />
       <main className="pt-20">
-        <div className="py-8 bg-white sm:py-12">
+        <div className="py-10 bg-white border-b border-[rgba(44,24,16,0.05)] shadow-[0_4px_30px_rgba(44,24,16,0.02)] sm:py-14">
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div className="text-center">
-              <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl lg:text-5xl">
+              <h1 className="text-3xl font-extrabold tracking-tight text-[#2C1810] sm:text-4xl lg:text-5xl" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 Your Loyalty Rewards
               </h1>
-              <p className="max-w-2xl mx-auto mt-3 text-base text-gray-500 sm:mt-4 sm:text-lg">
+              <p className="max-w-2xl mx-auto mt-4 text-base font-medium text-[#5C3D2E] sm:mt-5 sm:text-lg">
                 Complete orders to unlock exclusive discounts and offers! You've completed
-                <span className="font-bold text-orange-600"> {completedOrdersCount} </span>
+                <span className="font-extrabold text-[#E85D04]"> {completedOrdersCount} </span>
                 orders so far.
               </p>
               {nextTier && (
-                <p className="mt-2 text-sm text-gray-600 sm:text-base">
-                  Complete <span className="font-bold text-orange-600">{nextTier.remaining}</span> more orders to unlock
-                  <span className="font-bold text-orange-600"> {nextTier.nextDiscount}% off!</span>
-                </p>
+                <div className="inline-block px-5 py-2.5 mt-5 bg-[#FFF3E8] border border-[#E85D04]/20 rounded-full shadow-sm">
+                  <p className="text-sm font-semibold text-[#5C3D2E] sm:text-base">
+                    Complete <span className="font-extrabold text-[#E85D04]">{nextTier.remaining}</span> more orders to unlock
+                    <span className="font-extrabold text-[#E85D04]"> {nextTier.nextDiscount}% off!</span>
+                  </p>
+                </div>
               )}
             </div>
           </div>
         </div>
 
-        <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 sm:py-12 lg:px-8">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8">
+        <div className="px-4 py-10 mx-auto max-w-7xl sm:px-6 sm:py-14 lg:px-8">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 lg:gap-10">
             {dynamicRewardsTiers.map((reward, index) => {
               const status = calculateStatus(reward.orders);
               const isUnlocked = status === 'unlocked';
@@ -86,46 +95,59 @@ const Rewards = () => {
               const ordersRemaining = nextOrderToUnlock - completedOrdersCount;
 
               return (
-                <div
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
                   key={index}
-                  className={`relative flex flex-col overflow-hidden transition-transform duration-300 transform border border-gray-200 shadow-lg rounded-2xl ${isUnlocked ? 'bg-white hover:-translate-y-2' : 'bg-gray-100 opacity-70 cursor-not-allowed'
+                  className={`relative flex flex-col overflow-hidden transition-all duration-300 transform border shadow-[0_10px_40px_rgba(44,24,16,0.06)] rounded-3xl ${isUnlocked
+                    ? 'bg-white border-[rgba(44,24,16,0.05)] hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(232,93,4,0.15)] hover:border-[#E85D04]/30'
+                    : 'bg-white/60 border-[rgba(44,24,16,0.05)] opacity-80 cursor-not-allowed grayscale-[20%]'
                     }`}
                 >
-                  <div className={`p-5 sm:p-6 flex items-center justify-center ${reward.bgColor}`}>
-                    <Gift className="w-7 h-7 text-white sm:w-8 sm:h-8" />
+                  <div className={`p-6 sm:p-8 flex items-center justify-center ${isUnlocked ? reward.bgGradient : 'bg-gray-300'}`}>
+                    <Gift className={`w-8 h-8 sm:w-10 sm:h-10 ${isUnlocked ? 'text-white drop-shadow-md' : 'text-gray-500'}`} />
                   </div>
-                  <div className="flex flex-col flex-grow p-4 sm:p-6">
-                    <h3 className="mb-1 text-lg font-bold text-gray-800 sm:mb-2 sm:text-xl">{reward.discount}% Off!</h3>
-                    <p className="flex-grow text-sm text-gray-600 sm:text-base">{reward.description}</p>
-                    <p className="mt-2 text-sm font-medium">
-                      Requires: <span className="font-bold">{reward.orders} Orders</span>
+
+                  <div className="flex flex-col flex-grow p-5 sm:p-7 relative z-10 bg-white">
+                    <h3 className="mb-1.5 text-xl font-extrabold text-[#2C1810] sm:mb-2 sm:text-2xl" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                      {reward.discount}% Off!
+                    </h3>
+                    <p className="flex-grow text-sm font-medium text-[#5C3D2E] sm:text-base leading-relaxed">
+                      {reward.description}
                     </p>
+                    <div className="mt-4 pt-4 border-t border-[rgba(44,24,16,0.05)]">
+                      <p className="text-sm font-bold text-[#5C3D2E]">
+                        Requires: <span className="font-extrabold text-[#E85D04]">{reward.orders} Orders</span>
+                      </p>
+                    </div>
                   </div>
-                  <div className="p-3 bg-gray-50 sm:p-4">
+
+                  <div className="p-4 sm:p-5 bg-[rgba(44,24,16,0.02)] border-t border-[rgba(44,24,16,0.05)]">
                     {isUnlocked ? (
-                      <div
+                      <button
                         onClick={() => handleCopy(reward.code)}
-                        className="flex items-center justify-center w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm font-bold text-gray-700 border-2 border-dashed rounded-lg cursor-pointer group hover:border-orange-500 hover:text-orange-600"
+                        className="flex items-center justify-center w-full px-4 py-3 sm:px-5 sm:py-3.5 text-sm font-extrabold text-[#E85D04] bg-[#FFF3E8] border border-[#E85D04]/30 rounded-xl cursor-pointer group hover:bg-[#E85D04] hover:text-white transition-all duration-300 shadow-sm"
                       >
                         {copiedCode === reward.code ? (
                           <>
-                            <Check className="w-4 h-4 mr-2 text-green-500" />
-                            Copied!
+                            <Check className="w-4 h-4 mr-2" />
+                            Copied to Clipboard!
                           </>
                         ) : (
                           <>
-                            <span className="truncate">{reward.code}</span>
+                            <span className="truncate tracking-wider">{reward.code}</span>
                             <Copy className="flex-shrink-0 w-4 h-4 ml-2 transition-transform duration-200 group-hover:scale-110" />
                           </>
                         )}
-                      </div>
+                      </button>
                     ) : (
-                      <div className="flex items-center justify-center w-full px-3 py-2.5 sm:px-4 sm:py-3 text-xs font-semibold text-center text-gray-500 bg-gray-200 rounded-lg sm:text-sm">
-                        Complete {ordersRemaining} more orders to unlock
+                      <div className="flex items-center justify-center w-full px-4 py-3 sm:px-5 sm:py-3.5 text-xs font-bold text-center text-[#5C3D2E]/60 bg-gray-100/80 rounded-xl sm:text-sm border border-gray-200/50">
+                        Complete {ordersRemaining} more order{ordersRemaining > 1 ? 's' : ''} to unlock
                       </div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>

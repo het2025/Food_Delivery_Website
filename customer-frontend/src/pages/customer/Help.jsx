@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { 
-  HelpCircle, 
-  Phone, 
-  Mail, 
-  MessageCircle, 
-  ChevronDown, 
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  HelpCircle,
+  Phone,
+  Mail,
+  MessageCircle,
+  ChevronDown,
   ChevronUp,
   ArrowLeft,
   Search,
@@ -17,6 +17,13 @@ import {
 import { useNavigate } from 'react-router-dom'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
+
+// --- 🍑 WARM PEACH THEME (With Clean White Cards) ---
+// bgMain: '#FFF3E8'
+// borderOrange: '#E85D04'
+// accentAmber: '#F48C06'
+// textDark: '#2C1810'
+// textMuted: '#5C3D2E'
 
 const Help = () => {
   const navigate = useNavigate()
@@ -108,21 +115,21 @@ const Help = () => {
       description: 'Speak with our support team',
       icon: Phone,
       action: 'tel:1800-123-4567',
-      color: 'bg-blue-50 text-blue-600'
+      color: 'bg-[#E85D04]/10 text-[#E85D04]'
     },
     {
       title: 'Email Support',
       description: 'Send us your queries',
       icon: Mail,
       action: 'mailto:support@quickbites.com',
-      color: 'bg-green-50 text-green-600'
+      color: 'bg-[#F48C06]/10 text-[#F48C06]'
     },
     {
       title: 'Live Chat',
       description: 'Chat with us now',
       icon: MessageCircle,
       action: 'chat',
-      color: 'bg-purple-50 text-purple-600'
+      color: 'bg-[#2C1810]/10 text-[#2C1810]'
     }
   ]
 
@@ -139,7 +146,7 @@ const Help = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FFF3E8] font-['Inter',_sans-serif]">
       <Header />
 
       <div className="pt-16 sm:pt-20 pb-16">
@@ -149,12 +156,14 @@ const Help = () => {
           <div className="flex flex-wrap items-center gap-2 mb-5 sm:mb-8 pt-4 sm:pt-0">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center text-gray-600 hover:text-gray-800 min-h-[44px] px-1"
+              className="flex items-center text-[#5C3D2E] hover:text-[#2C1810] min-h-[44px] px-1 transition-colors font-semibold"
             >
               <ArrowLeft className="w-5 h-5 mr-1" />
               <span className="text-sm sm:text-base">Back</span>
             </button>
-            <h1 className="text-xl sm:text-3xl font-bold text-gray-800">Help & Support</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2C1810]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              Help & Support
+            </h1>
           </div>
 
           {/* Search */}
@@ -164,13 +173,13 @@ const Help = () => {
             className="mb-6 sm:mb-8"
           >
             <div className="relative">
-              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-[#5C3D2E]/60 w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 placeholder="Search for help..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-sm text-sm sm:text-base"
+                className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 border border-[rgba(44,24,16,0.1)] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#E85D04] bg-white shadow-[0_8px_30px_rgba(44,24,16,0.04)] text-[#2C1810] placeholder-[#5C3D2E]/50 text-sm sm:text-base font-medium transition-shadow"
               />
             </div>
           </motion.div>
@@ -180,9 +189,9 @@ const Help = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-3 gap-2 sm:gap-4 mb-8 sm:mb-12"
+            className="grid grid-cols-3 gap-3 sm:gap-4 mb-8 sm:mb-12"
           >
-            {contactOptions.map((option, index) => (
+            {contactOptions.map((option) => (
               <button
                 key={option.title}
                 onClick={() => {
@@ -190,11 +199,11 @@ const Help = () => {
                     window.open(option.action)
                   }
                 }}
-                className={`p-3 sm:p-6 rounded-xl sm:rounded-2xl ${option.color} hover:shadow-md transition-all duration-200 min-h-[80px] sm:min-h-auto`}
+                className={`p-3 sm:p-6 rounded-2xl sm:rounded-3xl ${option.color} hover:-translate-y-1 transition-all duration-300 min-h-[90px] sm:min-h-auto border border-[rgba(44,24,16,0.05)] shadow-sm hover:shadow-md`}
               >
-                <option.icon className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-3" />
-                <h3 className="font-bold text-xs sm:text-lg mb-0.5 sm:mb-1 leading-tight">{option.title}</h3>
-                <p className="text-xs opacity-75 hidden sm:block">{option.description}</p>
+                <option.icon className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1.5 sm:mb-3" />
+                <h3 className="font-extrabold text-xs sm:text-lg mb-0.5 sm:mb-1 leading-tight">{option.title}</h3>
+                <p className="text-xs font-medium opacity-80 hidden sm:block">{option.description}</p>
               </button>
             ))}
           </motion.div>
@@ -207,41 +216,47 @@ const Help = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + categoryIndex * 0.1 }}
-                className="bg-white rounded-2xl shadow-lg p-4 sm:p-6"
+                className="bg-white rounded-3xl shadow-[0_8px_30px_rgba(44,24,16,0.04)] border border-[rgba(44,24,16,0.05)] p-4 sm:p-6"
               >
                 <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                  <category.icon className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 flex-shrink-0" />
-                  <h2 className="text-base sm:text-xl font-bold text-gray-800">{category.title}</h2>
+                  <category.icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#E85D04] flex-shrink-0" />
+                  <h2 className="text-lg sm:text-xl font-extrabold text-[#2C1810]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                    {category.title}
+                  </h2>
                 </div>
 
-                <div className="space-y-2 sm:space-y-3">
+                <div className="space-y-3">
                   {category.faqs.map((faq, faqIndex) => {
                     const globalIndex = categoryIndex * 100 + faqIndex
 
                     return (
-                      <div key={faqIndex} className="border border-gray-200 rounded-lg overflow-hidden">
+                      <div key={faqIndex} className="border border-[rgba(44,24,16,0.05)] rounded-2xl overflow-hidden transition-colors">
                         <button
                           onClick={() => toggleAccordion(globalIndex)}
-                          className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-gray-50 transition-colors min-h-[48px]"
+                          className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-[#FFF3E8]/50 transition-colors min-h-[48px]"
                         >
-                          <span className="font-semibold text-gray-800 pr-3 text-sm sm:text-base leading-snug">{faq.question}</span>
+                          <span className="font-bold text-[#2C1810] pr-3 text-sm sm:text-base leading-snug">{faq.question}</span>
                           {activeAccordion === globalIndex ? (
-                            <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 flex-shrink-0" />
+                            <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#E85D04] flex-shrink-0" />
                           ) : (
-                            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
+                            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-[#5C3D2E]/50 flex-shrink-0" />
                           )}
                         </button>
 
-                        {activeAccordion === globalIndex && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="border-t border-gray-200 bg-gray-50"
-                          >
-                            <p className="p-3 sm:p-4 text-gray-600 leading-relaxed text-sm sm:text-base">{faq.answer}</p>
-                          </motion.div>
-                        )}
+                        <AnimatePresence>
+                          {activeAccordion === globalIndex && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="border-t border-[rgba(44,24,16,0.05)] bg-[#FFF3E8]/30"
+                            >
+                              <p className="p-3 sm:p-4 text-[#5C3D2E] font-medium leading-relaxed text-sm sm:text-base">
+                                {faq.answer}
+                              </p>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     )
                   })}
@@ -250,27 +265,28 @@ const Help = () => {
             ))}
           </div>
 
+          {/* Empty Search State */}
           {filteredFAQs.length === 0 && searchQuery && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-12 sm:py-16"
+              className="text-center py-12 sm:py-16 bg-white rounded-3xl shadow-[0_8px_30px_rgba(44,24,16,0.04)] border border-[rgba(44,24,16,0.05)]"
             >
-              <HelpCircle className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg sm:text-xl font-bold text-gray-600 mb-2">No results found</h3>
-              <p className="text-gray-500 mb-6 text-sm sm:text-base px-2">
+              <HelpCircle className="w-12 h-12 sm:w-16 sm:h-16 text-[#E85D04]/30 mx-auto mb-4" />
+              <h3 className="text-lg sm:text-xl font-extrabold text-[#2C1810] mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>No results found</h3>
+              <p className="text-[#5C3D2E] font-medium mb-6 text-sm sm:text-base px-2">
                 Try different keywords or contact our support team
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-3">
+              <div className="flex flex-col sm:flex-row justify-center gap-3 px-4">
                 <button
                   onClick={() => window.open('tel:1800-123-4567')}
-                  className="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors min-h-[48px]"
+                  className="bg-[#E85D04] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#C1440E] transition-colors min-h-[48px] shadow-lg shadow-[#E85D04]/20"
                 >
                   Call Support
                 </button>
                 <button
                   onClick={() => window.open('mailto:support@quickbites.com')}
-                  className="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors min-h-[48px]"
+                  className="bg-[#2C1810] text-[#FFF3E8] px-6 py-3 rounded-xl font-bold hover:bg-[#4D2E18] transition-colors min-h-[48px] shadow-lg shadow-[#2C1810]/20"
                 >
                   Email Us
                 </button>
@@ -278,27 +294,27 @@ const Help = () => {
             </motion.div>
           )}
 
-          {/* Still Need Help */}
+          {/* Still Need Help (CTA) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mt-8 sm:mt-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl p-5 sm:p-8 text-white text-center"
+            className="mt-8 sm:mt-12 bg-gradient-to-r from-[#E85D04] to-[#F48C06] shadow-[0_10px_30px_rgba(232,93,4,0.2)] rounded-3xl p-6 sm:p-10 text-white text-center"
           >
-            <h2 className="text-lg sm:text-2xl font-bold mb-2">Still need help?</h2>
-            <p className="text-orange-100 mb-4 sm:mb-6 text-sm sm:text-base">
+            <h2 className="text-xl sm:text-3xl font-extrabold mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Still need help?</h2>
+            <p className="text-[#FFF3E8]/90 font-medium mb-6 sm:mb-8 text-sm sm:text-base">
               Our friendly support team is available 24/7 to assist you
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <button
                 onClick={() => window.open('tel:1800-123-4567')}
-                className="bg-white text-orange-600 px-5 sm:px-6 py-3 rounded-lg font-semibold hover:bg-orange-50 transition-colors min-h-[48px] text-sm sm:text-base"
+                className="bg-[#FFF3E8] text-[#E85D04] px-5 sm:px-8 py-3.5 rounded-xl font-bold hover:bg-white transition-all hover:scale-105 min-h-[48px] text-sm sm:text-base shadow-lg"
               >
                 Call: 1800-123-4567
               </button>
               <button
                 onClick={() => window.open('mailto:support@quickbites.com')}
-                className="bg-white bg-opacity-20 text-white px-5 sm:px-6 py-3 rounded-lg font-semibold hover:bg-opacity-30 transition-colors min-h-[48px] text-sm sm:text-base"
+                className="bg-black/10 text-white px-5 sm:px-8 py-3.5 rounded-xl font-bold hover:bg-black/20 transition-all hover:scale-105 min-h-[48px] text-sm sm:text-base"
               >
                 Email Support
               </button>

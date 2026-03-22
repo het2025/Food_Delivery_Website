@@ -119,11 +119,10 @@ const Header = () => {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'border-b border-gray-100 shadow-lg backdrop-blur-md bg-white/95' 
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'border-b border-gray-100 shadow-lg backdrop-blur-md bg-white/95'
           : 'bg-white border-b border-gray-100 shadow-sm'
-      }`}>
+        }`}>
         {/* ✅ CHANGED: Removed max-w-7xl constraint, using full width with padding */}
         <div className="px-4 w-full sm:px-6 lg:px-8">
           <div className="flex gap-4 justify-between items-center h-16">
@@ -167,37 +166,34 @@ const Header = () => {
 
             {/* Center: Navigation Links */}
             <nav className="hidden gap-2 items-center lg:flex">
-              <Link 
+              <Link
                 to="/"
-                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg whitespace-nowrap ${
-                  location.pathname === '/' 
-                    ? 'text-orange-600 bg-orange-50' 
+                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg whitespace-nowrap ${location.pathname === '/'
+                    ? 'text-orange-600 bg-orange-50'
                     : 'text-gray-700 hover:text-orange-500 hover:bg-orange-50'
-                }`}
+                  }`}
               >
                 <Home className="w-4 h-4" />
                 Home
               </Link>
 
-              <Link 
+              <Link
                 to="/restaurants"
-                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg whitespace-nowrap ${
-                  location.pathname === '/restaurants' 
-                    ? 'text-orange-600 bg-orange-50' 
+                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg whitespace-nowrap ${location.pathname === '/restaurants'
+                    ? 'text-orange-600 bg-orange-50'
                     : 'text-gray-700 hover:text-orange-500 hover:bg-orange-50'
-                }`}
+                  }`}
               >
                 <Store className="w-4 h-4" />
                 Restaurants
               </Link>
 
-              <Link 
+              <Link
                 to="/newly-registered"
-                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg whitespace-nowrap ${
-                  location.pathname === '/newly-registered' 
-                    ? 'text-orange-600 bg-orange-50' 
+                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg whitespace-nowrap ${location.pathname === '/newly-registered'
+                    ? 'text-orange-600 bg-orange-50'
                     : 'text-gray-700 hover:text-orange-500 hover:bg-orange-50'
-                }`}
+                  }`}
               >
                 <Sparkles className="w-4 h-4" />
                 <span className="hidden xl:inline">Newly Registered</span>
@@ -353,7 +349,7 @@ const Header = () => {
               )}
 
               {/* Mobile Menu Button */}
-              <button 
+              <button
                 onClick={toggleMobileMenu}
                 className="p-2 text-gray-700 rounded-lg transition-colors lg:hidden hover:bg-gray-100"
               >
@@ -372,7 +368,7 @@ const Header = () => {
             <div className="p-6">
               <div className="flex justify-between items-center mb-8">
                 <span className="text-xl font-bold text-gray-800">Menu</span>
-                <button 
+                <button
                   onClick={toggleMobileMenu}
                   className="p-2 text-gray-500 rounded-lg hover:bg-gray-100"
                 >
@@ -520,8 +516,8 @@ const Header = () => {
       )}
 
       {isLocationModalOpen && (
-        <LocationModal 
-          onClose={closeLocationModal} 
+        <LocationModal
+          onClose={closeLocationModal}
           onLocationSelect={handleLocationSelect}
         />
       )}
