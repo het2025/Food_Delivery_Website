@@ -38,6 +38,19 @@ const Login = () => {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      setError('Please enter a valid email address.');
+      setLoading(false);
+      return;
+    }
+
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      setLoading(false);
+      return;
+    }
+
     const result = await login(formData.email, formData.password);
     
     if (result.success) {
@@ -86,6 +99,7 @@ const Login = () => {
                 placeholder="admin@quickbite.com"
                 className="w-full px-4 py-3 transition border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
+                maxLength={100}
               />
             </div>
 
@@ -101,6 +115,8 @@ const Login = () => {
                 placeholder="••••••••"
                 className="w-full px-4 py-3 transition border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
+                minLength={8}
+                maxLength={50}
               />
             </div>
 

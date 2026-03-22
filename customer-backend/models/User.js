@@ -8,21 +8,28 @@ const AddressSchema = new mongoose.Schema({
   },
   street: {
     type: String,
-    required: true
+    required: true,
+    maxlength: 100
   },
   city: {
     type: String,
-    required: true
+    required: true,
+    maxlength: 100
   },
   state: {
     type: String,
-    required: true
+    required: true,
+    maxlength: 100
   },
   pincode: {
     type: String,
-    required: true
+    required: true,
+    maxlength: 10
   },
-  landmark: String,
+  landmark: {
+    type: String,
+    maxlength: 100
+  },
   isDefault: {
     type: Boolean,
     default: false
@@ -50,13 +57,14 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please add a password'],
-    minlength: [6, 'Password must be at least 6 characters'],
+    match: [/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, 'Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters'],
     select: false
   },
   phone: {
     type: String,
     default: '',
     trim: true,
+    maxlength: 15,
     validate: {
       validator: function (v) {
         return !v || /^\d{10}$/.test(v.replace(/\D/g, ''));

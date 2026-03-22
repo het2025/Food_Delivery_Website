@@ -16,12 +16,14 @@ const restaurantOwnerSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      maxlength: 100,
       match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
     },
     phone: {
       type: String,
       required: [true, 'Phone is required'],
       trim: true,
+      maxlength: 15,
       // ✅ FIX: Remove strict 10-digit validation to allow country codes
       validate: {
         validator: function (v) {
@@ -34,7 +36,7 @@ const restaurantOwnerSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Password is required'],
-      minlength: [6, 'Password must be at least 6 characters'],
+      match: [/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, 'Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters'],
       select: false
     },
     role: {
@@ -64,7 +66,8 @@ const restaurantOwnerSchema = new mongoose.Schema(
     },
     rejectionReason: {
       type: String,
-      trim: true
+      trim: true,
+      maxlength: 500
     },
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,

@@ -20,7 +20,13 @@ const Register = () => {
   const { register } = useDelivery();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    let value = e.target.value;
+    if (e.target.name === 'phone') {
+      value = value.replace(/\D/g, ''); // only allow digits
+    } else if (e.target.name === 'vehicleNumber' || e.target.name === 'drivingLicense') {
+      value = value.toUpperCase().replace(/[^A-Z0-9 -]/g, '');
+    }
+    setFormData({ ...formData, [e.target.name]: value });
     setError('');
   };
 
@@ -32,10 +38,19 @@ const Register = () => {
       setError('Passwords do not match');
       return;
     }
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    
+    // Check strong password
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!strongPasswordRegex.test(formData.password)) {
+      setError('Password must be at least 8 characters long, contain an uppercase letter, a number, and a special character.');
       return;
     }
+
+    if (formData.phone.length < 10) {
+      setError('Valid phone number is required (min 10 digits)');
+      return;
+    }
+    // Password check removed from here since regex covers it.
 
     setLoading(true);
     const { confirmPassword, ...registerData } = formData;
@@ -95,6 +110,7 @@ const Register = () => {
                   placeholder="Your full name"
                   className={inputClass}
                   required
+                  maxLength={50}
                   autoComplete="name"
                 />
               </div>
@@ -110,6 +126,8 @@ const Register = () => {
                   placeholder="10-digit mobile number"
                   className={inputClass}
                   required
+                  maxLength={15}
+                  pattern="[0-9]{10,15}"
                   autoComplete="tel"
                 />
               </div>
@@ -125,6 +143,7 @@ const Register = () => {
                   placeholder="delivery@example.com"
                   className={inputClass}
                   required
+                  maxLength={100}
                   autoComplete="email"
                   autoCapitalize="none"
                   autoCorrect="off"
@@ -163,6 +182,8 @@ const Register = () => {
                   placeholder="GJ01AB1234"
                   className={inputClass}
                   required
+                  maxLength={15}
+                  pattern="^[A-Z]{2}[ -]?[0-9]{1,2}(?:[ -]?[A-Z]{1,2})?[ -]?[0-9]{4}$"
                   autoCapitalize="characters"
                   autoCorrect="off"
                   spellCheck={false}
@@ -179,6 +200,8 @@ const Register = () => {
                   placeholder="DL Number"
                   className={inputClass}
                   required
+                  maxLength={20}
+                  pattern="^[A-Z]{2}[0-9]{2}[ -]?[0-9]{11}$"
                   autoCapitalize="characters"
                   autoCorrect="off"
                   spellCheck={false}
@@ -201,6 +224,8 @@ const Register = () => {
                   placeholder="Min. 6 characters"
                   className={inputClass}
                   required
+                  minLength={8}
+                  maxLength={50}
                   autoComplete="new-password"
                 />
               </div>
@@ -215,6 +240,8 @@ const Register = () => {
                   placeholder="Repeat password"
                   className={inputClass}
                   required
+                  minLength={8}
+                  maxLength={50}
                   autoComplete="new-password"
                 />
               </div>

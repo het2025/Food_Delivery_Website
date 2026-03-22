@@ -80,6 +80,7 @@ const Login = () => {
                 placeholder="delivery@example.com"
                 className="w-full px-4 py-3 text-base rounded-xl border border-gray-300 outline-none transition focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
+                maxLength={100}
                 autoComplete="email"
                 autoCapitalize="none"
                 autoCorrect="off"
@@ -99,6 +100,8 @@ const Login = () => {
                 placeholder="••••••••"
                 className="w-full px-4 py-3 text-base rounded-xl border border-gray-300 outline-none transition focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
+                minLength={8}
+                maxLength={50}
                 autoComplete="current-password"
               />
             </div>

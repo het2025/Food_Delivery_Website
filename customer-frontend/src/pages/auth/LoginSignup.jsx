@@ -231,6 +231,7 @@ export default function LoginSignup() {
                 disabled={loading}
                 onChange={handleChange}
                 required
+                maxLength={50}
                 className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="Your name"
               />
@@ -246,6 +247,7 @@ export default function LoginSignup() {
               disabled={loading}
               onChange={handleChange}
               required
+              maxLength={100}
               className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder="Enter your email"
               spellCheck={false}
@@ -279,6 +281,7 @@ export default function LoginSignup() {
               onChange={handleChange}
               required
               minLength={8}
+              maxLength={50}
               className="px-4 py-3 pr-12 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder={mode === "login" ? "Enter your password" : "Create a strong password"}
             />
@@ -309,6 +312,7 @@ export default function LoginSignup() {
                 onChange={handleChange}
                 required
                 minLength={8}
+                maxLength={50}
                 className="px-4 py-3 pr-12 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="Confirm your password"
               />

@@ -221,6 +221,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="e.g., Ritesh Agrwal"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                    maxLength={50}
                   />
                 </div>
 
@@ -236,6 +237,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="your@email.com"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                    maxLength={100}
                   />
                 </div>
 
@@ -251,6 +253,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="+91 9876543210"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                    maxLength={15}
                   />
                 </div>
 
@@ -280,6 +283,10 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="Min 6 characters"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                    minLength={8}
+                    maxLength={50}
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                    title="Must contain at least one number and one uppercase and lowercase letter, one special char, and at least 8 or more characters"
                   />
                 </div>
 
@@ -295,6 +302,8 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="Re-enter password"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                    minLength={8}
+                    maxLength={50}
                   />
                 </div>
               </div>
@@ -322,6 +331,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="e.g., Pizza Mountain"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                    maxLength={100}
                   />
                 </div>
 
@@ -427,6 +437,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="e.g., Alkapuri"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                    maxLength={100}
                   />
                 </div>
 
@@ -442,6 +453,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="e.g., Vadodara"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                    maxLength={100}
                   />
                 </div>
 
@@ -457,6 +469,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     rows="2"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 resize-none focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                    maxLength={100}
                   />
                 </div>
 
@@ -471,6 +484,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     onChange={handleChange}
                     placeholder="e.g., Gujarat"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    maxLength={100}
                   />
                 </div>
 
