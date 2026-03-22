@@ -15,9 +15,25 @@ const Register = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [focusedField, setFocusedField] = useState('');
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    hasUppercase: false,
+    hasNumber: false,
+    hasSpecial: false
+  });
 
   const navigate = useNavigate();
   const { register } = useDelivery();
+
+  const checkPasswordRequirements = (password) => {
+    const requirements = {
+      hasUppercase: /[A-Z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecial: /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/;']/.test(password)
+    };
+    setPasswordRequirements(requirements);
+    return requirements;
+  };
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -26,6 +42,12 @@ const Register = () => {
     } else if (e.target.name === 'vehicleNumber' || e.target.name === 'drivingLicense') {
       value = value.toUpperCase().replace(/[^A-Z0-9 -]/g, '');
     }
+
+    // Check password requirements in real-time
+    if (e.target.name === 'password') {
+      checkPasswordRequirements(value);
+    }
+
     setFormData({ ...formData, [e.target.name]: value });
     setError('');
   };
@@ -38,19 +60,18 @@ const Register = () => {
       setError('Passwords do not match');
       return;
     }
-    
-    // Check strong password
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!strongPasswordRegex.test(formData.password)) {
-      setError('Password must be at least 8 characters long, contain an uppercase letter, a number, and a special character.');
+
+    // Check all password requirements are met
+    const requirements = checkPasswordRequirements(formData.password);
+    if (!requirements.hasUppercase || !requirements.hasNumber || !requirements.hasSpecial) {
+      setError('Password must contain at least one uppercase letter, one number, and one special character.');
       return;
     }
 
-    if (formData.phone.length < 10) {
-      setError('Valid phone number is required (min 10 digits)');
+    if (formData.phone.length !== 10) {
+      setError('Phone number must be exactly 10 digits');
       return;
     }
-    // Password check removed from here since regex covers it.
 
     setLoading(true);
     const { confirmPassword, ...registerData } = formData;
@@ -70,7 +91,7 @@ const Register = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-start w-full min-h-screen min-h-screen-dvh px-4 bg-gradient-to-br from-primary to-secondary sm:justify-center"
+      className="flex flex-col items-center justify-start w-full min-h-screen px-4 min-h-screen-dvh bg-gradient-to-br from-primary to-secondary sm:justify-center"
       style={{
         paddingTop: 'max(2.5rem, env(safe-area-inset-top))',
         paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom))'
@@ -84,11 +105,11 @@ const Register = () => {
         </div>
 
         {/* Form Card */}
-        <div className="p-5 bg-white rounded-2xl shadow-2xl sm:p-7">
+        <div className="p-5 bg-white shadow-2xl rounded-2xl sm:p-7">
           <h2 className="mb-4 text-xl font-bold text-gray-800">Create Account</h2>
 
           {error && (
-            <div className="flex items-start gap-2 p-3 mb-4 text-sm text-red-700 bg-red-50 rounded-lg border border-red-200">
+            <div className="flex items-start gap-2 p-3 mb-4 text-sm text-red-700 border border-red-200 rounded-lg bg-red-50">
               <span className="flex-shrink-0 mt-0.5">⚠</span>
               <span>{error}</span>
             </div>
@@ -107,12 +128,19 @@ const Register = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
+                  onFocus={() => setFocusedField('name')}
+                  onBlur={() => setFocusedField('')}
                   placeholder="Your full name"
                   className={inputClass}
                   required
-                  maxLength={50}
+                  maxLength={128}
                   autoComplete="name"
                 />
+                {focusedField === 'name' && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Max 128 characters ({formData.name.length}/128)
+                  </p>
+                )}
               </div>
 
               <div>
@@ -123,13 +151,20 @@ const Register = () => {
                   inputMode="tel"
                   value={formData.phone}
                   onChange={handleChange}
+                  onFocus={() => setFocusedField('phone')}
+                  onBlur={() => setFocusedField('')}
                   placeholder="10-digit mobile number"
                   className={inputClass}
                   required
-                  maxLength={15}
-                  pattern="[0-9]{10,15}"
+                  maxLength={10}
+                  pattern="[0-9]{10}"
                   autoComplete="tel"
                 />
+                {focusedField === 'phone' && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Must be exactly 10 digits ({formData.phone.length}/10)
+                  </p>
+                )}
               </div>
 
               <div className="sm:col-span-2">
@@ -179,15 +214,21 @@ const Register = () => {
                   name="vehicleNumber"
                   value={formData.vehicleNumber}
                   onChange={handleChange}
+                  onFocus={() => setFocusedField('vehicleNumber')}
+                  onBlur={() => setFocusedField('')}
                   placeholder="GJ01AB1234"
                   className={inputClass}
                   required
-                  maxLength={15}
-                  pattern="^[A-Z]{2}[ -]?[0-9]{1,2}(?:[ -]?[A-Z]{1,2})?[ -]?[0-9]{4}$"
+                  maxLength={10}
                   autoCapitalize="characters"
                   autoCorrect="off"
                   spellCheck={false}
                 />
+                {focusedField === 'vehicleNumber' && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Max 10 characters ({formData.vehicleNumber.length}/10)
+                  </p>
+                )}
               </div>
 
               <div className="sm:col-span-2">
@@ -197,15 +238,21 @@ const Register = () => {
                   name="drivingLicense"
                   value={formData.drivingLicense}
                   onChange={handleChange}
-                  placeholder="DL Number"
+                  onFocus={() => setFocusedField('drivingLicense')}
+                  onBlur={() => setFocusedField('')}
+                  placeholder="DL Number (16 alphanumeric)"
                   className={inputClass}
                   required
-                  maxLength={20}
-                  pattern="^[A-Z]{2}[0-9]{2}[ -]?[0-9]{11}$"
+                  maxLength={16}
                   autoCapitalize="characters"
                   autoCorrect="off"
                   spellCheck={false}
                 />
+                {focusedField === 'drivingLicense' && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Max 16 alphanumeric characters ({formData.drivingLicense.length}/16)
+                  </p>
+                )}
               </div>
             </div>
 
@@ -214,36 +261,111 @@ const Register = () => {
               Account Security
             </p>
             <div className="space-y-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0">
-              <div>
+              <div className="sm:col-span-2">
                 <label className={labelClass}>Password</label>
                 <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Min. 6 characters"
+                  onFocus={() => setFocusedField('password')}
+                  onBlur={() => setFocusedField('')}
+                  placeholder="Create a strong password"
                   className={inputClass}
                   required
                   minLength={8}
-                  maxLength={50}
+                  maxLength={32}
                   autoComplete="new-password"
                 />
+                {focusedField === 'password' && (
+                  <div className="p-3 mt-2 border border-gray-200 rounded-lg bg-gray-50">
+                    <p className="mb-2 text-xs font-medium text-gray-700">
+                      Password must contain (max 32 characters):
+                    </p>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className={`flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full ${
+                          passwordRequirements.hasUppercase
+                            ? 'bg-green-500 text-white'
+                            : 'bg-gray-300 text-gray-600'
+                        }`}>
+                          {passwordRequirements.hasUppercase ? '✓' : '○'}
+                        </span>
+                        <span className={passwordRequirements.hasUppercase ? 'text-green-700 font-medium' : 'text-gray-600'}>
+                          At least one uppercase letter (A-Z)
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className={`flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full ${
+                          passwordRequirements.hasNumber
+                            ? 'bg-green-500 text-white'
+                            : 'bg-gray-300 text-gray-600'
+                        }`}>
+                          {passwordRequirements.hasNumber ? '✓' : '○'}
+                        </span>
+                        <span className={passwordRequirements.hasNumber ? 'text-green-700 font-medium' : 'text-gray-600'}>
+                          At least one number (0-9)
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className={`flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full ${
+                          passwordRequirements.hasSpecial
+                            ? 'bg-green-500 text-white'
+                            : 'bg-gray-300 text-gray-600'
+                        }`}>
+                          {passwordRequirements.hasSpecial ? '✓' : '○'}
+                        </span>
+                        <span className={passwordRequirements.hasSpecial ? 'text-green-700 font-medium' : 'text-gray-600'}>
+                          At least one special character (!@#$%^&*...)
+                        </span>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-xs text-gray-500">
+                      Character count: {formData.password.length}/32
+                    </p>
+                  </div>
+                )}
               </div>
 
-              <div>
+              <div className="sm:col-span-2">
                 <label className={labelClass}>Confirm Password</label>
                 <input
                   type="password"
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
+                  onFocus={() => setFocusedField('confirmPassword')}
+                  onBlur={() => setFocusedField('')}
                   placeholder="Repeat password"
                   className={inputClass}
                   required
                   minLength={8}
-                  maxLength={50}
+                  maxLength={32}
                   autoComplete="new-password"
                 />
+                {focusedField === 'confirmPassword' && formData.confirmPassword.length > 0 && (
+                  <>
+                    {formData.password !== formData.confirmPassword ? (
+                      <p className="mt-1 text-xs text-red-600 font-medium flex items-center gap-1">
+                        <span>✗</span>
+                        <span>Passwords do not match!</span>
+                      </p>
+                    ) : (
+                      <p className="mt-1 text-xs text-green-600 font-medium flex items-center gap-1">
+                        <span>✓</span>
+                        <span>Passwords match</span>
+                      </p>
+                    )}
+                    <p className="mt-1 text-xs text-gray-500">
+                      Max 32 characters ({formData.confirmPassword.length}/32)
+                    </p>
+                  </>
+                )}
+                {focusedField === 'confirmPassword' && formData.confirmPassword.length === 0 && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Max 32 characters ({formData.confirmPassword.length}/32)
+                  </p>
+                )}
               </div>
             </div>
 
@@ -254,7 +376,7 @@ const Register = () => {
             >
               {loading ? (
                 <>
-                  <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span className="inline-block w-4 h-4 mr-2 border-2 border-white rounded-full border-t-transparent animate-spin"></span>
                   Registering…
                 </>
               ) : 'Create Account'}

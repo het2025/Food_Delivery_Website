@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CheckCircle, AlertCircle, Store, MapPin, Clock, IndianRupee, Image as ImageIcon } from 'lucide-react';
+import { X, CheckCircle, AlertCircle, Store, MapPin, Clock, IndianRupee, Image as ImageIcon, Check, Circle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { registerRestaurantOwner } from '../api/restaurantOwnerApi';
 
@@ -36,10 +36,35 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
     gstNumber: ''
   });
 
+  // Password strength checks
+  const passwordChecks = {
+    hasUppercase: /[A-Z]/.test(formData.password),
+    hasNumeric: /[0-9]/.test(formData.password),
+    hasSpecial: /[@$!%*?&]/.test(formData.password),
+    hasMinLength: formData.password.length >= 8
+  };
+
+  const isPasswordStrong = Object.values(passwordChecks).every(check => check);
+  const passwordsMatch = formData.password && formData.confirmPassword && formData.password === formData.confirmPassword;
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
     if (name === 'image' && files && files[0]) {
+      // Only allow single image
       setFormData((prev) => ({ ...prev, image: files[0] }));
+    } else if (name === 'phone') {
+      // Only allow 10 digit numbers
+      const numericValue = value.replace(/\D/g, '');
+      if (numericValue.length <= 10) {
+        setFormData((prev) => ({ ...prev, [name]: numericValue }));
+      }
+    } else if (name === 'pincode') {
+      // Only allow 6 digit numbers
+      const numericValue = value.replace(/\D/g, '');
+      if (numericValue.length <= 6) {
+        setFormData((prev) => ({ ...prev, [name]: numericValue }));
+      }
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -67,8 +92,31 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    // Phone validation - exactly 10 digits
+    if (formData.phone.length !== 10) {
+      setError('Phone number must be exactly 10 digits');
+      return;
+    }
+
+    // Pincode validation - exactly 6 digits
+    if (formData.pincode.length !== 6) {
+      setError('PIN code must be exactly 6 digits');
+      return;
+    }
+
+    // Password strength validation
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+
+    if (formData.password.length > 32) {
+      setError('Password must not exceed 32 characters');
+      return;
+    }
+
+    if (!isPasswordStrong) {
+      setError('Password must contain at least one uppercase letter, one number, and one special character (@$!%*?&)');
       return;
     }
 
@@ -221,8 +269,9 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="e.g., Ritesh Agrwal"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
-                    maxLength={50}
+                    maxLength={32}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.name.length}/32 characters</p>
                 </div>
 
                 <div>
@@ -250,11 +299,12 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="+91 9876543210"
+                    placeholder="9876543210"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
-                    maxLength={15}
+                    maxLength={10}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.phone.length}/10 digits (numeric only)</p>
                 </div>
 
                 <div>
@@ -268,7 +318,9 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     onChange={handleChange}
                     placeholder="e.g., 29ABCDE1234F1Z5"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    maxLength={15}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.gstNumber.length}/15 characters</p>
                 </div>
 
                 <div>
@@ -280,14 +332,60 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="Min 6 characters"
+                    placeholder="Create a strong password"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
                     minLength={8}
-                    maxLength={50}
-                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                    title="Must contain at least one number and one uppercase and lowercase letter, one special char, and at least 8 or more characters"
+                    maxLength={32}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.password.length}/32 characters</p>
+
+                  {/* Password strength indicators - Always visible when typing */}
+                  <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <p className="text-xs font-semibold text-gray-700 mb-2">Password must contain:</p>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2 text-xs">
+                        {passwordChecks.hasUppercase ? (
+                          <CheckCircle size={16} className="text-green-600 flex-shrink-0" fill="currentColor" />
+                        ) : (
+                          <Circle size={16} className="text-gray-400 flex-shrink-0" />
+                        )}
+                        <span className={passwordChecks.hasUppercase ? 'text-green-600 font-medium' : 'text-gray-600'}>
+                          At least one uppercase letter (A-Z)
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        {passwordChecks.hasNumeric ? (
+                          <CheckCircle size={16} className="text-green-600 flex-shrink-0" fill="currentColor" />
+                        ) : (
+                          <Circle size={16} className="text-gray-400 flex-shrink-0" />
+                        )}
+                        <span className={passwordChecks.hasNumeric ? 'text-green-600 font-medium' : 'text-gray-600'}>
+                          At least one number (0-9)
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        {passwordChecks.hasSpecial ? (
+                          <CheckCircle size={16} className="text-green-600 flex-shrink-0" fill="currentColor" />
+                        ) : (
+                          <Circle size={16} className="text-gray-400 flex-shrink-0" />
+                        )}
+                        <span className={passwordChecks.hasSpecial ? 'text-green-600 font-medium' : 'text-gray-600'}>
+                          At least one special character (@$!%*?&)
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        {passwordChecks.hasMinLength ? (
+                          <CheckCircle size={16} className="text-green-600 flex-shrink-0" fill="currentColor" />
+                        ) : (
+                          <Circle size={16} className="text-gray-400 flex-shrink-0" />
+                        )}
+                        <span className={passwordChecks.hasMinLength ? 'text-green-600 font-medium' : 'text-gray-600'}>
+                          Minimum 8 characters
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -303,8 +401,29 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
                     minLength={8}
-                    maxLength={50}
+                    maxLength={32}
                   />
+
+                  {/* Password match indicator - shows when user starts typing confirm password */}
+                  {formData.confirmPassword && (
+                    <div className="flex items-center gap-2 mt-2 p-2 rounded-lg bg-gray-50 border border-gray-200">
+                      {passwordsMatch ? (
+                        <>
+                          <CheckCircle size={18} className="text-green-600 flex-shrink-0" fill="currentColor" />
+                          <span className="text-green-600 font-semibold text-sm">
+                            ✓ Passwords match!
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <AlertCircle size={18} className="text-red-600 flex-shrink-0" />
+                          <span className="text-red-600 font-medium text-sm">
+                            Passwords do not match
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -331,8 +450,9 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="e.g., Pizza Mountain"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
-                    maxLength={100}
+                    maxLength={64}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.restaurantName.length}/64 characters</p>
                 </div>
 
                 <div className="md:col-span-2">
@@ -346,7 +466,9 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="Describe your restaurant and what makes it special..."
                     rows="3"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 resize-none focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    maxLength={100}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.description.length}/100 characters</p>
                 </div>
 
                 <div>
@@ -360,14 +482,17 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     onChange={handleChange}
                     placeholder="e.g., Italian, Chinese, Indian"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    maxLength={32}
                   />
-                  <p className="mt-1 text-xs text-gray-500">Separate multiple cuisines with commas</p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    {formData.cuisine.length}/32 characters · Separate multiple cuisines with commas
+                  </p>
                 </div>
 
                 <div>
                   <label className="flex gap-2 items-center mb-1 text-sm font-medium text-gray-700">
                     <ImageIcon size={16} />
-                    Restaurant Image
+                    Restaurant Image (Select only 1 image)
                   </label>
                   <input
                     type="file"
@@ -376,6 +501,11 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     accept="image/*"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
+                  {formData.image && (
+                    <p className="mt-1 text-xs text-green-600">
+                      ✓ {formData.image.name || 'Image selected'}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -437,8 +567,9 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="e.g., Alkapuri"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
-                    maxLength={100}
+                    maxLength={32}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.area.length}/32 characters</p>
                 </div>
 
                 <div>
@@ -453,8 +584,9 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     placeholder="e.g., Vadodara"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
-                    maxLength={100}
+                    maxLength={32}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.city.length}/32 characters</p>
                 </div>
 
                 <div className="md:col-span-2">
@@ -471,6 +603,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     required
                     maxLength={100}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.address.length}/100 characters</p>
                 </div>
 
                 <div>
@@ -484,8 +617,9 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     onChange={handleChange}
                     placeholder="e.g., Gujarat"
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                    maxLength={100}
+                    maxLength={18}
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.state.length}/18 characters</p>
                 </div>
 
                 <div>
@@ -498,10 +632,11 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
                     value={formData.pincode}
                     onChange={handleChange}
                     placeholder="e.g., 390007"
-                    maxLength="6"
+                    maxLength={6}
                     className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
                   />
+                  <p className="mt-1 text-xs text-gray-500">{formData.pincode.length}/6 digits (numeric only)</p>
                 </div>
               </div>
             </div>

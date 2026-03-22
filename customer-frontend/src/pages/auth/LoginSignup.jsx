@@ -32,6 +32,15 @@ export default function LoginSignup() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Validation hints state
+  const [showPasswordHints, setShowPasswordHints] = useState(false);
+  const [passwordValidation, setPasswordValidation] = useState({
+    hasUpperCase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
+    isValidLength: false
+  });
+
   // ✅ NEW: Handle browser back button - redirect to home page
   useEffect(() => {
     // Push current state to history
@@ -68,6 +77,40 @@ export default function LoginSignup() {
 
   const handleChange = e => {
     const { name, value } = e.target;
+
+    // Phone number: only allow numeric input
+    if (name === "phone") {
+      const numericValue = value.replace(/\D/g, "");
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue
+      }));
+      setError("");
+      setSuccess("");
+      return;
+    }
+
+    // Password: update validation hints
+    if (name === "password") {
+      const cleanValue = safeValue(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: cleanValue
+      }));
+
+      // Update password validation state
+      setPasswordValidation({
+        hasUpperCase: /[A-Z]/.test(cleanValue),
+        hasNumber: /[0-9]/.test(cleanValue),
+        hasSpecialChar: /[@$!%*?&]/.test(cleanValue),
+        isValidLength: cleanValue.length >= 8 && cleanValue.length <= 32
+      });
+
+      setError("");
+      setSuccess("");
+      return;
+    }
+
     setFormData(prev => ({
       ...prev,
       [name]: safeValue(value)
@@ -182,7 +225,7 @@ export default function LoginSignup() {
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen"
+      className="flex items-center justify-center min-h-screen"
       style={{
         backgroundImage: `url('/login_background.jpg')`,
         backgroundSize: "cover",
@@ -190,7 +233,7 @@ export default function LoginSignup() {
       }}
     >
       <div
-        className="px-6 pt-3 pb-8 mx-4 w-full max-w-md rounded-2xl drop-shadow-lg sm:px-8 sm:mx-0"
+        className="w-full max-w-md px-6 pt-3 pb-8 mx-4 rounded-2xl drop-shadow-lg sm:px-8 sm:mx-0"
         style={{
           background: "linear-gradient(132deg, rgba(255,255,255,0.48) 85%, rgba(255,255,255,0.24) 98%)",
           backdropFilter: "blur(22px)",
@@ -199,7 +242,7 @@ export default function LoginSignup() {
         }}
       >
         <div className="mb-3 text-center">
-          <img src="/quickbite_logo.svg" alt="QuickBite" className="object-contain mx-auto mb-1 w-12 h-12" />
+          <img src="/quickbite_logo.svg" alt="QuickBite" className="object-contain w-12 h-12 mx-auto mb-1" />
           <h1 className="mb-2 text-3xl font-bold text-gray-800">
             {mode === "login" ? "" : "Create Account"}
           </h1>
@@ -210,12 +253,12 @@ export default function LoginSignup() {
           </p>
         </div>
         {success && (
-          <div className="flex gap-2 justify-center items-center px-4 py-3 mb-4 text-center text-green-600 bg-green-50 rounded-lg border border-green-200">
+          <div className="flex items-center justify-center gap-2 px-4 py-3 mb-4 text-center text-green-600 border border-green-200 rounded-lg bg-green-50">
               {success}
           </div>
         )}
         {error && (
-          <div className="flex gap-2 justify-center items-center px-4 py-3 mb-4 text-center text-red-600 bg-red-50 rounded-lg border border-red-200">
+          <div className="flex items-center justify-center gap-2 px-4 py-3 mb-4 text-center text-red-600 border border-red-200 rounded-lg bg-red-50">
               {error}
           </div>
         )}
@@ -231,10 +274,13 @@ export default function LoginSignup() {
                 disabled={loading}
                 onChange={handleChange}
                 required
-                maxLength={50}
-                className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                maxLength={128}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="Your name"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                {formData.name.length}/128 characters
+              </p>
             </div>
           )}
           <div>
@@ -248,7 +294,7 @@ export default function LoginSignup() {
               onChange={handleChange}
               required
               maxLength={100}
-              className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder="Enter your email"
               spellCheck={false}
             />
@@ -263,11 +309,14 @@ export default function LoginSignup() {
                 autoComplete="off"
                 disabled={loading}
                 onChange={handleChange}
-                className="px-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="Your 10-digit phone"
                 maxLength={10}
                 pattern="\d{10}"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Only numeric input allowed ({formData.phone.length}/10 digits)
+              </p>
             </div>
           )}
           <div className="relative">
@@ -279,16 +328,18 @@ export default function LoginSignup() {
               autoComplete={mode === "login" ? "current-password" : "new-password"}
               disabled={loading}
               onChange={handleChange}
+              onFocus={() => mode === "signup" && setShowPasswordHints(true)}
+              onBlur={() => mode === "signup" && setShowPasswordHints(false)}
               required
               minLength={8}
-              maxLength={50}
-              className="px-4 py-3 pr-12 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              maxLength={32}
+              className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder={mode === "login" ? "Enter your password" : "Create a strong password"}
             />
             <button
               type="button"
               tabIndex={-1}
-              className="absolute right-4 top-9 text-gray-400 hover:text-orange-400"
+              className="absolute text-gray-400 right-4 top-9 hover:text-orange-400"
               onClick={() => setShowPassword(s => !s)}
               style={{ background: "none", border: "none" }}
               disabled={loading}
@@ -299,6 +350,27 @@ export default function LoginSignup() {
                 <Eye className="w-6 h-6" />
               )}
             </button>
+            {mode === "signup" && (showPasswordHints || formData.password.length > 0) && (
+              <div className="p-3 mt-2 space-y-1 border border-gray-200 rounded-lg bg-gray-50">
+                <p className="mb-2 text-xs font-semibold text-gray-700">Password must contain:</p>
+                <p className={`text-xs flex items-center gap-2 ${passwordValidation.hasUpperCase ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span>{passwordValidation.hasUpperCase ? '✓' : '○'}</span>
+                  At least one capital letter (A-Z)
+                </p>
+                <p className={`text-xs flex items-center gap-2 ${passwordValidation.hasNumber ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span>{passwordValidation.hasNumber ? '✓' : '○'}</span>
+                  At least one number (0-9)
+                </p>
+                <p className={`text-xs flex items-center gap-2 ${passwordValidation.hasSpecialChar ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span>{passwordValidation.hasSpecialChar ? '✓' : '○'}</span>
+                  At least one special character (@$!%*?&)
+                </p>
+                <p className={`text-xs flex items-center gap-2 ${passwordValidation.isValidLength ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span>{passwordValidation.isValidLength ? '✓' : '○'}</span>
+                  8-32 characters ({formData.password.length}/32)
+                </p>
+              </div>
+            )}
           </div>
           {mode === "signup" && (
             <div className="relative">
@@ -312,14 +384,14 @@ export default function LoginSignup() {
                 onChange={handleChange}
                 required
                 minLength={8}
-                maxLength={50}
-                className="px-4 py-3 pr-12 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                maxLength={32}
+                className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="Confirm your password"
               />
               <button
                 type="button"
                 tabIndex={-1}
-                className="absolute right-4 top-9 text-gray-400 hover:text-orange-400"
+                className="absolute text-gray-400 right-4 top-9 hover:text-orange-400"
                 onClick={() => setShowConfirmPassword(s => !s)}
                 style={{ background: "none", border: "none" }}
                 disabled={loading}
@@ -330,12 +402,24 @@ export default function LoginSignup() {
                   <Eye className="w-6 h-6" />
                 )}
               </button>
+              {formData.confirmPassword.length > 0 && (
+                <p className={`mt-1 text-xs flex items-center gap-1 ${
+                  formData.password === formData.confirmPassword
+                    ? 'text-green-600'
+                    : 'text-red-500'
+                }`}>
+                  <span>{formData.password === formData.confirmPassword ? '✓' : '✗'}</span>
+                  {formData.password === formData.confirmPassword
+                    ? 'Passwords match'
+                    : 'Passwords do not match'}
+                </p>
+              )}
             </div>
           )}
           <button
             type="submit"
             disabled={loading || throttle}
-            className="flex gap-2 justify-center items-center py-3 w-full font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-lg transition-all duration-200 hover:from-orange-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center w-full gap-2 py-3 font-semibold text-white transition-all duration-200 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading && <Loader className="w-5 h-5 animate-spin" />}
             {mode === "login" ? "Sign In" : "Create Account"}

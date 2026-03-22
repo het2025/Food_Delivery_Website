@@ -88,13 +88,13 @@ function RestaurantOwnerLoginModal({
 
   return (
     <motion.div
-      className="flex fixed inset-0 z-50 justify-center items-center backdrop-blur-sm bg-black/40"
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/40"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="relative p-8 w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-xl"
+        className="relative w-full max-w-md p-8 bg-white border border-gray-200 shadow-xl rounded-2xl"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
@@ -103,7 +103,7 @@ function RestaurantOwnerLoginModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 transition hover:text-gray-600"
+          className="absolute text-gray-400 transition top-4 right-4 hover:text-gray-600"
           disabled={loading}
         >
           <X size={20} />
@@ -114,7 +114,7 @@ function RestaurantOwnerLoginModal({
         </h2>
 
         {error && (
-          <div className="px-4 py-2 mb-4 text-sm text-center text-red-700 bg-red-50 rounded-lg">
+          <div className="px-4 py-2 mb-4 text-sm text-center text-red-700 rounded-lg bg-red-50">
               {error}
           </div>
         )}
@@ -129,7 +129,7 @@ function RestaurantOwnerLoginModal({
             disabled={loading}
             autoComplete="username"
             spellCheck={false}
-            className="px-4 py-3 w-full placeholder-gray-400 text-gray-700 rounded-lg border border-gray-300 transition focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
             whileFocus={{ scale: 1.01 }}
             maxLength={64}
           />
@@ -141,7 +141,7 @@ function RestaurantOwnerLoginModal({
             onChange={e => setPassword(e.target.value)}
             disabled={loading}
             autoComplete="current-password"
-            className="px-4 py-3 w-full placeholder-gray-400 text-gray-700 rounded-lg border border-gray-300 transition focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
             whileFocus={{ scale: 1.01 }}
             minLength={8}
             maxLength={32}
@@ -149,7 +149,7 @@ function RestaurantOwnerLoginModal({
           <motion.button
             type="submit"
             disabled={loading || throttle}
-            className="py-3 w-full font-semibold text-white bg-orange-500 rounded-lg shadow-md transition hover:bg-orange-600 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full py-3 font-semibold text-white transition bg-orange-500 rounded-lg shadow-md hover:bg-orange-600 disabled:opacity-60 disabled:cursor-not-allowed"
             whileHover={!loading ? { scale: 1.03 } : {}}
             whileTap={!loading ? { scale: 0.97 } : {}}
           >

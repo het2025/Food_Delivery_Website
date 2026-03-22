@@ -39,7 +39,7 @@ const Login = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-start w-full min-h-screen min-h-screen-dvh px-4 bg-gradient-to-br from-primary to-secondary sm:justify-center"
+      className="flex flex-col items-center justify-start w-full min-h-screen px-4 min-h-screen-dvh bg-gradient-to-br from-primary to-secondary sm:justify-center"
       style={{
         paddingTop: 'max(3rem, env(safe-area-inset-top))',
         paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom))'
@@ -48,7 +48,7 @@ const Login = () => {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-6 text-center">
-          <div className="inline-flex justify-center items-center p-3 mb-4 bg-white rounded-full shadow-lg">
+          <div className="inline-flex items-center justify-center p-3 mb-4 bg-white rounded-full shadow-lg">
             <img src="/quickbite_logo.svg" alt="QuickBite Delivery" className="w-12 h-12 sm:w-14 sm:h-14" />
           </div>
           <h1 className="text-2xl font-bold text-white sm:text-3xl">QuickBite Delivery</h1>
@@ -56,11 +56,11 @@ const Login = () => {
         </div>
 
         {/* Login Card */}
-        <div className="p-6 bg-white rounded-2xl shadow-2xl">
+        <div className="p-6 bg-white shadow-2xl rounded-2xl">
           <h2 className="mb-5 text-xl font-bold text-gray-800">Sign In</h2>
 
           {error && (
-            <div className="flex items-start gap-2 p-3 mb-4 text-sm text-red-700 bg-red-50 rounded-lg border border-red-200">
+            <div className="flex items-start gap-2 p-3 mb-4 text-sm text-red-700 border border-red-200 rounded-lg bg-red-50">
               <span className="flex-shrink-0 mt-0.5">⚠</span>
               <span>{error}</span>
             </div>
@@ -78,7 +78,7 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="delivery@example.com"
-                className="w-full px-4 py-3 text-base rounded-xl border border-gray-300 outline-none transition focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-3 text-base transition border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
                 maxLength={100}
                 autoComplete="email"
@@ -98,7 +98,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 text-base rounded-xl border border-gray-300 outline-none transition focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-3 text-base transition border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
                 minLength={8}
                 maxLength={50}
@@ -113,7 +113,7 @@ const Login = () => {
             >
               {loading ? (
                 <>
-                  <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span className="inline-block w-4 h-4 mr-2 border-2 border-white rounded-full border-t-transparent animate-spin"></span>
                   Signing in…
                 </>
               ) : 'Sign In'}

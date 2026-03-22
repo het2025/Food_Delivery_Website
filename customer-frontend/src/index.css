@@ -17,12 +17,10 @@ html, body {
   font-family: 'Inter', 'system-ui', 'Avenir', 'Helvetica', 'Arial', sans-serif;
   line-height: 1.6;
   font-weight: 400;
-  
-  /* Light theme colors - FIXED */
-  color-scheme: light;
-  color: #1f2937;
-  background-color: #ffffff;
-  
+
+  /* Allow components to set their own color scheme */
+  color-scheme: light dark;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -35,11 +33,10 @@ html {
 }
 
 /* FIXED: Removed flexbox centering that was breaking layout */
+/* Allow components to override background and text colors */
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #f9fafb;
-  color: #1f2937;
   font-family: inherit;
   overflow-x: hidden;
 }
@@ -51,7 +48,6 @@ body {
 
 /* ===== TYPOGRAPHY ===== */
 h1, h2, h3, h4, h5, h6 {
-  color: #1f2937;
   font-weight: 600;
   line-height: 1.3;
 }
