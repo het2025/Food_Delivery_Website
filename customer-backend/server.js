@@ -20,6 +20,7 @@ import restaurantRoutes from './routes/restaurants.js';
 import userRoutes from './routes/users.js';
 import addressRoutes from './routes/addresses.js';
 import aiRoutes from './routes/aiRoutes.js';
+import pincodeRoutes from './routes/pincodeRoutes.js';
 
 dotenv.config();
 
@@ -97,7 +98,8 @@ app.get('/', (req, res) => {
       addresses: '/api/addresses',
       location: '/api/location',
       geocode: '/api/geocode',
-      reviews: '/api/reviews'
+      reviews: '/api/reviews',
+      pincodes: '/api/pincodes'
     }
   });
 });
@@ -112,6 +114,7 @@ app.use('/api/location', locationRoutes);
 app.use('/api/geocode', geocodeRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/pincodes', pincodeRoutes);
 
 // Debug log for geocode routes
 console.log('📍 Geocode routes registered at /api/geocode');
@@ -133,7 +136,8 @@ app.use('*', (req, res) => {
       '/api/addresses',
       '/api/location',
       '/api/geocode',
-      '/api/reviews'
+      '/api/reviews',
+      '/api/pincodes'
     ]
   });
 });

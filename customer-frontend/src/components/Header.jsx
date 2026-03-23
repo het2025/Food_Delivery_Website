@@ -108,9 +108,11 @@ const Header = () => {
 
   const handleSignOut = async () => {
     try {
-      logoutUser()
       setIsProfileOpen(false)
       navigate('/')
+      setTimeout(() => {
+        logoutUser()
+      }, 0)
       console.log('Signed out successfully')
     } catch (error) {
       console.error('Error signing out:', error)

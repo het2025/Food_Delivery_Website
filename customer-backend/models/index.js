@@ -1,6 +1,7 @@
 // Import all models to ensure they're registered
 import './User.js';
 import './Restaurant.js';
+import './Pincode.js';
 
 // Add other models as you create them
 // import './Order.js';

@@ -4,7 +4,7 @@ import { CircularProgress } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 
 // IMPORTANT: adjust this import to point to your real API/service file
-import { restaurantService } from '../services/api'; // <-- change path if necessary
+import { restaurantService, pincodeService } from '../services/api'; // <-- change path if necessary
 
 // --- 🍑 WARM PEACH & DEEP WARM DARK THEME COLORS ---
 const bgMain = '#FFF3E8';          // Section BG (warm peach light)
@@ -63,6 +63,10 @@ export default function Homepage() {
   const navigate = useNavigate();
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  
+  const [availabilityStatus, setAvailabilityStatus] = useState(null);
+  const [availabilityMessage, setAvailabilityMessage] = useState('');
+  const [checkingPincode, setCheckingPincode] = useState(false);
 
   // New state for dynamic restaurants
   const [restaurants, setRestaurants] = useState([]);
@@ -83,8 +87,48 @@ export default function Homepage() {
   // State for copy code button
   const [isCopied, setIsCopied] = useState(false);
 
+  const handlePincodeChange = (e) => {
+    const val = e.target.value.replace(/\D/g, ''); // replace non-digits
+    if (val.length <= 6) {
+      setDeliveryAddress(val);
+      setAvailabilityStatus(null);
+      setAvailabilityMessage('');
+    }
+  };
+
+  const handleCheckAvailability = async () => {
+    if (deliveryAddress.length !== 6) {
+      setAvailabilityStatus('not_available');
+      setAvailabilityMessage('Please enter a valid 6-digit pincode');
+      return;
+    }
+
+    setCheckingPincode(true);
+    setAvailabilityStatus(null);
+    try {
+      const res = await pincodeService.checkAvailability(deliveryAddress);
+      if (res.available) {
+        setAvailabilityStatus('available');
+        setAvailabilityMessage(`We are available in your area`);
+      } else {
+        setAvailabilityStatus('not_available');
+        setAvailabilityMessage('Not available in your area');
+      }
+    } catch (err) {
+      console.error(err);
+      setAvailabilityStatus('not_available');
+      setAvailabilityMessage('Error checking availability');
+    } finally {
+      setCheckingPincode(false);
+    }
+  };
+
   const handleLoginClick = () => {
     navigate('/login');
+  };
+
+  const handleSignupClick = () => {
+    navigate('/signup');
   };
 
   // Smooth scroll to section
@@ -334,7 +378,7 @@ export default function Homepage() {
               Login
             </button>
             <button
-              onClick={handleLoginClick}
+              onClick={handleSignupClick}
               className="ignite-gradient"
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -521,7 +565,7 @@ export default function Homepage() {
                   </span>
                   <input
                     value={deliveryAddress}
-                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                    onChange={handlePincodeChange}
                     style={{
                       backgroundColor: 'transparent',
                       border: 'none',
@@ -530,11 +574,14 @@ export default function Homepage() {
                       width: '100%',
                       fontSize: '16px'
                     }}
-                    placeholder="Enter your delivery address..."
+                    placeholder="Enter your Pincode"
                     type="text"
+                    maxLength={6}
                   />
                 </div>
                 <button
+                  onClick={handleCheckAvailability}
+                  disabled={checkingPincode}
                   className="ignite-gradient"
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -543,15 +590,38 @@ export default function Homepage() {
                     borderRadius: '9999px',
                     border: 'none',
                     color: '#fff',
-                    cursor: 'pointer',
+                    cursor: checkingPincode ? 'not-allowed' : 'pointer',
+                    opacity: checkingPincode ? 0.7 : 1,
                     transition: 'all 0.2s',
                     boxShadow: `0 4px 15px ${glowOrangeHover}`
                   }}
                 >
-                  Find Food
+                  {checkingPincode ? 'Checking...' : 'Check Availability'}
                 </button>
               </div>
             </div>
+            {availabilityStatus && (
+              <div style={{
+                marginTop: '16px',
+                padding: '12px 24px',
+                borderRadius: '9999px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                backgroundColor: availabilityStatus === 'available' ? 'rgba(76, 175, 80, 0.15)' : 'rgba(232, 93, 4, 0.15)',
+                color: availabilityStatus === 'available' ? '#2e7d32' : borderOrange,
+                fontWeight: 'bold',
+                fontSize: '14px',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                border: `1px solid ${availabilityStatus === 'available' ? 'rgba(76, 175, 80, 0.3)' : 'rgba(232, 93, 4, 0.3)'}`,
+                boxShadow: `0 4px 12px ${availabilityStatus === 'available' ? 'rgba(76, 175, 80, 0.1)' : glowOrange}`
+              }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+                  {availabilityStatus === 'available' ? 'check_circle' : 'error'}
+                </span>
+                {availabilityMessage}
+              </div>
+            )}
           </div>
 
           <div style={{

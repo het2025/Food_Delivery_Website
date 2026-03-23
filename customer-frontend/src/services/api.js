@@ -33,7 +33,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      window.location.href = '/';
     }
 
     return Promise.reject(error);
@@ -58,7 +58,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      window.location.href = '/';
     }
     return Promise.reject(error);
   }
@@ -460,6 +460,21 @@ export const orderService = {
       return response.data;
     } catch (error) {
       console.error('Error validating coupon:', error);
+      throw error.response?.data || { success: false, message: error.message };
+    }
+  }
+};
+
+// ============================================
+// PINCODE SERVICE
+// ============================================
+export const pincodeService = {
+  checkAvailability: async (pincode) => {
+    try {
+      const response = await api.get(`/pincodes/check/${pincode}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error checking pincode availability:', error);
       throw error.response?.data || { success: false, message: error.message };
     }
   }

@@ -26,7 +26,7 @@ import Footer from '../../components/Footer'
 
 const Settings = () => {
   const navigate = useNavigate()
-  const { logout } = useUser()
+  const { logoutUser } = useUser()
 
   const [settings, setSettings] = useState({
     notifications: {
@@ -57,8 +57,10 @@ const Settings = () => {
   }
 
   const handleLogout = () => {
-    logout()
-    navigate('/login')
+    navigate('/')
+    setTimeout(() => {
+      if (logoutUser) logoutUser()
+    }, 0)
   }
 
   const settingsGroups = [
