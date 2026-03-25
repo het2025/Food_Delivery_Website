@@ -164,7 +164,13 @@ const orderSchema = new mongoose.Schema({
     max: 5
   },
   review: String,
-  reviewDate: Date
+  reviewDate: Date,
+
+  // Delivery OTP for verification
+  deliveryOTP: {
+    type: String,
+    default: null
+  }
 
 }, {
   timestamps: true

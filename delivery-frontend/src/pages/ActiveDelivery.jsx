@@ -7,7 +7,9 @@ import {
   PhoneIcon,
   ClockIcon,
   CheckCircleIcon,
-  TruckIcon
+  TruckIcon,
+  XMarkIcon,
+  ShieldCheckIcon
 } from '@heroicons/react/24/outline';
 
 const ActiveDelivery = () => {
@@ -16,6 +18,8 @@ const ActiveDelivery = () => {
   const [loading, setLoading] = useState(true);
   const [otp, setOtp] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpError, setOtpError] = useState('');
 
   useEffect(() => {
     fetchCurrentOrder();
@@ -65,26 +69,37 @@ const ActiveDelivery = () => {
     }
   };
 
-  const handleComplete = async () => {
-    if (!otp && order.deliveryOTP) {
-      alert('Please enter the delivery OTP');
-      return;
-    }
+  // Open OTP modal when clicking Complete Delivery
+  const openOtpModal = () => {
+    setOtp('');
+    setOtpError('');
+    setShowOtpModal(true);
+  };
 
-    if (!confirm('Confirm that you have delivered the order to the customer?')) {
+  // Handle OTP submission from modal
+  const handleComplete = async () => {
+    if (!otp || otp.length !== 6) {
+      setOtpError('Please enter the 6-digit delivery OTP');
       return;
     }
 
     try {
       setActionLoading(true);
+      setOtpError('');
       const response = await ordersAPI.complete(order._id, otp);
       if (response.data.success) {
+        setShowOtpModal(false);
         alert(`Order delivered successfully! You earned ₹${response.data.data.earnings}`);
         navigate('/dashboard');
       }
     } catch (error) {
       console.error('Error completing delivery:', error);
-      alert(error.response?.data?.message || 'Failed to complete delivery');
+      const errorMsg = error.response?.data?.message || 'Failed to complete delivery';
+      if (errorMsg.toLowerCase().includes('otp') || errorMsg.toLowerCase().includes('invalid')) {
+        setOtpError('Invalid OTP. Please check with the customer.');
+      } else {
+        setOtpError(errorMsg);
+      }
     } finally {
       setActionLoading(false);
     }
@@ -242,35 +257,14 @@ const ActiveDelivery = () => {
           )}
 
           {statusInfo.action === 'complete' && (
-            <div className="space-y-4">
-              {order.deliveryOTP && (
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-700">
-                    Enter Delivery OTP
-                  </label>
-                  <input
-                    type="tel"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    autoComplete="one-time-code"
-                    enterKeyHint="done"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                    placeholder="• • • •"
-                    maxLength={4}
-                    className="px-4 py-3 w-full text-3xl tracking-[0.5em] text-center rounded-xl border-2 border-gray-300 outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                  />
-                </div>
-              )}
-              <button
-                onClick={handleComplete}
-                disabled={actionLoading}
-                className="flex justify-center items-center py-3.5 w-full font-semibold text-white rounded-xl transition bg-primary hover:bg-opacity-90 active:scale-95 disabled:opacity-50 sm:py-3"
-              >
-                <CheckCircleIcon className="mr-2 w-6 h-6" />
-                {actionLoading ? 'Processing...' : 'Complete Delivery'}
-              </button>
-            </div>
+            <button
+              onClick={openOtpModal}
+              disabled={actionLoading}
+              className="flex justify-center items-center py-3.5 w-full font-semibold text-white rounded-xl transition bg-primary hover:bg-opacity-90 active:scale-95 disabled:opacity-50 sm:py-3"
+            >
+              <CheckCircleIcon className="mr-2 w-6 h-6" />
+              Complete Delivery
+            </button>
           )}
         </div>
 
@@ -286,6 +280,77 @@ const ActiveDelivery = () => {
           </div>
         )}
       </div>
+
+      {/* OTP Modal */}
+      {showOtpModal && (
+        <div className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black/50">
+          <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-4 border-b sm:p-6">
+              <div className="flex items-center gap-2">
+                <ShieldCheckIcon className="w-6 h-6 text-primary" />
+                <h3 className="text-lg font-bold text-gray-800 sm:text-xl">Enter Delivery OTP</h3>
+              </div>
+              <button
+                onClick={() => setShowOtpModal(false)}
+                className="p-2 rounded-full transition hover:bg-gray-100"
+              >
+                <XMarkIcon className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-4 sm:p-6">
+              <p className="mb-4 text-sm text-center text-gray-600 sm:text-base">
+                Ask the customer for the 6-digit OTP to confirm delivery
+              </p>
+
+              {/* OTP Input */}
+              <input
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                autoComplete="one-time-code"
+                enterKeyHint="done"
+                value={otp}
+                onChange={(e) => {
+                  setOtp(e.target.value.replace(/\D/g, '').slice(0, 6));
+                  setOtpError('');
+                }}
+                placeholder="• • • • • •"
+                maxLength={6}
+                className={`px-4 py-4 w-full text-3xl tracking-[0.4em] text-center rounded-xl border-2 outline-none transition ${
+                  otpError
+                    ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
+                    : 'border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary'
+                }`}
+                autoFocus
+              />
+
+              {/* Error Message */}
+              {otpError && (
+                <p className="mt-3 text-sm font-medium text-center text-red-500">
+                  {otpError}
+                </p>
+              )}
+
+              {/* Submit Button */}
+              <button
+                onClick={handleComplete}
+                disabled={actionLoading || otp.length !== 6}
+                className="flex justify-center items-center py-3.5 mt-6 w-full font-semibold text-white rounded-xl transition bg-primary hover:bg-opacity-90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <CheckCircleIcon className="mr-2 w-6 h-6" />
+                {actionLoading ? 'Verifying...' : 'Confirm Delivery'}
+              </button>
+
+              <p className="mt-4 text-xs text-center text-gray-500">
+                OTP ensures secure delivery confirmation
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

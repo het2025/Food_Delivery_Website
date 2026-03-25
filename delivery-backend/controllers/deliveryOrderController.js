@@ -21,10 +21,12 @@ export const createDeliveryOrder = async (req, res) => {
       orderAmount,
       deliveryFee,
       distance,
-      estimatedDeliveryTime
+      estimatedDeliveryTime,
+      deliveryOTP
     } = req.body;
 
     console.log('🔔 Creating delivery order:', orderNumber);
+    console.log('🔐 Received delivery OTP:', deliveryOTP);
 
     // Validation
     if (!orderId || !restaurant || !customer) {
@@ -61,7 +63,8 @@ export const createDeliveryOrder = async (req, res) => {
       distance,
       estimatedDeliveryTime,
       status: 'ready_for_pickup',
-      deliveryBoy: null
+      deliveryBoy: null,
+      deliveryOTP: deliveryOTP || null // Store the OTP for verification
     });
 
     await deliveryOrder.save();
@@ -369,11 +372,18 @@ export const completeDelivery = async (req, res) => {
       });
     }
 
-    // Verify OTP if required
+    // OTP verification is mandatory
+    if (!otp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please enter the delivery OTP'
+      });
+    }
+
     if (order.deliveryOTP && order.deliveryOTP !== otp) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid OTP'
+        message: 'Invalid OTP. Please check with the customer.'
       });
     }
 

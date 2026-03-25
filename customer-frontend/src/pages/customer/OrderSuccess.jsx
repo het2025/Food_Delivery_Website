@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { CheckCircle, Package } from 'lucide-react'
+import { CheckCircle, Package, Shield } from 'lucide-react'
 import Header from '../../components/Header'
 import confetti from 'canvas-confetti'
 
@@ -101,12 +101,35 @@ const OrderSuccess = () => {
     orderData.deliveryTime ||
     orderData.estimatedTime ||
     '30-45 mins'
+  const deliveryOTP = orderData.deliveryOTP || null
 
-  console.log('Extracted values:', { orderId, orderNumber, total, paymentMethod })
+  console.log('Extracted values:', { orderId, orderNumber, total, paymentMethod, deliveryOTP })
 
   return (
     <div className="min-h-screen bg-[#FFF3E8] font-['Inter',_sans-serif]">
       <Header />
+
+      {/* OTP Display - Fixed at top right */}
+      {deliveryOTP && (
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="fixed top-20 right-4 sm:top-24 sm:right-6 z-50"
+        >
+          <div className="bg-white border-2 border-[#E85D04] rounded-2xl shadow-lg p-3 sm:p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Shield className="w-4 h-4 text-[#E85D04]" />
+              <span className="text-xs font-bold text-[#5C3D2E]">Delivery OTP</span>
+            </div>
+            <p className="text-2xl sm:text-3xl font-extrabold text-[#E85D04] tracking-wider text-center">
+              {deliveryOTP}
+            </p>
+            <p className="text-[10px] sm:text-xs text-[#5C3D2E]/70 text-center mt-1">
+              Share with delivery partner
+            </p>
+          </div>
+        </motion.div>
+      )}
 
       <div className="pt-24 sm:pt-32 pb-12 sm:pb-16">
         <div className="px-4 mx-auto max-w-2xl sm:px-6 lg:px-8">

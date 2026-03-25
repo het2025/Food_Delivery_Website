@@ -11,7 +11,8 @@ import {
   MapPin,
   Phone,
   Loader,
-  Home
+  Home,
+  Shield
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Header from '../../components/Header'
@@ -237,7 +238,24 @@ const OrderTrackingPage = () => {
     <div className="min-h-screen bg-[#FFF3E8] font-['Inter',_sans-serif]">
       <Header />
 
-      <div className="pt-20 sm:pt-24 pb-8 sm:pb-16">
+      {/* OTP Display - Fixed below header on right side (only show if not delivered) */}
+      {orderData?.deliveryOTP && !isDelivered && (
+        <div className="fixed top-16 right-0 left-0 z-40 bg-[#FFF3E8]/95 backdrop-blur-sm border-b border-[rgba(44,24,16,0.05)]">
+          <div className="container px-3 sm:px-4 mx-auto max-w-4xl">
+            <div className="flex justify-end items-center py-2">
+              <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/80 rounded-xl border border-[#E85D04]/20">
+                <Shield className="w-4 h-4 text-[#E85D04]/70" />
+                <span className="text-xs font-medium text-[#5C3D2E]/70">Delivery OTP:</span>
+                <span className="text-base sm:text-lg font-bold text-[#E85D04] tracking-wider">
+                  {orderData.deliveryOTP}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className={`pt-20 sm:pt-24 pb-8 sm:pb-16 ${orderData?.deliveryOTP && !isDelivered ? 'mt-10' : ''}`}>
         <div className="container px-3 sm:px-4 mx-auto max-w-4xl">
           {/* Back Button */}
           <button

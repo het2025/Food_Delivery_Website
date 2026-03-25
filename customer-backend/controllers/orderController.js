@@ -60,6 +60,10 @@ export const createOrder = async (req, res) => {
     const random = crypto.randomBytes(3).toString('hex').toUpperCase();
     const orderNumber = `ORD-${date}-${random}`;
 
+    // Generate 6-digit delivery OTP
+    const deliveryOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log('🔐 Generated delivery OTP:', deliveryOTP);
+
     // Only use restaurant if it's a valid ObjectId, otherwise null
     const restaurantObjectId = restaurant && mongoose.Types.ObjectId.isValid(restaurant) ? restaurant : null;
     console.log('📦 Restaurant ObjectId (after validation):', restaurantObjectId);
@@ -106,6 +110,7 @@ export const createOrder = async (req, res) => {
       status: 'Pending',
       paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Paid',
       orderNumber: orderNumber,
+      deliveryOTP: deliveryOTP,
       isScheduled: isScheduled || false,
       scheduledFor: scheduledFor || null
     });
@@ -412,7 +417,8 @@ export const updateOrderStatus = async (req, res) => {
           orderAmount: order.total,
           deliveryFee: order.deliveryFee || 0,
           distance: order.deliveryDistance || 0,
-          estimatedDeliveryTime: order.estimatedDeliveryTime || 30
+          estimatedDeliveryTime: order.estimatedDeliveryTime || 30,
+          deliveryOTP: order.deliveryOTP // Pass OTP to delivery-backend
         };
 
         console.log('📦 Notifying delivery-backend about Ready order:', order.orderNumber);
