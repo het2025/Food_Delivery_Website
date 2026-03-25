@@ -28,7 +28,7 @@ const deliveryBoySchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    match: [/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, 'Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters'],
+    minlength: [8, 'Password must be at least 8 characters'],
     select: false
   },
   vehicleType: {
@@ -46,7 +46,17 @@ const deliveryBoySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Driving license is required'],
     maxlength: 20,
-    match: [/^[A-Z]{2}[0-9]{2}[ -]?[0-9]{11}$/i, 'Please enter a valid driving license number']
+    validate: {
+      validator: function (v) {
+        // Accept various Indian DL formats:
+        // - Standard: XX00 00000000000 (2 letters + 13 digits)
+        // - Numeric only: 16 digits
+        // - With spaces/dashes
+        const cleaned = v.replace(/[\s-]/g, '');
+        return /^[A-Z0-9]{10,20}$/i.test(cleaned);
+      },
+      message: 'Please enter a valid driving license number'
+    }
   },
   currentLocation: {
     type: {

@@ -32,10 +32,19 @@ export const registerRestaurantOwner = async (req, res) => {
       });
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return res.status(400).json({
         success: false,
-        message: 'Password must be at least 6 characters'
+        message: 'Password must be at least 8 characters'
+      });
+    }
+
+    // Validate password format (uppercase, lowercase, number, special char)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters (@$!%*?&)'
       });
     }
 
@@ -473,8 +482,17 @@ export const updateRestaurantOwnerPassword = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Current password and new password are required' });
     }
 
-    if (newPassword.length < 6) {
-      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
+    if (newPassword.length < 8) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 8 characters' });
+    }
+
+    // Validate password format
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must contain uppercase, lowercase, numbers, and special characters (@$!%*?&)'
+      });
     }
 
     const restaurantOwner = await RestaurantOwner.findById(req.restaurantOwner.id).select('+password');

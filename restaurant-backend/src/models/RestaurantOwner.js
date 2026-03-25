@@ -36,7 +36,7 @@ const restaurantOwnerSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Password is required'],
-      match: [/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, 'Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters'],
+      minlength: [8, 'Password must be at least 8 characters'],
       select: false
     },
     role: {

@@ -7,6 +7,30 @@ export const registerDelivery = async (req, res) => {
   try {
     const { name, email, phone, password, vehicleType, vehicleNumber, drivingLicense } = req.body;
 
+    // Validate required fields
+    if (!name || !email || !phone || !password || !vehicleNumber || !drivingLicense) {
+      return res.status(400).json({
+        success: false,
+        message: 'All fields are required'
+      });
+    }
+
+    // Validate password format
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 8 characters'
+      });
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must contain uppercase, lowercase, numbers, and special characters (@$!%*?&)'
+      });
+    }
+
     // Check if delivery boy already exists
     const existingDelivery = await DeliveryBoy.findOne({
       $or: [{ email }, { phone }]

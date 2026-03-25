@@ -336,17 +336,47 @@ export const rejectRestaurant = async (req, res) => {
       { returnDocument: 'after' }
     );
 
-    if (!result.value) {
+    // MongoDB driver 4.x+ returns document directly, not in .value
+    const updatedRestaurant = result?.value ?? result;
+
+    if (!updatedRestaurant) {
       return res.status(404).json({
         success: false,
         message: 'Restaurant not found'
       });
     }
 
+    // Also update the RestaurantOwner in restaurant database
+    try {
+      const restaurantConn = mongoose.createConnection(process.env.RESTAURANT_DB_URI || process.env.MONGO_URI);
+      await restaurantConn.asPromise();
+
+      const RestaurantOwnerSchema = new mongoose.Schema({}, { strict: false });
+      const RestaurantOwner = restaurantConn.model('RestaurantOwner', RestaurantOwnerSchema);
+
+      await RestaurantOwner.updateOne(
+        { restaurant: restaurantId },
+        {
+          $set: {
+            isApproved: false,
+            rejectedAt: new Date(),
+            rejectionReason: reason || 'No reason provided'
+          }
+        }
+      );
+
+      console.log(`✅ RestaurantOwner rejection status updated`);
+      await restaurantConn.close();
+    } catch (ownerError) {
+      console.error('⚠️ RestaurantOwner rejection update error:', ownerError.message);
+    }
+
+    console.log(`Restaurant "${restaurantId}" rejected. Reason: ${reason}`);
+
     res.status(200).json({
       success: true,
       message: 'Restaurant rejected',
-      data: result.value
+      data: updatedRestaurant
     });
   } catch (error) {
     console.error('Reject restaurant error:', error);
@@ -389,7 +419,10 @@ export const updateRestaurantStatus = async (req, res) => {
       { returnDocument: 'after' }
     );
 
-    const result = result1.value || result2.value;
+    // MongoDB driver 4.x+ returns document directly, not in .value
+    const updated1 = result1?.value ?? result1;
+    const updated2 = result2?.value ?? result2;
+    const result = updated1 || updated2;
 
     if (!result) {
       return res.status(404).json({
