@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { restaurantsAPI } from '../api/adminApi';
-import { MagnifyingGlassIcon, TrashIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, TrashIcon, SparklesIcon, EyeIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const Restaurants = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -9,6 +9,8 @@ const Restaurants = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [pagination, setPagination] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   useEffect(() => {
     fetchRestaurants();
@@ -52,6 +54,11 @@ const Restaurants = () => {
       console.error('Error deleting restaurant:', error);
       alert('Failed to delete restaurant');
     }
+  };
+
+  const handleView = (restaurant) => {
+    setSelectedRestaurant(restaurant);
+    setIsViewModalOpen(true);
   };
 
   const statusSelectClass = (status) =>
@@ -151,21 +158,22 @@ const Restaurants = () => {
                           <option value="closed">Closed</option>
                         </select>
                       </div>
-
-                      {/* Cuisines */}
-                      {restaurant.cuisines?.length > 0 && (
-                        <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{restaurant.cuisines.join(', ')}</p>
-                      )}
                     </div>
                   </div>
 
-                  {/* Delete Row */}
-                  <div className="mt-3 pt-3 border-t border-gray-100">
+                  {/* Actions Row */}
+                  <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100">
+                    <button
+                      onClick={() => handleView(restaurant)}
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-medium text-blue-600 border border-blue-200 rounded-lg bg-blue-50 active:bg-blue-100 touch-manipulation"
+                    >
+                      <EyeIcon className="w-4 h-4" /> View
+                    </button>
                     <button
                       onClick={() => handleDelete(restaurant._id, restaurant.name)}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-medium text-red-600 border border-red-200 rounded-lg bg-red-50 active:bg-red-100 touch-manipulation"
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-medium text-red-600 border border-red-200 rounded-lg bg-red-50 active:bg-red-100 touch-manipulation"
                     >
-                      <TrashIcon className="w-4 h-4" /> Delete Restaurant
+                      <TrashIcon className="w-4 h-4" /> Delete
                     </button>
                   </div>
                 </div>
@@ -179,7 +187,6 @@ const Restaurants = () => {
                   <tr>
                     <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Restaurant</th>
                     <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Location</th>
-                    <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Cuisine</th>
                     <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Rating</th>
                     <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Status</th>
                     <th className="px-6 py-3 text-xs font-medium text-left text-gray-500 uppercase">Actions</th>
@@ -211,9 +218,6 @@ const Restaurants = () => {
                         {restaurant.location?.area || restaurant.location?.city || 'N/A'}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
-                        {restaurant.cuisines?.join(', ') || 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
                         ⭐ {restaurant.rating || 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -228,12 +232,20 @@ const Restaurants = () => {
                         </select>
                       </td>
                       <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                        <button
-                          onClick={() => handleDelete(restaurant._id, restaurant.name)}
-                          className="inline-flex items-center text-red-600 hover:text-red-800"
-                        >
-                          <TrashIcon className="w-4 h-4 mr-1" /> Delete
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => handleView(restaurant)}
+                            className="inline-flex items-center text-blue-600 hover:text-blue-800"
+                          >
+                            <EyeIcon className="w-4 h-4 mr-1" /> View
+                          </button>
+                          <button
+                            onClick={() => handleDelete(restaurant._id, restaurant.name)}
+                            className="inline-flex items-center text-red-600 hover:text-red-800"
+                          >
+                            <TrashIcon className="w-4 h-4 mr-1" /> Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -268,6 +280,97 @@ const Restaurants = () => {
           </>
         )}
       </div>
+      {/* View Restaurant Modal */}
+      {isViewModalOpen && selectedRestaurant && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center p-6 border-b">
+              <h3 className="text-xl font-bold text-gray-900">Restaurant Details</h3>
+              <button 
+                onClick={() => setIsViewModalOpen(false)}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <XMarkIcon className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="flex items-center gap-4">
+                {selectedRestaurant.image ? (
+                  <img src={selectedRestaurant.image} alt={selectedRestaurant.name} className="w-20 h-20 rounded-full object-cover" />
+                ) : (
+                  <div className="flex items-center justify-center w-20 h-20 text-2xl font-semibold text-white rounded-full bg-primary">
+                    {selectedRestaurant.name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div>
+                  <h4 className="text-2xl font-bold text-gray-900">{selectedRestaurant.name}</h4>
+                  <p className="text-sm text-gray-500">
+                    ID: {selectedRestaurant._id}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h5 className="text-sm font-medium text-gray-500 mb-1">Cuisines</h5>
+                  <p className="text-base text-gray-900">{selectedRestaurant.cuisines?.join(', ') || 'N/A'}</p>
+                </div>
+                <div>
+                  <h5 className="text-sm font-medium text-gray-500 mb-1">Status</h5>
+                  <span className={statusSelectClass(selectedRestaurant.status) + " inline-block mt-1"}>
+                    {selectedRestaurant.status}
+                  </span>
+                </div>
+                <div>
+                  <h5 className="text-sm font-medium text-gray-500 mb-1">Rating</h5>
+                  <p className="text-base text-gray-900">⭐ {selectedRestaurant.rating || 'N/A'}</p>
+                </div>
+                <div>
+                  <h5 className="text-sm font-medium text-gray-500 mb-1">Location</h5>
+                  <p className="text-base text-gray-900">
+                    {selectedRestaurant.location?.address || 'N/A'}<br/>
+                    {selectedRestaurant.location?.area ? `${selectedRestaurant.location.area}, ` : ''}
+                    {selectedRestaurant.location?.city || ''}
+                  </p>
+                </div>
+                
+                {/* Suggestions for future implementations */}
+                <div className="col-span-1 md:col-span-2 pt-4 border-t mt-2">
+                  <h5 className="text-sm font-semibold text-gray-900 mb-3">Suggested Future Enhancements (Coming Soon)</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 opacity-75">
+                     <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
+                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner Details</span>
+                       <p className="text-sm text-gray-700 mt-1">Name, Email, Phone Number</p>
+                     </div>
+                     <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
+                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Business Info</span>
+                       <p className="text-sm text-gray-700 mt-1">FSSAI License, GST Number</p>
+                     </div>
+                     <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
+                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Operational</span>
+                       <p className="text-sm text-gray-700 mt-1">Opening Hours, Preparation Time</p>
+                     </div>
+                     <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
+                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Financials</span>
+                       <p className="text-sm text-gray-700 mt-1">Commission Rate, Bank Details</p>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-6 border-t bg-gray-50 flex justify-end">
+              <button
+                onClick={() => setIsViewModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
