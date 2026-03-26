@@ -52,6 +52,7 @@ export const usersAPI = {
 export const restaurantsAPI = {
   getAll: (page = 1, limit = 20, search = '', status = '') =>
     adminAPI.get(`/restaurants?page=${page}&limit=${limit}&search=${search}&status=${status}`),
+  getById: (id) => adminAPI.get(`/restaurants/${id}`),
   getPending: () => adminAPI.get('/restaurants/pending'),
   approve: (id) => adminAPI.post(`/restaurants/${id}/approve`),
   reject: (id, reason) => adminAPI.post(`/restaurants/${id}/reject`, { reason }),
@@ -83,5 +84,10 @@ export const analyticsAPI = {
   getPaymentSplit: () => adminAPI.get('/analytics/payment-split'),
   getPopularDishes: (limit = 10) => adminAPI.get(`/analytics/popular-dishes?limit=${limit}`),
   getCustomerRetention: () => adminAPI.get('/analytics/customer-retention')
+};
+
+export const payoutsAPI = {
+  getAllRequests: () => adminAPI.get('/payouts/requests'),
+  updateStatus: (id, status) => adminAPI.put(`/payouts/requests/${id}/status`, { status })
 };
 

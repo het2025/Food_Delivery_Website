@@ -301,6 +301,7 @@ function RestaurantOwnerMenuManagementPage() {
         </div>
 
         <motion.button
+          id="tour-add-menu-btn"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => {

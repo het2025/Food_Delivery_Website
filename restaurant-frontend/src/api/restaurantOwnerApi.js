@@ -118,6 +118,8 @@ export const getCurrentRestaurantOwner = async () => {
 export const logoutRestaurantOwner = () => {
   localStorage.removeItem('restaurantOwnerToken');
   localStorage.removeItem('token');
+  localStorage.removeItem('restaurantOwnerData');
+  localStorage.removeItem('completedTourPhases');
 };
 
 // PUT /api/auth/profile

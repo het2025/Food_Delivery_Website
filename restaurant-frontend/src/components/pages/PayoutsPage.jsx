@@ -111,10 +111,10 @@ const PayoutsPage = () => {
         try {
             const token = localStorage.getItem('restaurantOwnerToken');
             const res = await axios.post(
-                `${API_BASE_URL}/dashboard/collect-payout`,
+                `${API_BASE_URL}/payouts/request`,
                 {
                     amount: stats.pendingPayout,
-                    breakdown: stats.breakdown
+                    orderCount: stats.orderCount
                 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -146,6 +146,7 @@ const PayoutsPage = () => {
                     Overview
                 </button>
                 <button
+                    id="tour-bank-details-tab"
                     onClick={() => setActiveTab('bank-details')}
                     className={`pb-2 px-3 sm:px-4 text-sm font-medium whitespace-nowrap flex-shrink-0 ${activeTab === 'bank-details' ? 'border-b-2 border-red-600 font-bold text-red-600' : 'text-gray-500'}`}
                 >
@@ -230,6 +231,7 @@ const PayoutsPage = () => {
                             <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
                                 <h2 className="text-base font-semibold">Your Linked Accounts</h2>
                                 <button
+                                    id="tour-add-bank-btn"
                                     onClick={handleAddBankClick}
                                     className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
                                 >
@@ -344,19 +346,27 @@ const PayoutsPage = () => {
                                 <label className="block mb-1 text-sm font-medium">Account Number</label>
                                 <input
                                     type="text" required
+                                    maxLength="18"
                                     inputMode="numeric"
                                     className="w-full p-3 text-sm border border-gray-300 rounded-lg"
                                     value={formData.accountNumber}
-                                    onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
+                                    onChange={(e) => {
+                                        const val = e.target.value.replace(/\D/g, '');
+                                        setFormData({ ...formData, accountNumber: val });
+                                    }}
                                 />
                             </div>
                             <div>
                                 <label className="block mb-1 text-sm font-medium">IFSC Code</label>
                                 <input
                                     type="text" required
+                                    maxLength="11"
                                     className="w-full p-3 text-sm uppercase border border-gray-300 rounded-lg"
                                     value={formData.ifscCode}
-                                    onChange={(e) => setFormData({ ...formData, ifscCode: e.target.value })}
+                                    onChange={(e) => {
+                                        const val = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                                        setFormData({ ...formData, ifscCode: val });
+                                    }}
                                 />
                             </div>
                             <div className="flex gap-3 pt-1">
@@ -388,12 +398,12 @@ const PayoutsPage = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </div>
-                        <h2 className="mb-2 text-xl font-bold text-gray-800">Payout Collected!</h2>
-                        <p className="mb-3 text-sm text-gray-500">You have successfully collected:</p>
+                        <h2 className="mb-2 text-xl font-bold text-gray-800">Payout Requested!</h2>
+                        <p className="mb-3 text-sm text-gray-500">You have successfully requested:</p>
                         <div className="mb-4 text-3xl font-bold text-green-600">
                             ₹{payoutAmount.toLocaleString()}
                         </div>
-                        <p className="text-xs text-gray-400">This amount has been transferred to your bank account.</p>
+                        <p className="text-xs text-gray-400">This amount will be transferred to your bank account after Admin approval.</p>
                     </div>
                 </div>
             )}

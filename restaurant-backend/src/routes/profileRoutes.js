@@ -9,6 +9,7 @@ import {
 } from '../controllers/restaurantOwnerProfileController.js';
 import { authRestaurantOwner } from '../middleware/restaurantOwnerAuth.js';
 import { checkApproval } from '../middleware/checkApproval.js';  // ✅ NEW: Check approval status
+import { completeOnboarding } from '../controllers/restaurantOwnerProfileController.js';
 
 const router = express.Router();
 
@@ -26,5 +27,8 @@ router.put('/owner', checkApproval, updateOwnerInfo);  // ✅ Requires approval
 router.post('/bank-account', checkApproval, addBankAccount);
 router.get('/bank-account', getBankAccounts);
 router.delete('/bank-account/:id', checkApproval, deleteBankAccount); // ✅ NEW
+
+// ✅ Onboarding Tracking
+router.put('/onboarding-complete', checkApproval, completeOnboarding);
 
 export default router;

@@ -268,7 +268,7 @@ function RestaurantOwnerOrdersPage() {
 
       {/* Live Orders Table - always use netAmount */}
       <div className="p-6 bg-white rounded-xl shadow-md">
-        <h2 className="mb-4 text-xl font-semibold text-gray-800">
+        <h2 id="tour-order-status-filter" className="mb-4 text-xl font-semibold text-gray-800">
           Orders
         </h2>
         <div className="overflow-x-auto">

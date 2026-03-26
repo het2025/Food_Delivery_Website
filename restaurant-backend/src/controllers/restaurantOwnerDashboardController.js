@@ -134,16 +134,18 @@ export const getPayoutStats = async (req, res) => {
 
     console.log('🔍 Calculating payouts for restaurantId:', restaurantId);
 
-    // Calculate Total Revenue from ALL orders
+    // Calculate Total Revenue strictly from DELIVERED orders
     const result = await Order.aggregate([
       {
         $match: {
-          restaurant: restaurantId
+          restaurant: restaurantId,
+          status: 'delivered'
         }
       },
       {
         $group: {
           _id: null,
+          totalOrders: { $sum: 1 },
           totalDishPrice: { $sum: { $ifNull: ['$subtotal', 0] } },
           totalTaxes: { $sum: { $ifNull: ['$taxes', 0] } },
           totalRevenue: { $sum: { $add: [{ $ifNull: ['$subtotal', 0] }, { $ifNull: ['$taxes', 0] }] } }
@@ -153,7 +155,7 @@ export const getPayoutStats = async (req, res) => {
 
     console.log('📊 Order aggregation result:', JSON.stringify(result));
 
-    const stats = result[0] || { totalDishPrice: 0, totalTaxes: 0, totalRevenue: 0 };
+    const stats = result[0] || { totalOrders: 0, totalDishPrice: 0, totalTaxes: 0, totalRevenue: 0 };
 
     console.log('💰 Stats calculated:', stats);
 
@@ -164,6 +166,7 @@ export const getPayoutStats = async (req, res) => {
         $group: {
           _id: null,
           totalPaid: { $sum: '$amount' },
+          paidOrders: { $sum: { $ifNull: ['$orderCount', 0] } },
           paidDishPrice: { $sum: { $ifNull: ['$breakdown.dishPrice', 0] } },
           paidTaxes: { $sum: { $ifNull: ['$breakdown.taxes', 0] } }
         }
@@ -171,6 +174,7 @@ export const getPayoutStats = async (req, res) => {
     ]);
 
     const totalPaid = payoutResult[0]?.totalPaid || 0;
+    const paidOrders = payoutResult[0]?.paidOrders || 0;
     const paidDishPrice = payoutResult[0]?.paidDishPrice || 0;
     const paidTaxes = payoutResult[0]?.paidTaxes || 0;
 
@@ -178,6 +182,7 @@ export const getPayoutStats = async (req, res) => {
 
     // Pending payout = Total revenue - Total paid
     const pendingPayout = stats.totalRevenue - totalPaid;
+    const pendingOrdersCount = stats.totalOrders - paidOrders;
     const pendingDishPrice = stats.totalDishPrice - paidDishPrice;
     const pendingTaxes = stats.totalTaxes - paidTaxes;
 
@@ -188,6 +193,7 @@ export const getPayoutStats = async (req, res) => {
       data: {
         totalRevenue: stats.totalRevenue,
         totalPaid: totalPaid,
+        orderCount: Math.max(0, pendingOrdersCount),
         pendingPayout: Math.max(0, pendingPayout), // Ensure non-negative
         breakdown: {
           dishPrice: Math.max(0, pendingDishPrice),

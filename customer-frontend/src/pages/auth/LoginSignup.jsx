@@ -268,6 +268,12 @@ export default function LoginSignup() {
             -webkit-text-fill-color: ${textName} !important;
             transition: background-color 5000s ease-in-out 0s;
         }
+
+        /* Hide native password reveal icons */
+        input::-ms-reveal,
+        input::-ms-clear {
+          display: none;
+        }
       `}</style>
 
       {/* Optional subtle background glow matching the warm peach aesthetic */}

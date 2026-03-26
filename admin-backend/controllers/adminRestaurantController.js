@@ -507,11 +507,76 @@ export const getRestaurantById = async (req, res) => {
       });
     }
 
+    let ownerDetails = null;
+    let bankAccount = null;
+    
+    // Fetch owner and bank details from restaurant DB
+    try {
+      const restaurantConn = mongoose.createConnection(
+        process.env.RESTAURANT_DB_URI || process.env.MONGO_URI
+      );
+      await restaurantConn.asPromise();
+
+      const RestaurantOwnerSchema = new mongoose.Schema({}, { strict: false });
+      const RestaurantOwner = restaurantConn.model('RestaurantOwner', RestaurantOwnerSchema, 'restaurantowners');
+      
+      // Look up owner using the restaurant reference - handle mix of string/ObjectId schemas
+      ownerDetails = await RestaurantOwner.findOne({
+        $or: [
+          { restaurant: restaurantId },
+          { restaurant: restaurantId.toString() },
+          { restaurantId: restaurantId },
+          { restaurantId: restaurantId.toString() }
+        ]
+      }).lean();
+
+      const BankAccountSchema = new mongoose.Schema({}, { strict: false });
+      const BankAccount = restaurantConn.model('BankAccount', BankAccountSchema, 'bankaccounts');
+      bankAccount = await BankAccount.findOne({
+        $or: [
+          { restaurantId: restaurantId },
+          { restaurantId: restaurantId.toString() },
+          { restaurant: restaurantId },
+          { restaurant: restaurantId.toString() }
+        ]
+      }).lean();
+      
+      await restaurantConn.close();
+    } catch (e) {
+      console.error('Error fetching extended restaurant details:', e.message);
+    }
+
+    let averagePreparationTime = 15;
+    if (restaurant.menu && restaurant.menu.length > 0) {
+      let totalPrepTime = 0;
+      let itemCount = 0;
+      restaurant.menu.forEach(category => {
+        if (category.items && category.items.length > 0) {
+          category.items.forEach(item => {
+             totalPrepTime += (item.preparationTime || 15);
+             itemCount++;
+          });
+        }
+      });
+      if (itemCount > 0) {
+        averagePreparationTime = Math.round(totalPrepTime / itemCount);
+      }
+    }
+
     res.status(200).json({
       success: true,
       data: {
         ...restaurant,
-        isNew
+        isNew,
+        ownerDetails: ownerDetails ? {
+           name: ownerDetails.name,
+           email: ownerDetails.email,
+           phone: ownerDetails.phone,
+           lastLogin: ownerDetails.lastLogin,
+           lastLogout: ownerDetails.lastLogout
+        } : null,
+        bankAccount,
+        averagePreparationTime
       }
     });
   } catch (error) {

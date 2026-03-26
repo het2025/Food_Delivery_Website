@@ -21,6 +21,10 @@ function WithApprovalCheck({ children }) {
             const userRes = await getCurrentRestaurantOwner();
             if (userRes.success && userRes.data) {
                 setIsApproved(userRes.data.isApproved || false);
+                
+                // ✅ Save user data for TourContext to intercept
+                localStorage.setItem('restaurantOwnerData', JSON.stringify(userRes.data));
+                window.dispatchEvent(new Event('storage'));
             } else {
                 // If can't fetch user, assume approved to avoid blocking
                 setIsApproved(true);

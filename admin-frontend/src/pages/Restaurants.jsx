@@ -56,8 +56,18 @@ const Restaurants = () => {
     }
   };
 
-  const handleView = (restaurant) => {
-    setSelectedRestaurant(restaurant);
+  const handleView = async (restaurant) => {
+    try {
+      const response = await restaurantsAPI.getById(restaurant._id);
+      if (response.data.success) {
+        setSelectedRestaurant(response.data.data);
+      } else {
+        setSelectedRestaurant(restaurant);
+      }
+    } catch (error) {
+      console.error('Error fetching restaurant details:', error);
+      setSelectedRestaurant(restaurant);
+    }
     setIsViewModalOpen(true);
   };
 
@@ -314,7 +324,7 @@ const Restaurants = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h5 className="text-sm font-medium text-gray-500 mb-1">Cuisines</h5>
-                  <p className="text-base text-gray-900">{selectedRestaurant.cuisines?.join(', ') || 'N/A'}</p>
+                  <p className="text-base text-gray-900">{(selectedRestaurant.cuisines || selectedRestaurant.cuisine)?.join(', ') || 'N/A'}</p>
                 </div>
                 <div>
                   <h5 className="text-sm font-medium text-gray-500 mb-1">Status</h5>
@@ -324,7 +334,7 @@ const Restaurants = () => {
                 </div>
                 <div>
                   <h5 className="text-sm font-medium text-gray-500 mb-1">Rating</h5>
-                  <p className="text-base text-gray-900">⭐ {selectedRestaurant.rating || 'N/A'}</p>
+                  <p className="text-base text-gray-900">⭐ {selectedRestaurant.rating !== undefined ? selectedRestaurant.rating : 'N/A'}</p>
                 </div>
                 <div>
                   <h5 className="text-sm font-medium text-gray-500 mb-1">Location</h5>
@@ -335,25 +345,46 @@ const Restaurants = () => {
                   </p>
                 </div>
                 
-                {/* Suggestions for future implementations */}
+                {/* Extra Details */}
                 <div className="col-span-1 md:col-span-2 pt-4 border-t mt-2">
-                  <h5 className="text-sm font-semibold text-gray-900 mb-3">Suggested Future Enhancements (Coming Soon)</h5>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 opacity-75">
-                     <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
+                  <h5 className="text-sm font-semibold text-gray-900 mb-3">Owner & Operational Details</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <div className="bg-gray-50 p-3 rounded border border-gray-200">
                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner Details</span>
-                       <p className="text-sm text-gray-700 mt-1">Name, Email, Phone Number</p>
+                       <p className="text-sm text-gray-900 mt-1">
+                         {selectedRestaurant.ownerDetails ? (
+                           <>
+                             {selectedRestaurant.ownerDetails.name}<br/>
+                             {selectedRestaurant.ownerDetails.email}<br/>
+                             {selectedRestaurant.ownerDetails.phone}
+                           </>
+                         ) : 'N/A'}
+                       </p>
                      </div>
-                     <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
-                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Business Info</span>
-                       <p className="text-sm text-gray-700 mt-1">FSSAI License, GST Number</p>
+                     <div className="bg-gray-50 p-3 rounded border border-gray-200">
+                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Session Activity</span>
+                       <p className="text-sm text-gray-900 mt-1">
+                         Last Login: {selectedRestaurant.ownerDetails?.lastLogin ? new Date(selectedRestaurant.ownerDetails.lastLogin).toLocaleString() : 'N/A'}<br/>
+                         Last Logout: {selectedRestaurant.ownerDetails?.lastLogout ? new Date(selectedRestaurant.ownerDetails.lastLogout).toLocaleString() : 'N/A'}
+                       </p>
                      </div>
-                     <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
+                     <div className="bg-gray-50 p-3 rounded border border-gray-200">
                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Operational</span>
-                       <p className="text-sm text-gray-700 mt-1">Opening Hours, Preparation Time</p>
+                       <p className="text-sm text-gray-900 mt-1">
+                         Average Prep Time: {selectedRestaurant.averagePreparationTime ? `${selectedRestaurant.averagePreparationTime} mins` : 'N/A'}
+                       </p>
                      </div>
-                     <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
-                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Financials</span>
-                       <p className="text-sm text-gray-700 mt-1">Commission Rate, Bank Details</p>
+                     <div className="bg-gray-50 p-3 rounded border border-gray-200">
+                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Bank Details</span>
+                       <p className="text-sm text-gray-900 mt-1">
+                         {selectedRestaurant.bankAccount ? (
+                           <>
+                             {selectedRestaurant.bankAccount.bankName}<br/>
+                             A/C: {selectedRestaurant.bankAccount.accountNumber}<br/>
+                             IFSC: {selectedRestaurant.bankAccount.ifscCode}
+                           </>
+                         ) : 'Not Provided'}
+                       </p>
                      </div>
                   </div>
                 </div>

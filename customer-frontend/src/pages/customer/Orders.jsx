@@ -450,7 +450,7 @@ const Orders = () => {
                               title={`Rate ${star} star${star > 1 ? 's' : ''}`}
                             >
                               <Star
-                                className={`w-8 h-8 sm:w-6 sm:h-6 transition-colors ${s <= pendingRatingStar ? 'text-[#F48C06] fill-current drop-shadow-sm' : 'text-[#5C3D2E]/30'
+                                className={`w-8 h-8 sm:w-6 sm:h-6 transition-colors ${star <= pendingRatingStar ? 'text-[#F48C06] fill-current drop-shadow-sm' : 'text-[#5C3D2E]/30'
                                   }`}
                               />
                             </button>

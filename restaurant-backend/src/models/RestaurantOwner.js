@@ -48,6 +48,17 @@ const restaurantOwnerSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
+    lastLogin: {
+      type: Date
+    },
+    lastLogout: {
+      type: Date
+    },
+    // Onboarding Tracking
+    hasCompletedOnboarding: {
+      type: Boolean,
+      default: false
+    },
     // Approval workflow fields
     isApproved: {
       type: Boolean,

@@ -21,6 +21,12 @@ const RestaurantOwnerSchema = new mongoose.Schema({
     isApproved: {
         type: Boolean,
         default: false
+    },
+    lastLogin: {
+        type: Date
+    },
+    lastLogout: {
+        type: Date
     }
 }, { timestamps: true });
 

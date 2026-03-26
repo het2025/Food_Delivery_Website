@@ -322,7 +322,8 @@ export const registerRestaurantOwner = async (req, res) => {
           id: restaurantOwner._id,
           name: restaurantOwner.name,
           email: restaurantOwner.email,
-          phone: restaurantOwner.phone
+          phone: restaurantOwner.phone,
+          hasCompletedOnboarding: false
         },
         restaurant: {
           id: newRestaurant._id,
@@ -379,6 +380,9 @@ export const loginRestaurantOwner = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
+    restaurantOwner.lastLogin = new Date();
+    await restaurantOwner.save();
+
     const token = restaurantOwner.getJwtToken();
 
     const user = {
@@ -386,7 +390,8 @@ export const loginRestaurantOwner = async (req, res) => {
       name: restaurantOwner.name,
       email: restaurantOwner.email,
       phone: restaurantOwner.phone,
-      isApproved: restaurantOwner.isApproved || false  // ✅ NEW: Include approval status
+      isApproved: restaurantOwner.isApproved || false,  // ✅ NEW: Include approval status
+      hasCompletedOnboarding: restaurantOwner.hasCompletedOnboarding || false
     };
 
     console.log('Login successful for:', email);
@@ -417,7 +422,8 @@ export const getCurrentRestaurantOwner = async (req, res) => {
       phone: restaurantOwner.phone,
       role: restaurantOwner.role,
       isActive: restaurantOwner.isActive,
-      isApproved: restaurantOwner.isApproved || false  // ✅ NEW: Include approval status
+      isApproved: restaurantOwner.isApproved || false,  // ✅ NEW: Include approval status
+      hasCompletedOnboarding: restaurantOwner.hasCompletedOnboarding || false
     };
 
     res.json({ success: true, data: user });
@@ -514,5 +520,20 @@ export const updateRestaurantOwnerPassword = async (req, res) => {
   } catch (error) {
     console.error('updateRestaurantOwnerPassword error:', error);
     res.status(500).json({ success: false, message: 'Failed to update password' });
+  }
+};
+
+// POST /api/auth/logout
+export const logoutRestaurantOwner = async (req, res) => {
+  try {
+    const restaurantOwner = await RestaurantOwner.findById(req.restaurantOwner.id);
+    if (restaurantOwner) {
+      restaurantOwner.lastLogout = new Date();
+      await restaurantOwner.save();
+    }
+    res.json({ success: true, message: 'Logout successful' });
+  } catch (error) {
+    console.error('logoutRestaurantOwner error:', error);
+    res.status(500).json({ success: false, message: 'Failed to logout' });
   }
 };

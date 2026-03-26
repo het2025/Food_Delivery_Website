@@ -27,7 +27,8 @@ const Layout = () => {
     { name: 'Restaurants', href: '/restaurants', icon: BuildingStorefrontIcon },
     { name: 'Restaurant Approvals', href: '/restaurants/pending', icon: BellIcon, badge: true },
     { name: 'Bank Approvals', href: '/payouts/approvals', icon: CreditCardIcon }, // ✅ NEW
-    { name: 'Orders', href: '/orders', icon: ShoppingCartIcon }
+    { name: 'Orders', href: '/orders', icon: ShoppingCartIcon },
+    { name: 'Payout Requests', href: '/payout-requests', icon: CreditCardIcon } // Payout feature
   ];
 
   const handleLogout = () => {

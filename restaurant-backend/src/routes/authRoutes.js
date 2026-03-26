@@ -4,7 +4,8 @@ import {
   loginRestaurantOwner,
   getCurrentRestaurantOwner,
   updateRestaurantOwnerProfile,
-  updateRestaurantOwnerPassword
+  updateRestaurantOwnerPassword,
+  logoutRestaurantOwner
 } from '../controllers/restaurantOwnerAuthController.js';  // Ensure controller exists
 import { authRestaurantOwner } from '../middleware/restaurantOwnerAuth.js';  // Middleware verifies JWT, sets req.user
 
@@ -33,5 +34,6 @@ router.post('/login', authLimiter, loginRestaurantOwner);  // Validates creds, r
 router.get('/me', authRestaurantOwner, getCurrentRestaurantOwner);  // Returns current user profile
 router.put('/profile', authRestaurantOwner, updateRestaurantOwnerProfile);  // Updates user info (e.g., name, email)
 router.put('/password', authRestaurantOwner, updateRestaurantOwnerPassword);  // Updates password (old/new validation)
+router.post('/logout', authRestaurantOwner, logoutRestaurantOwner); // Track lastLogout
 
 export default router;

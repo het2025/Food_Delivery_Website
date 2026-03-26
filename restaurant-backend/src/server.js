@@ -9,6 +9,7 @@ import profileRoutes from './routes/profileRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import payoutRoutes from './routes/payoutRoutes.js';
 
 dotenv.config();
 
@@ -104,6 +105,9 @@ console.log('✅ Order routes mounted at /api/orders');
 
 app.use('/api/dashboard', dashboardRoutes);
 console.log('✅ Dashboard routes mounted at /api/dashboard');
+
+app.use('/api/payouts', payoutRoutes);
+console.log('✅ Payout routes mounted at /api/payouts');
 
 // 404 Handler
 app.use('*', (req, res) => {

@@ -12,6 +12,7 @@ import Orders from './pages/Orders';
 import OrderDetails from './pages/OrderDetails';
 import UserDetails from './pages/UserDetails';
 import AdminPayoutsPage from './pages/AdminPayoutsPage'; // ✅ NEW
+import PayoutRequestsPage from './pages/PayoutRequestsPage';
 import Analysis from './pages/Analysis'; // ✅ NEW: Analytics
 
 // Components
@@ -40,6 +41,7 @@ function App() {
               <Route path="/analytics" element={<Analysis />} /> {/* ✅ NEW */}
               <Route path="/orders" element={<Orders />} />
               <Route path="/orders/:id" element={<OrderDetails />} />
+              <Route path="/payout-requests" element={<PayoutRequestsPage />} />
             </Route>
           </Route>
 

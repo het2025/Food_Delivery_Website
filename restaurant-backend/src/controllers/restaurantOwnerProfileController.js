@@ -220,3 +220,22 @@ export const deleteBankAccount = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to delete bank account' });
   }
 };
+
+// ✅ Complete Onboarding
+export const completeOnboarding = async (req, res) => {
+  try {
+    const ownerId = req.restaurantOwner.id;
+    const owner = await RestaurantOwner.findByIdAndUpdate(
+      ownerId,
+      { hasCompletedOnboarding: true },
+      { new: true }
+    );
+    if (!owner) {
+      return res.status(404).json({ success: false, message: 'Owner not found' });
+    }
+    res.json({ success: true, message: 'Onboarding completed successfully' });
+  } catch (error) {
+    console.error('Error completing onboarding:', error);
+    res.status(500).json({ success: false, message: 'Failed to complete onboarding' });
+  }
+};
