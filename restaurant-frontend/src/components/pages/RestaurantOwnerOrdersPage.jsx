@@ -198,7 +198,7 @@ function RestaurantOwnerOrdersPage() {
         if (profileRes.success && profileRes.data && profileRes.data.restaurantId) {
           const restaurantId = profileRes.data.restaurantId;
 
-          socket = io(`http://${window.location.hostname}:5004`); // Connect to Restaurant Backend
+          socket = io(import.meta.env.VITE_SOCKET_URL || `http://${window.location.hostname}:5004`); // Connect to Restaurant Backend
 
           socket.on('connect', () => {
             console.log('🔌 Connected to Restaurant Backend Socket');

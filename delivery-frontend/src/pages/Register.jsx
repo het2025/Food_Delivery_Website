@@ -61,12 +61,7 @@ const Register = () => {
       return;
     }
 
-    // Check all password requirements are met
-    const requirements = checkPasswordRequirements(formData.password);
-    if (!requirements.hasUppercase || !requirements.hasNumber || !requirements.hasSpecial) {
-      setError('Password must contain at least one uppercase letter, one number, and one special character.');
-      return;
-    }
+    
 
     if (formData.phone.length !== 10) {
       setError('Phone number must be exactly 10 digits');
@@ -277,54 +272,6 @@ const Register = () => {
                   maxLength={32}
                   autoComplete="new-password"
                 />
-                {focusedField === 'password' && (
-                  <div className="p-3 mt-2 border border-gray-200 rounded-lg bg-gray-50">
-                    <p className="mb-2 text-xs font-medium text-gray-700">
-                      Password must contain (max 32 characters):
-                    </p>
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-2 text-xs">
-                        <span className={`flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full ${
-                          passwordRequirements.hasUppercase
-                            ? 'bg-green-500 text-white'
-                            : 'bg-gray-300 text-gray-600'
-                        }`}>
-                          {passwordRequirements.hasUppercase ? '✓' : '○'}
-                        </span>
-                        <span className={passwordRequirements.hasUppercase ? 'text-green-700 font-medium' : 'text-gray-600'}>
-                          At least one uppercase letter (A-Z)
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        <span className={`flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full ${
-                          passwordRequirements.hasNumber
-                            ? 'bg-green-500 text-white'
-                            : 'bg-gray-300 text-gray-600'
-                        }`}>
-                          {passwordRequirements.hasNumber ? '✓' : '○'}
-                        </span>
-                        <span className={passwordRequirements.hasNumber ? 'text-green-700 font-medium' : 'text-gray-600'}>
-                          At least one number (0-9)
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        <span className={`flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full ${
-                          passwordRequirements.hasSpecial
-                            ? 'bg-green-500 text-white'
-                            : 'bg-gray-300 text-gray-600'
-                        }`}>
-                          {passwordRequirements.hasSpecial ? '✓' : '○'}
-                        </span>
-                        <span className={passwordRequirements.hasSpecial ? 'text-green-700 font-medium' : 'text-gray-600'}>
-                          At least one special character (!@#$%^&*...)
-                        </span>
-                      </div>
-                    </div>
-                    <p className="mt-2 text-xs text-gray-500">
-                      Character count: {formData.password.length}/32
-                    </p>
-                  </div>
-                )}
               </div>
 
               <div className="sm:col-span-2">
@@ -396,3 +343,4 @@ const Register = () => {
 };
 
 export default Register;
+

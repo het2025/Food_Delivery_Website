@@ -22,6 +22,8 @@ const io = new Server(server, {
     origin: process.env.NODE_ENV === 'development'
       ? true  // Allow all origins in development (needed for mobile/LAN access)
       : [
+          process.env.FRONTEND_URL,
+          ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : []),
           'http://localhost:3000',
           'http://localhost:5173',
           'http://localhost:5174',
@@ -29,7 +31,7 @@ const io = new Server(server, {
           'http://localhost:3174',
           // Allow local network IP addresses
           /^http:\/\/(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}):(5173|5174|5175|3174|3000)$/
-        ],
+        ].filter(Boolean),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
   }
@@ -60,12 +62,14 @@ app.use(cors({
   origin: process.env.NODE_ENV === 'development'
     ? true  // Allow all origins in development (needed for mobile/LAN access)
     : [
+        process.env.FRONTEND_URL,
+        ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : []),
         'http://localhost:3000',
         'http://localhost:5173',
         'http://localhost:5174',
         'http://localhost:5175',
         'http://localhost:3174'
-      ],
+      ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']

@@ -17,6 +17,8 @@ import {
   EyeOff
 } from 'lucide-react';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || `http://${window.location.hostname}:5004/api`;
+
 function ProfileSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -76,7 +78,7 @@ function ProfileSettings() {
       const token = localStorage.getItem('restaurantOwnerToken');
 
       // Fetch restaurant profile
-      const response = await fetch(`http://${window.location.hostname}:5004/api/profile/restaurant`, {
+      const response = await fetch(`${API_BASE}/profile/restaurant`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -109,7 +111,7 @@ function ProfileSettings() {
       }
 
       // Fetch owner data
-      const ownerResponse = await fetch(`http://${window.location.hostname}:5004/api/auth/me`, {
+      const ownerResponse = await fetch(`${API_BASE}/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -186,7 +188,7 @@ function ProfileSettings() {
     try {
       const token = localStorage.getItem('restaurantOwnerToken');
 
-      const response = await fetch(`http://${window.location.hostname}:5004/api/profile/restaurant`, {
+      const response = await fetch(`${API_BASE}/profile/restaurant`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -223,7 +225,7 @@ function ProfileSettings() {
     try {
       const token = localStorage.getItem('restaurantOwnerToken');
 
-      const response = await fetch(`http://${window.location.hostname}:5004/api/profile/owner`, {
+      const response = await fetch(`${API_BASE}/profile/owner`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -275,7 +277,7 @@ function ProfileSettings() {
     try {
       const token = localStorage.getItem('restaurantOwnerToken');
 
-      const response = await fetch(`http://${window.location.hostname}:5004/api/auth/password`, {
+      const response = await fetch(`${API_BASE}/auth/password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

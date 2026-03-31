@@ -16,20 +16,21 @@ export const registerDelivery = async (req, res) => {
     }
 
     // Validate password format
-    if (password.length < 8) {
+    if (password.length < 6) {
       return res.status(400).json({
         success: false,
-        message: 'Password must be at least 8 characters'
+        message: 'Password must be at least 6 characters'
       });
     }
 
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password must contain uppercase, lowercase, numbers, and special characters (@$!%*?&)'
-      });
-    }
+    // Relaxed password validation for smoother testing/usage
+    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // if (!passwordRegex.test(password)) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'Password must contain uppercase, lowercase, numbers, and special characters (@$!%*?&)'
+    //   });
+    // }
 
     // Check if delivery boy already exists
     const existingDelivery = await DeliveryBoy.findOne({

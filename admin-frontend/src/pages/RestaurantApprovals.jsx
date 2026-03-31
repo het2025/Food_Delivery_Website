@@ -12,7 +12,7 @@ const RestaurantApprovals = () => {
   useEffect(() => {
     fetchPendingRestaurants();
 
-    const socket = io(`http://${window.location.hostname}:5004`);
+    const socket = io(import.meta.env.VITE_SOCKET_URL || `http://${window.location.hostname}:5004`);
 
     socket.on('connect', () => {
       console.log('🔌 Connected to Restaurant Backend Socket');
