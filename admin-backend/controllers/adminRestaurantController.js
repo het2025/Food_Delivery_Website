@@ -187,16 +187,24 @@ export const approveRestaurant = async (req, res) => {
     const newRestaurantsCollection = customerConn.collection('new_registered_restaurants');
     const restaurantsCollection = customerConn.collection('restaurants');
 
-    const restaurantId = new mongoose.Types.ObjectId(req.params.id);
+    const restaurantIdStr = req.params.id;
+    let restaurantIdObj = null;
+    try { restaurantIdObj = new mongoose.Types.ObjectId(restaurantIdStr); } catch (e) {}
+    
+    const restaurantId = restaurantIdObj || restaurantIdStr;
+
+    const query = {
+      $or: restaurantIdObj ? [{ _id: restaurantIdObj }, { _id: restaurantIdStr }] : [{ _id: restaurantIdStr }]
+    };
 
     // Find restaurant in new_registered_restaurants collection
-    const restaurant = await newRestaurantsCollection.findOne({ _id: restaurantId });
+    const restaurant = await newRestaurantsCollection.findOne(query);
 
     if (!restaurant) {
       // Check if it was already moved to main collection (idempotency)
-      const alreadyApproved = await restaurantsCollection.findOne({ _id: restaurantId });
+      const alreadyApproved = await restaurantsCollection.findOne(query);
       if (alreadyApproved) {
-        console.log(`Restaurant ${restaurantId} already in main collection. Skipping move.`);
+        console.log(`Restaurant ${restaurantIdStr} already in main collection. Skipping move.`);
       } else {
         return res.status(404).json({
           success: false,
@@ -207,13 +215,14 @@ export const approveRestaurant = async (req, res) => {
       // Check if already exists in main collection (to handle retries/duplicates)
       const existingRestaurant = await restaurantsCollection.findOne({
         $or: [
-          { _id: restaurantId },
-          { restaurantId: restaurantId.toString() }
+          ...(restaurantIdObj ? [{ _id: restaurantIdObj }, { restaurantId: restaurantIdObj }] : []),
+          { _id: restaurantIdStr },
+          { restaurantId: restaurantIdStr }
         ]
       });
 
       if (existingRestaurant) {
-        console.log(`Restaurant ${restaurantId} already exists in main collection. Updating instead of inserting.`);
+        console.log(`Restaurant ${restaurantIdStr} already exists in main collection. Updating instead of inserting.`);
 
         // Update existing
         await restaurantsCollection.updateOne(
@@ -252,7 +261,7 @@ export const approveRestaurant = async (req, res) => {
       // ✅ FIXED: Update new_registered_restaurants instead of deleting
       // This ensures it remains visible on the "Newly Registered" page for customers
       await newRestaurantsCollection.updateOne(
-        { _id: restaurantId },
+        query,
         {
           $set: {
             status: 'active',
@@ -275,7 +284,11 @@ export const approveRestaurant = async (req, res) => {
       const RestaurantOwner = restaurantConn.model('RestaurantOwner', RestaurantOwnerSchema);
 
       const ownerUpdate = await RestaurantOwner.updateOne(
-        { restaurant: restaurantId },
+        { 
+          $or: restaurantIdObj 
+            ? [{ restaurant: restaurantIdObj }, { restaurant: restaurantIdStr }, { restaurantId: restaurantIdObj }, { restaurantId: restaurantIdStr }]
+            : [{ restaurant: restaurantIdStr }, { restaurantId: restaurantIdStr }]
+        },
         {
           $set: {
             isApproved: true,
@@ -320,11 +333,18 @@ export const rejectRestaurant = async (req, res) => {
     const customerConn = await getCustomerDB();
     const newRestaurantsCollection = customerConn.collection('new_registered_restaurants');
 
-    const restaurantId = new mongoose.Types.ObjectId(req.params.id);
+    const restaurantIdStr = req.params.id;
+    let restaurantIdObj = null;
+    try { restaurantIdObj = new mongoose.Types.ObjectId(restaurantIdStr); } catch (e) {}
+
+    const query = {
+      $or: restaurantIdObj ? [{ _id: restaurantIdObj }, { _id: restaurantIdStr }] : [{ _id: restaurantIdStr }]
+    };
+    
     const { reason } = req.body;
 
     const result = await newRestaurantsCollection.findOneAndUpdate(
-      { _id: restaurantId },
+      query,
       {
         $set: {
           status: 'rejected',
@@ -355,7 +375,11 @@ export const rejectRestaurant = async (req, res) => {
       const RestaurantOwner = restaurantConn.model('RestaurantOwner', RestaurantOwnerSchema);
 
       await RestaurantOwner.updateOne(
-        { restaurant: restaurantId },
+        { 
+          $or: restaurantIdObj 
+            ? [{ restaurant: restaurantIdObj }, { restaurant: restaurantIdStr }, { restaurantId: restaurantIdObj }, { restaurantId: restaurantIdStr }]
+            : [{ restaurant: restaurantIdStr }, { restaurantId: restaurantIdStr }]
+        },
         {
           $set: {
             isApproved: false,
@@ -396,7 +420,14 @@ export const updateRestaurantStatus = async (req, res) => {
     const restaurantsCollection = customerConn.collection('restaurants');
     const newRestaurantsCollection = customerConn.collection('new_registered_restaurants');
 
-    const restaurantId = new mongoose.Types.ObjectId(req.params.id);
+    const restaurantIdStr = req.params.id;
+    let restaurantIdObj = null;
+    try { restaurantIdObj = new mongoose.Types.ObjectId(restaurantIdStr); } catch (e) {}
+
+    const query = {
+      $or: restaurantIdObj ? [{ _id: restaurantIdObj }, { _id: restaurantIdStr }] : [{ _id: restaurantIdStr }]
+    };
+    
     const { status } = req.body;
 
     if (!['active', 'inactive', 'closed'].includes(status)) {
@@ -408,13 +439,13 @@ export const updateRestaurantStatus = async (req, res) => {
 
     // Try to update in both collections
     const result1 = await restaurantsCollection.findOneAndUpdate(
-      { _id: restaurantId },
+      query,
       { $set: { status, updatedAt: new Date() } },
       { returnDocument: 'after' }
     );
 
     const result2 = await newRestaurantsCollection.findOneAndUpdate(
-      { _id: restaurantId },
+      query,
       { $set: { status, updatedAt: new Date() } },
       { returnDocument: 'after' }
     );
@@ -454,11 +485,17 @@ export const deleteRestaurant = async (req, res) => {
     const restaurantsCollection = customerConn.collection('restaurants');
     const newRestaurantsCollection = customerConn.collection('new_registered_restaurants');
 
-    const restaurantId = new mongoose.Types.ObjectId(req.params.id);
+    const restaurantIdStr = req.params.id;
+    let restaurantIdObj = null;
+    try { restaurantIdObj = new mongoose.Types.ObjectId(restaurantIdStr); } catch (e) {}
+
+    const query = {
+      $or: restaurantIdObj ? [{ _id: restaurantIdObj }, { _id: restaurantIdStr }] : [{ _id: restaurantIdStr }]
+    };
 
     // Try to delete from both collections
-    const result1 = await restaurantsCollection.deleteOne({ _id: restaurantId });
-    const result2 = await newRestaurantsCollection.deleteOne({ _id: restaurantId });
+    const result1 = await restaurantsCollection.deleteOne(query);
+    const result2 = await newRestaurantsCollection.deleteOne(query);
 
     if (result1.deletedCount === 0 && result2.deletedCount === 0) {
       return res.status(404).json({
@@ -489,14 +526,20 @@ export const getRestaurantById = async (req, res) => {
     const restaurantsCollection = customerConn.collection('restaurants');
     const newRestaurantsCollection = customerConn.collection('new_registered_restaurants');
 
-    const restaurantId = new mongoose.Types.ObjectId(req.params.id);
+    const restaurantIdStr = req.params.id;
+    let restaurantIdObj = null;
+    try { restaurantIdObj = new mongoose.Types.ObjectId(restaurantIdStr); } catch (e) {}
+
+    const query = {
+      $or: restaurantIdObj ? [{ _id: restaurantIdObj }, { _id: restaurantIdStr }] : [{ _id: restaurantIdStr }]
+    };
 
     // Try to find in both collections
-    let restaurant = await restaurantsCollection.findOne({ _id: restaurantId });
+    let restaurant = await restaurantsCollection.findOne(query);
     let isNew = false;
 
     if (!restaurant) {
-      restaurant = await newRestaurantsCollection.findOne({ _id: restaurantId });
+      restaurant = await newRestaurantsCollection.findOne(query);
       isNew = true;
     }
 
@@ -522,23 +565,17 @@ export const getRestaurantById = async (req, res) => {
       
       // Look up owner using the restaurant reference - handle mix of string/ObjectId schemas
       ownerDetails = await RestaurantOwner.findOne({
-        $or: [
-          { restaurant: restaurantId },
-          { restaurant: restaurantId.toString() },
-          { restaurantId: restaurantId },
-          { restaurantId: restaurantId.toString() }
-        ]
+        $or: restaurantIdObj 
+            ? [{ restaurant: restaurantIdObj }, { restaurant: restaurantIdStr }, { restaurantId: restaurantIdObj }, { restaurantId: restaurantIdStr }]
+            : [{ restaurant: restaurantIdStr }, { restaurantId: restaurantIdStr }]
       }).lean();
 
       const BankAccountSchema = new mongoose.Schema({}, { strict: false });
       const BankAccount = restaurantConn.model('BankAccount', BankAccountSchema, 'bankaccounts');
       bankAccount = await BankAccount.findOne({
-        $or: [
-          { restaurantId: restaurantId },
-          { restaurantId: restaurantId.toString() },
-          { restaurant: restaurantId },
-          { restaurant: restaurantId.toString() }
-        ]
+        $or: restaurantIdObj 
+            ? [{ restaurantId: restaurantIdObj }, { restaurantId: restaurantIdStr }, { restaurant: restaurantIdObj }, { restaurant: restaurantIdStr }]
+            : [{ restaurantId: restaurantIdStr }, { restaurant: restaurantIdStr }]
       }).lean();
       
       await restaurantConn.close();

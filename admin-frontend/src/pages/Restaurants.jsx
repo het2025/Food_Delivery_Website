@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { restaurantsAPI } from '../api/adminApi';
 import { MagnifyingGlassIcon, TrashIcon, SparklesIcon, EyeIcon, XMarkIcon } from '@heroicons/react/24/outline';
-
 const Restaurants = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,14 +77,38 @@ const Restaurants = () => {
       'bg-red-100 text-red-800'
     }`;
 
+  const exportToCSV = () => {
+    if (restaurants.length === 0) return;
+    const headers = ['Name', 'Phone', 'Email', 'Status', 'Address'];
+    const csvData = restaurants.map(rest => [
+      `"${rest.name || ''}"`,
+      `"${rest.phone || ''}"`,
+      `"${rest.email || ''}"`,
+      rest.status || 'inactive',
+      `"${rest.address?.street ? `${rest.address.street}, ${rest.address.city}` : ''}"`
+    ]);
+    const csvContent = [headers.join(","), ...csvData.map(e => e.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "restaurants.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Restaurant Management</h2>
-        <p className="mt-1 text-xs sm:text-base text-gray-600">
-          {pagination.oldRestaurants || 0} approved · {pagination.newRestaurants || 0} newly registered
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-gray-800 sm:text-2xl">Restaurant Management</h2>
+          <p className="mt-1 text-xs text-gray-600 sm:text-base">
+            {pagination.oldRestaurants || 0} approved · {pagination.newRestaurants || 0} newly registered
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={exportToCSV} className="px-4 py-2 text-sm font-medium text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700">Export CSV</button>
+        </div>
       </div>
 
       {/* Filters */}

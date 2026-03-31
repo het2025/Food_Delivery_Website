@@ -82,7 +82,7 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     message: 'Restaurant Owner backend is running',
     timestamp: new Date().toISOString(),
-    port: process.env.PORT || 5001
+    port: process.env.PORT || 5004
   });
 });
 
@@ -129,7 +129,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5004;
 
 const startServer = async () => {
   try {
@@ -137,7 +137,20 @@ const startServer = async () => {
     await connectDB();
     console.log('✅ MongoDB connected successfully');
 
-    // Use server.listen instead of app.listen
+    // Handle EADDRINUSE gracefully - retry after waiting
+    server.on('error', (e) => {
+      if (e.code === 'EADDRINUSE') {
+        console.warn(`⚠️ Port ${PORT} is busy. Retrying in 3 seconds...`);
+        setTimeout(() => {
+          server.close();
+          server.listen(PORT);
+        }, 3000);
+      } else {
+        console.error('Server error:', e);
+        process.exit(1);
+      }
+    });
+
     server.listen(PORT, () => {
       console.log(`🚀 Restaurant Owner backend listening on port ${PORT}`);
       console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
@@ -145,10 +158,22 @@ const startServer = async () => {
       console.log(`🔌 Socket.IO initialized on port ${PORT}`);
     });
 
-    process.on('SIGTERM', () => {
-      console.log('🛑 SIGTERM received, shutting down gracefully');
-      server.close(() => console.log('Process terminated'));
-    });
+    // Graceful shutdown — SIGINT works on Windows (Ctrl+C / nodemon restart)
+    const gracefulShutdown = (signal) => {
+      console.log(`🛑 ${signal} received. Closing server gracefully...`);
+      server.close(() => {
+        console.log('✅ Server closed. Port released.');
+        process.exit(0);
+      });
+      // Force exit after 5 seconds if close hangs
+      setTimeout(() => {
+        console.warn('⚠️ Forcing exit after timeout');
+        process.exit(0);
+      }, 5000);
+    };
+
+    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
   } catch (error) {
     console.error('💥 Failed to start server:', error.message);

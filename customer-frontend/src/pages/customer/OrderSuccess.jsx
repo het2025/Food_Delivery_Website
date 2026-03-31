@@ -114,7 +114,7 @@ const OrderSuccess = () => {
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
-          className="fixed top-20 right-4 sm:top-24 sm:right-6 z-50"
+          className="fixed z-50 top-20 right-4 sm:top-24 sm:right-6"
         >
           <div className="bg-white border-2 border-[#E85D04] rounded-2xl shadow-lg p-3 sm:p-4">
             <div className="flex items-center gap-2 mb-1">
@@ -131,8 +131,8 @@ const OrderSuccess = () => {
         </motion.div>
       )}
 
-      <div className="pt-24 sm:pt-32 pb-12 sm:pb-16">
-        <div className="px-4 mx-auto max-w-2xl sm:px-6 lg:px-8">
+      <div className="pt-24 pb-12 sm:pt-32 sm:pb-16">
+        <div className="max-w-2xl px-4 mx-auto sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -147,9 +147,9 @@ const OrderSuccess = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 15 }}
-              className="relative flex justify-center items-center mx-auto mb-6 sm:mb-8 w-20 h-20 sm:w-24 sm:h-24 bg-green-50 border-4 border-white shadow-lg rounded-full z-10"
+              className="relative z-10 flex items-center justify-center w-20 h-20 mx-auto mb-6 border-4 border-white rounded-full shadow-lg sm:mb-8 sm:w-24 sm:h-24 bg-green-50"
             >
-              <CheckCircle className="w-12 h-12 sm:w-14 sm:h-14 text-green-500" />
+              <CheckCircle className="w-12 h-12 text-green-500 sm:w-14 sm:h-14" />
             </motion.div>
 
             {/* Success Message */}
@@ -165,28 +165,28 @@ const OrderSuccess = () => {
             {/* Order Details Box */}
             <div className="p-5 sm:p-8 mb-6 sm:mb-8 text-left bg-[#FFF3E8]/50 border border-[rgba(44,24,16,0.05)] rounded-2xl relative z-10">
               <div className="space-y-4 sm:space-y-5">
-                <div className="flex justify-between items-start gap-3">
+                <div className="flex items-start justify-between gap-3">
                   <span className="font-bold text-[#5C3D2E] text-sm sm:text-base shrink-0">Order Number</span>
                   <span className="text-base sm:text-lg font-extrabold text-[#E85D04] text-right break-all">
                     #{orderNumber}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center gap-3">
+                <div className="flex items-center justify-between gap-3">
                   <span className="font-bold text-[#5C3D2E] text-sm sm:text-base shrink-0">Total Amount</span>
                   <span className="text-base sm:text-lg font-extrabold text-[#2C1810]">
                     ₹{Number(total).toFixed(2)}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center gap-3">
+                <div className="flex items-center justify-between gap-3">
                   <span className="font-bold text-[#5C3D2E] text-sm sm:text-base shrink-0">Payment Method</span>
                   <span className="font-extrabold text-[#2C1810] capitalize text-sm sm:text-base text-right">
                     {paymentMethod}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-start gap-3">
+                <div className="flex items-start justify-between gap-3">
                   <span className="font-bold text-[#5C3D2E] text-sm sm:text-base shrink-0">
                     {orderData.isScheduled ? 'Scheduled For' : 'Estimated Delivery'}
                   </span>
@@ -212,7 +212,7 @@ const OrderSuccess = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row relative z-10">
+            <div className="relative z-10 flex flex-col gap-3 sm:gap-4 sm:flex-row">
               <button
                 onClick={() => {
                   navigate(`/track-order/${orderId}`)
@@ -230,7 +230,7 @@ const OrderSuccess = () => {
                 }}
                 className="flex-1 px-4 sm:px-6 py-3.5 font-bold text-[#2C1810] bg-[rgba(44,24,16,0.05)] rounded-xl transition-colors hover:bg-[rgba(44,24,16,0.1)] text-sm sm:text-base touch-manipulation"
               >
-                Continue Shopping
+                Continue Ordering
               </button>
             </div>
 

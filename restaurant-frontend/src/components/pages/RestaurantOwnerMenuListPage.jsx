@@ -277,7 +277,7 @@ function RestaurantOwnerMenuListPage() {  // Renamed for consistency
     try {
       const token = localStorage.getItem('restaurantOwnerToken') || localStorage.getItem('token');
 
-      const response = await fetch(`http://${window.location.hostname}:5001/api/menu/categories`, {
+      const response = await fetch(`http://${window.location.hostname}:5004/api/menu/categories`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

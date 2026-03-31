@@ -12,7 +12,6 @@ import PaymentPieChart from '../components/analytics/PaymentPieChart';
 import ActivityHeatmap from '../components/analytics/ActivityHeatmap';
 import StatusDonutChart from '../components/analytics/StatusDonutChart';
 import TopRestaurantsChart from '../components/analytics/TopRestaurantsChart';
-import PopularDishesChart from '../components/analytics/PopularDishesChart';
 import CustomerRetentionCard from '../components/analytics/CustomerRetentionCard';
 
 const Analysis = () => {
@@ -24,7 +23,6 @@ const Analysis = () => {
         paymentSplit: [],
         peakHours: [],
         topRestaurants: [],
-        popularDishes: [],
         customerRetention: null
     });
 
@@ -35,14 +33,13 @@ const Analysis = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const [overview, orderStatus, ordersTrend, paymentSplit, peakHours, topRestaurants, popularDishes, customerRetention] = await Promise.all([
+            const [overview, orderStatus, ordersTrend, paymentSplit, peakHours, topRestaurants, customerRetention] = await Promise.all([
                 analyticsAPI.getOverview(),
                 analyticsAPI.getOrderStatus(),
                 analyticsAPI.getOrdersTrend(12),
                 analyticsAPI.getPaymentSplit(),
                 analyticsAPI.getPeakHours(),
                 analyticsAPI.getTopRestaurants(10),
-                analyticsAPI.getPopularDishes(10),
                 analyticsAPI.getCustomerRetention()
             ]);
 
@@ -53,7 +50,6 @@ const Analysis = () => {
                 paymentSplit: paymentSplit.data.data,
                 peakHours: peakHours.data.data,
                 topRestaurants: topRestaurants.data.data,
-                popularDishes: popularDishes.data.data,
                 customerRetention: customerRetention.data.data
             });
         } catch (error) {
@@ -71,7 +67,7 @@ const Analysis = () => {
         );
     }
 
-    const { overview, orderStatus, ordersTrend, paymentSplit, peakHours, topRestaurants, popularDishes, customerRetention } = data;
+    const { overview, orderStatus, ordersTrend, paymentSplit, peakHours, topRestaurants, customerRetention } = data;
 
     return (
         <Box sx={{ pb: { xs: 2, sm: 3 } }}>
@@ -87,9 +83,9 @@ const Analysis = () => {
                 Analytics Dashboard
             </Typography>
 
-            {/* Row 1: Key Metrics (3 cols) */}
+            {/* Row 1: Key Metrics (4 cols) */}
             <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
-                <Grid item xs={12} sm={6} md={6} lg={4}>
+                <Grid item xs={12} sm={6} md={3}>
                     <KPICard
                         title="Total Revenue"
                         value={`₹${(overview?.totalRevenue || 0).toLocaleString()}`}
@@ -97,7 +93,7 @@ const Analysis = () => {
                         data={overview?.monthlyStats?.revenue}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={6} lg={4}>
+                <Grid item xs={12} sm={6} md={3}>
                     <KPICard
                         title="Total Orders"
                         value={overview?.totalOrders?.toLocaleString()}
@@ -105,7 +101,7 @@ const Analysis = () => {
                         data={overview?.monthlyStats?.orders}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={6} lg={4}>
+                <Grid item xs={12} sm={6} md={3}>
                     <KPICard
                         title="Active Users"
                         value={overview?.totalUsers?.toLocaleString()}
@@ -113,11 +109,7 @@ const Analysis = () => {
                         data={overview?.monthlyStats?.users}
                     />
                 </Grid>
-            </Grid>
-
-            {/* Row 2: Restaurants & Distribution (3 cols) */}
-            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
-                <Grid item xs={12} sm={6} md={4} lg={4}>
+                <Grid item xs={12} sm={6} md={3}>
                     <KPICard
                         title="Active Restaurants"
                         value={overview?.totalRestaurants?.toLocaleString()}
@@ -125,38 +117,35 @@ const Analysis = () => {
                         data={overview?.monthlyStats?.restaurants}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <PaymentPieChart data={paymentSplit} />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <StatusDonutChart data={orderStatus} />
-                </Grid>
             </Grid>
 
-            {/* Row 3: Trends & Leaderboard */}
+            {/* Row 2: Trends & Status */}
             <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                 <Grid item xs={12} lg={8}>
                     <RevenueAreaChart data={ordersTrend} />
                 </Grid>
                 <Grid item xs={12} lg={4}>
-                    <TopRestaurantsChart data={topRestaurants} />
+                    <StatusDonutChart data={orderStatus} />
                 </Grid>
             </Grid>
-
-            {/* Row 4: Popular Dishes & Customer Retention */}
+            
+            {/* Row 3: Heatmap & Payment Split */}
             <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                 <Grid item xs={12} lg={8}>
-                    <PopularDishesChart data={popularDishes} />
+                    <ActivityHeatmap data={peakHours} />
                 </Grid>
                 <Grid item xs={12} lg={4}>
-                    <CustomerRetentionCard data={customerRetention} />
+                    <PaymentPieChart data={paymentSplit} />
                 </Grid>
             </Grid>
 
-            {/* Heatmap Row */}
+            {/* Row 4: Top Restaurants & Customer Retention */}
             <Grid container spacing={{ xs: 2, sm: 3 }}>
-                <Grid item xs={12}>
-                    <ActivityHeatmap data={peakHours} />
+                <Grid item xs={12} lg={6}>
+                    <TopRestaurantsChart data={topRestaurants} />
+                </Grid>
+                <Grid item xs={12} lg={6}>
+                    <CustomerRetentionCard data={customerRetention} />
                 </Grid>
             </Grid>
         </Box>

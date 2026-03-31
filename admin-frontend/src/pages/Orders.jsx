@@ -90,14 +90,24 @@ const Orders = () => {
     );
   }
 
+  const totalOverallOrders = restaurantOrders.reduce((sum, restaurant) => sum + (restaurant.totalOrders || 0), 0);
+
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Orders by Restaurant</h2>
-        <p className="mt-1 text-sm sm:text-base text-gray-600">
-          View and manage orders grouped by restaurant ({restaurantOrders.length} restaurants with orders)
-        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Orders by Restaurant</h2>
+            <p className="mt-1 text-sm sm:text-base text-gray-600">
+              View and manage orders grouped by restaurant ({restaurantOrders.length} restaurants with orders)
+            </p>
+          </div>
+          <div className="bg-primary/10 text-primary px-4 py-3 rounded-lg border border-primary/20 flex flex-col items-center">
+            <span className="text-sm font-medium">Total Platform Orders</span>
+            <span className="text-2xl font-bold">{totalOverallOrders}</span>
+          </div>
+        </div>
       </div>
 
       {/* Restaurant Cards */}

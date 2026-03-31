@@ -40,7 +40,7 @@ export const registerRestaurantOwner = async (req, res) => {
     }
 
     // Validate password format (uppercase, lowercase, number, special char)
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
         success: false,
@@ -372,8 +372,10 @@ export const loginRestaurantOwner = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email and password are required' });
     }
 
-    const restaurantOwner = await RestaurantOwner.findOne({ email }).select('+password');
-    console.log('Login attempt for email:', email, 'User found:', !!restaurantOwner);
+    const formattedEmail = email.trim().toLowerCase();
+
+    const restaurantOwner = await RestaurantOwner.findOne({ email: formattedEmail }).select('+password');
+    console.log('Login attempt for email:', formattedEmail, 'User found:', !!restaurantOwner);
 
     if (!restaurantOwner || !(await restaurantOwner.comparePassword(password))) {
       console.log('Invalid credentials for:', email);
@@ -493,7 +495,7 @@ export const updateRestaurantOwnerPassword = async (req, res) => {
     }
 
     // Validate password format
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
     if (!passwordRegex.test(newPassword)) {
       return res.status(400).json({
         success: false,

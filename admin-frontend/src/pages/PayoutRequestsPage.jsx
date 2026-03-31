@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { payoutsAPI } from '../api/adminApi';
-import { Check, X } from 'lucide-react';
+import { Check, X, Download } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-
 const PayoutRequestsPage = () => {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -39,9 +38,41 @@ const PayoutRequestsPage = () => {
         }
     };
 
+    const exportToCSV = () => {
+        const headers = ['Restaurant Name', 'Owner Name', 'Owner Phone', 'Order Count', 'Amount (Rs)', 'Date', 'Status'];
+        const csvRows = requests.map(req => [
+            `"${req.restaurantId?.name || 'Unknown'}"`,
+            `"${req.restaurantId?.owner?.name || 'N/A'}"`,
+            `"${req.restaurantId?.owner?.phone || 'N/A'}"`,
+            req.orderCount || 0,
+            req.amount,
+            `"${new Date(req.createdAt).toLocaleDateString()}"`,
+            `"${req.status}"`
+        ]);
+        const csvContent = [headers.join(','), ...csvRows.map(e => e.join(','))].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'payout_requests.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
     return (
         <div className="space-y-4 sm:space-y-6">
-            <h1 className="text-xl sm:text-2xl font-bold">Payout Requests</h1>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <h1 className="text-xl sm:text-2xl font-bold">Payout Requests</h1>
+                <div className="flex gap-2">
+                    <button 
+                        onClick={exportToCSV}
+                        className="px-4 py-2 text-sm font-medium text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700"
+                    >
+                        Export CSV
+                    </button>
+                </div>
+            </div>
 
             {loading ? (
                 <div className="text-center py-10">Loading...</div>

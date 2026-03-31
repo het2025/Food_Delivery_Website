@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   ClipboardList, CheckCircle, Clock, XCircle, IndianRupee, X,
-  MapPin, User, Phone, Package
+  MapPin, User, Phone, Package, Bell
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 import {
@@ -20,6 +20,49 @@ function RestaurantOwnerOrdersPage() {
   const [selectedOrderDetails, setSelectedOrderDetails] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [newOrderNotification, setNewOrderNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const notificationTimeoutRef = useRef(null);
+
+  // Play notification sound using Web Audio API (no external files needed)
+  const playNotificationSound = useCallback(() => {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // Play a pleasant two-tone chime
+      const playTone = (freq, startTime, duration) => {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.frequency.value = freq;
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.3, startTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+        oscillator.start(startTime);
+        oscillator.stop(startTime + duration);
+      };
+      const now = audioCtx.currentTime;
+      playTone(880, now, 0.15);       // A5
+      playTone(1100, now + 0.15, 0.15); // C#6
+      playTone(1320, now + 0.3, 0.25);  // E6
+    } catch (e) {
+      // Silently fail if audio is not available
+    }
+  }, []);
+
+  const showOrderNotification = useCallback((message = '🔔 New order received!') => {
+    setNewOrderNotification(true);
+    setNotificationMessage(message);
+    playNotificationSound();
+    // Also try browser notification
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('QuickBite - New Order!', { body: message, icon: '/quickbite_logo.svg' });
+    }
+    if (notificationTimeoutRef.current) clearTimeout(notificationTimeoutRef.current);
+    notificationTimeoutRef.current = setTimeout(() => {
+      setNewOrderNotification(false);
+      setNotificationMessage('');
+    }, 8000);
+  }, [playNotificationSound]);
 
   // ✅ FIXED: Added 'OutForDelivery' and 'Delivered' for display purposes
   const allowedStatuses = [
@@ -105,7 +148,12 @@ function RestaurantOwnerOrdersPage() {
   };
 
 
-  // ... state variables
+  // Request browser notification permission on mount
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
 
   useEffect(() => {
     let isFirstLoad = true;
@@ -123,8 +171,8 @@ function RestaurantOwnerOrdersPage() {
 
         // New order notification check
         if (!isFirstLoad && orders.length > 0 && mapped.length > orders.length) {
-          setNewOrderNotification(true);
-          setTimeout(() => setNewOrderNotification(false), 5000);
+          const newCount = mapped.length - orders.length;
+          showOrderNotification(`🔔 ${newCount} new order${newCount > 1 ? 's' : ''} received!`);
         }
         setOrders(mapped);
         isFirstLoad = false;
@@ -150,7 +198,7 @@ function RestaurantOwnerOrdersPage() {
         if (profileRes.success && profileRes.data && profileRes.data.restaurantId) {
           const restaurantId = profileRes.data.restaurantId;
 
-          socket = io(`http://${window.location.hostname}:5001`); // Connect to Restaurant Backend
+          socket = io(`http://${window.location.hostname}:5004`); // Connect to Restaurant Backend
 
           socket.on('connect', () => {
             console.log('🔌 Connected to Restaurant Backend Socket');
@@ -159,8 +207,7 @@ function RestaurantOwnerOrdersPage() {
 
           socket.on('new_order', (newOrder) => {
             console.log('🔔 New Order Received via Socket:', newOrder);
-            setNewOrderNotification(true);
-            setTimeout(() => setNewOrderNotification(false), 5000);
+            showOrderNotification('🔔 New order just placed!');
             loadOrders(); // Refresh orders immediately
           });
         }
@@ -240,7 +287,26 @@ function RestaurantOwnerOrdersPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 relative">
+      {/* New Order Notification Banner */}
+      {newOrderNotification && (
+        <div className="fixed top-4 right-4 z-[9999] animate-bounce">
+          <div className="flex items-center gap-3 px-5 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl shadow-2xl border border-orange-300">
+            <Bell className="w-6 h-6 animate-[wiggle_0.5s_ease-in-out_infinite]" />
+            <div>
+              <p className="font-bold text-sm">{notificationMessage || 'New Order!'}</p>
+              <p className="text-xs opacity-90">Check your orders now</p>
+            </div>
+            <button
+              onClick={() => { setNewOrderNotification(false); setNotificationMessage(''); }}
+              className="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       <h1 className="mb-6 text-3xl font-bold text-gray-800">
         📦 Restaurant Owner Order Management
       </h1>

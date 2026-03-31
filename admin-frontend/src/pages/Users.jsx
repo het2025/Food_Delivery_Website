@@ -68,12 +68,38 @@ const Users = () => {
     setCurrentPage(1);
   };
 
+  const exportToCSV = () => {
+    if (users.length === 0) return;
+    const headers = ['Name', 'Email', 'Phone', 'Status', 'Joined Date'];
+    const csvData = users.map(user => [
+      `"${user.name || ''}"`,
+      `"${user.email || ''}"`,
+      `"${user.phone || 'N/A'}"`,
+      user.isActive ? 'Active' : 'Inactive',
+      `"${new Date(user.createdAt).toLocaleDateString()}"`
+    ]);
+    const csvContent = [headers.join(","), ...csvData.map(e => e.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "users.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-xl font-bold text-gray-800 sm:text-2xl">User Management</h2>
-        <p className="mt-1 text-xs text-gray-600 sm:text-base">Manage all registered users</p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-gray-800 sm:text-2xl">User Management</h2>
+          <p className="mt-1 text-xs text-gray-600 sm:text-base">Manage all registered users</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={exportToCSV} className="px-4 py-2 text-sm font-medium text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700">Export CSV</button>
+        </div>
       </div>
 
       {/* Search */}

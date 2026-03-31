@@ -122,7 +122,7 @@ export const createOrder = async (req, res) => {
     // This is now handled in updateOrderStatus when status becomes 'Delivered'.
 
     // Send order to Restaurant Backend
-    const RESTAURANT_BACKEND_URL = process.env.RESTAURANT_BACKEND_URL || 'http://localhost:5001';
+    const RESTAURANT_BACKEND_URL = process.env.RESTAURANT_BACKEND_URL || 'http://localhost:5004';
 
     try {
       await axios.post(`${RESTAURANT_BACKEND_URL}/api/orders/receive`, {
@@ -441,7 +441,7 @@ export const updateOrderStatus = async (req, res) => {
     // ✅ NEW: Sync status to Restaurant Backend (e.g. Delivered)
     if (['Delivered', 'OutForDelivery', 'Out for Delivery'].includes(status)) {
       try {
-        const RESTAURANT_BACKEND_URL = process.env.RESTAURANT_BACKEND_URL || 'http://localhost:5001';
+        const RESTAURANT_BACKEND_URL = process.env.RESTAURANT_BACKEND_URL || 'http://localhost:5004';
 
         console.log(`📡 Syncing status '${status}' to restaurant-backend...`);
 

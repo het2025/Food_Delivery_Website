@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Order } from '../models/Order.js';
 import { MenuItem } from '../models/MenuItem.js';
 import { MenuCategory } from '../models/MenuCategory.js';
@@ -45,7 +46,7 @@ export const getRestaurantOwnerDashboardStats = async (req, res) => {
 
       // Total revenue (completed/delivered)
       Order.aggregate([
-        { $match: { restaurant: restaurantId, status: 'delivered' } },  // Enum: lowercase? Adjust if 'Delivered'
+        { $match: { restaurant: restaurantId, status: { $regex: /^delivered$/i } } },  // Enum: lowercase? Adjust if 'Delivered'
         { $group: { _id: null, total: { $sum: '$totalAmount' } } }
       ]).then(results => results[0]?.total || 0),
 
@@ -77,11 +78,11 @@ export const getRestaurantOwnerDashboardStats = async (req, res) => {
       Order.countDocuments({ restaurant: restaurantId, status: { $in: ['pending', 'preparing'] } }),
 
       // Completed
-      Order.countDocuments({ restaurant: restaurantId, status: 'delivered' }),
+      Order.countDocuments({ restaurant: restaurantId, status: { $regex: /^delivered$/i } }),
 
       // Avg delivery (ms to min)
       Order.aggregate([
-        { $match: { restaurant: restaurantId, status: 'delivered' } },
+        { $match: { restaurant: restaurantId, status: { $regex: /^delivered$/i } } },
         { $group: { _id: null, avgTime: { $avg: { $subtract: ['$updatedAt', '$createdAt'] } } } }
       ]).then(results => {
         const avgMs = results[0]?.avgTime || 0;
@@ -139,7 +140,7 @@ export const getPayoutStats = async (req, res) => {
       {
         $match: {
           restaurant: restaurantId,
-          status: 'delivered'
+          status: { $regex: /^delivered$/i }
         }
       },
       {
@@ -487,65 +488,50 @@ export const getCustomerFeedback = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Restaurant not found' });
     }
 
-    // Get rating distribution
-    const ratingDistribution = await Order.aggregate([
-      { $match: { restaurant: restaurantId, rating: { $exists: true, $ne: null } } },
-      {
-        $group: {
-          _id: '$rating',
-          count: { $sum: 1 }
+    try {
+      const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'http://localhost:5000';
+      const response = await axios.get(`${CUSTOMER_BACKEND_URL}/api/reviews/restaurant/${restaurantId}`);
+      const reviewsData = response.data;
+      const allReviews = reviewsData.reviews || [];
+      
+      const distribution = [5, 4, 3, 2, 1].map(rating => {
+        return {
+          rating,
+          count: allReviews.filter(r => Math.round(r.rating) === rating).length
+        };
+      });
+
+      res.json({
+        success: true,
+        data: {
+          averageRating: reviewsData.averageRating?.toFixed(1) || '0.0',
+          totalReviews: reviewsData.totalReviews || 0,
+          distribution,
+          recentReviews: allReviews.map(r => ({
+            orderNumber: r.order || 'N/A',
+            rating: r.rating,
+            review: r.comment,
+            date: r.createdAt
+          }))
         }
-      },
-      { $sort: { _id: -1 } }
-    ]);
-
-    // Calculate average rating
-    const avgRatingResult = await Order.aggregate([
-      { $match: { restaurant: restaurantId, rating: { $exists: true, $ne: null } } },
-      {
-        $group: {
-          _id: null,
-          avgRating: { $avg: '$rating' },
-          totalReviews: { $sum: 1 }
+      });
+    } catch (apiError) {
+      console.warn('Customer backend API error (fetching reviews):', apiError.message);
+      res.json({
+        success: true,
+        data: {
+          averageRating: '0.0',
+          totalReviews: 0,
+          distribution: [5, 4, 3, 2, 1].map(r => ({rating: r, count: 0})),
+          recentReviews: []
         }
-      }
-    ]);
-
-    // Get recent reviews
-    const recentReviews = await Order.find({
-      restaurant: restaurantId,
-      review: { $exists: true, $ne: '' }
-    })
-      .select('rating review createdAt orderNumber')
-      .sort({ createdAt: -1 })
-      .limit(10);
-
-    // Format rating distribution
-    const distribution = [5, 4, 3, 2, 1].map(rating => {
-      const found = ratingDistribution.find(r => r._id === rating);
-      return {
-        rating,
-        count: found?.count || 0
-      };
-    });
-
-    res.json({
-      success: true,
-      data: {
-        averageRating: avgRatingResult[0]?.avgRating?.toFixed(1) || '0.0',
-        totalReviews: avgRatingResult[0]?.totalReviews || 0,
-        distribution,
-        recentReviews: recentReviews.map(r => ({
-          orderNumber: r.orderNumber,
-          rating: r.rating,
-          review: r.review,
-          date: r.createdAt
-        }))
-      }
-    });
+      });
+    }
 
   } catch (error) {
     console.error('getCustomerFeedback error:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch customer feedback' });
   }
 };
+
+// Restart trigger

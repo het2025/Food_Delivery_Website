@@ -62,8 +62,7 @@ const LocationModal = ({ onClose, onLocationSelect }) => {
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
         {
           headers: {
-            'Accept-Language': 'en',
-            'User-Agent': 'QuickBites-Food-Delivery' // Required by Nominatim
+            'Accept-Language': 'en'
           }
         }
       )
@@ -81,12 +80,14 @@ const LocationModal = ({ onClose, onLocationSelect }) => {
       
       // Try to find the most specific area name
       const areaName = 
-        address.suburb || 
         address.neighbourhood || 
+        address.suburb || 
+        address.residential ||
+        address.village || 
         address.town || 
         address.city_district || 
-        address.village || 
-        'Current Location'
+        address.county ||
+        (data.display_name ? data.display_name.split(',')[0] : 'Current Location')
 
       return {
         area: areaName,

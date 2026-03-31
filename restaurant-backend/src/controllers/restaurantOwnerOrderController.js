@@ -192,36 +192,45 @@ export const updateRestaurantOwnerOrderStatus = async (req, res) => {
         } else {
           const DELIVERY_BACKEND_URL = process.env.DELIVERY_BACKEND_URL || 'http://localhost:5003';
 
-          // 2. Construct Payload
-          const deliveryPayload = {
-            orderId: updatedOrder.originalOrderId || updatedOrder._id.toString(), // Prefer original ID
-            orderNumber: updatedOrder.orderNumber,
-            restaurant: restaurantId,
-            restaurantName: restaurantDetails.name,
-            restaurantLocation: restaurantDetails.location, // { address, coordinates }
-            customer: updatedOrder.userId, // Customer ID
-            customerName: updatedOrder.customerName || 'Customer',
-            customerPhone: updatedOrder.customerPhone || '',
-            deliveryAddress: updatedOrder.deliveryAddress, // Now an object
-            orderAmount: updatedOrder.totalAmount,
-            deliveryFee: updatedOrder.deliveryFee || 0,
-            distance: updatedOrder.deliveryDistance || 0,
-            estimatedDeliveryTime: 30 // Default or calculate
-          };
+          // ✅ FIX: Validate all required fields before sending to delivery-backend
+          const customerId = updatedOrder.userId || updatedOrder.customer || null;
+          const deliveryAddr = updatedOrder.deliveryAddress || { address: 'Not provided' };
+          const orderNum = updatedOrder.orderNumber || `ORD-${updatedOrder._id.toString().slice(-8)}`;
 
-          console.log('📦 Sending payload to Delivery Backend:', JSON.stringify(deliveryPayload, null, 2));
-
-          // 3. Call Delivery Backend
-          const deliveryResponse = await axios.post(
-            `${DELIVERY_BACKEND_URL}/api/delivery/orders/create`,
-            deliveryPayload,
-            { timeout: 5000 }
-          );
-
-          if (deliveryResponse.data.success) {
-            console.log('✅✅✅ Delivery Order Created Successfully!');
+          if (!customerId) {
+            console.warn('⚠️ Skipping delivery creation: No customer ID found on order');
           } else {
-            console.warn('⚠️ Delivery Backend returned success: false', deliveryResponse.data);
+            // 2. Construct Payload with safe fallbacks
+            const deliveryPayload = {
+              orderId: updatedOrder.originalOrderId || updatedOrder._id.toString(),
+              orderNumber: orderNum,
+              restaurant: restaurantId.toString(),
+              restaurantName: restaurantDetails.name || 'Restaurant',
+              restaurantLocation: restaurantDetails.location || { address: restaurantDetails.address || '' },
+              customer: customerId.toString(),
+              customerName: updatedOrder.customerName || 'Customer',
+              customerPhone: updatedOrder.customerPhone || '',
+              deliveryAddress: deliveryAddr,
+              orderAmount: updatedOrder.totalAmount || updatedOrder.total || 0,
+              deliveryFee: updatedOrder.deliveryFee || 0,
+              distance: updatedOrder.deliveryDistance || 0,
+              estimatedDeliveryTime: 30
+            };
+
+            console.log('📦 Sending payload to Delivery Backend:', JSON.stringify(deliveryPayload, null, 2));
+
+            // 3. Call Delivery Backend
+            const deliveryResponse = await axios.post(
+              `${DELIVERY_BACKEND_URL}/api/delivery/orders/create`,
+              deliveryPayload,
+              { timeout: 5000 }
+            );
+
+            if (deliveryResponse.data.success) {
+              console.log('✅✅✅ Delivery Order Created Successfully!');
+            } else {
+              console.warn('⚠️ Delivery Backend returned success: false', deliveryResponse.data);
+            }
           }
         }
       } catch (deliveryError) {
@@ -233,9 +242,7 @@ export const updateRestaurantOwnerOrderStatus = async (req, res) => {
     }
 
     if (!remoteOrderId) {
-      console.warn('⚠️ No originalOrderId found for order. Cannot sync to customer-backend correctly.');
-      // We might still try with 'id' but it will likely fail if IDs are different.
-      // For now, we proceed but log the warning.
+      console.log('ℹ️ No originalOrderId — will use local order ID for customer-backend sync.');
     }
 
     // ✅ Sync status update to customer-backend
@@ -355,6 +362,20 @@ export const receiveOrderFromCustomer = async (req, res) => {
       });
     }
 
+    // ✅ FIX: Check if order already exists (prevent duplicate key error on retry)
+    const existingOrder = await Order.findOne({ orderNumber: orderNumber });
+    if (existingOrder) {
+      console.log('⚠️ Order already exists, skipping duplicate:', orderNumber);
+      return res.status(200).json({
+        success: true,
+        message: 'Order already received',
+        data: {
+          orderId: existingOrder._id,
+          orderNumber: orderNumber
+        }
+      });
+    }
+
     // Create order in RESTAURANT database
     const restaurantOrder = new Order({
       userId: customerId,
@@ -368,7 +389,7 @@ export const receiveOrderFromCustomer = async (req, res) => {
         price: item.price
       })),
       totalAmount: total,
-      paymentMethod: paymentMethod.toLowerCase(),
+      paymentMethod: (paymentMethod || 'cod').toLowerCase(),
       status: 'pending', // lowercase to match enum
       // ✅ CHANGED: Save full address object and fee
       deliveryAddress: deliveryAddress,

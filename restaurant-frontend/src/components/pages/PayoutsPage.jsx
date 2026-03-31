@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Wallet, Building2, Plus, Lock, AlertTriangle, Trash2 } from 'lucide-react';
 
-const API_BASE_URL = `http://${window.location.hostname}:5001/api`; // Restaurant Backend
+const API_BASE_URL = `http://${window.location.hostname}:5004/api`; // Restaurant Backend
 
 const PayoutsPage = () => {
     const [activeTab, setActiveTab] = useState('overview'); // overview | bank-details
@@ -172,15 +172,15 @@ const PayoutsPage = () => {
                                 <div className="pt-4 mt-4 text-sm text-gray-500 border-t space-y-2">
                                     <div className="flex justify-between">
                                         <span>Dish Price Earnings:</span>
-                                        <span className="font-semibold text-gray-800">₹{stats.breakdown.dishPrice.toLocaleString()}</span>
+                                        <span className="font-semibold text-gray-800">₹{(stats.breakdown?.dishPrice || 0).toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span>Tax Collected:</span>
-                                        <span className="font-semibold text-gray-800">₹{stats.breakdown.taxes.toLocaleString()}</span>
+                                        <span className="font-semibold text-gray-800">₹{(stats.breakdown?.taxes || 0).toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between pt-2 font-bold text-black border-t">
                                         <span>Total:</span>
-                                        <span>₹{(stats.breakdown.dishPrice + stats.breakdown.taxes).toLocaleString()}</span>
+                                        <span>₹{((stats.breakdown?.dishPrice || 0) + (stats.breakdown?.taxes || 0)).toLocaleString()}</span>
                                     </div>
                                 </div>
 

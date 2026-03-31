@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   BarChart3,
   Users,
@@ -15,13 +15,16 @@ import {
   AlertCircle,
   Filter,
   Search,
-  Plus
+  Plus,
+  Bell
 } from 'lucide-react';
 
 import {
   getDashboardStats,
-  getRestaurantOwnerOrders
+  getRestaurantOwnerOrders,
+  getCurrentRestaurantOwner
 } from '../../api/restaurantOwnerApi';
+import { io } from 'socket.io-client';
 import RestaurantAnalyticsTab from './RestaurantAnalyticsTab';
 
 function RestaurantOwnerDashboardPage() {
@@ -32,6 +35,46 @@ function RestaurantOwnerDashboardPage() {
   const [dashboardStats, setDashboardStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [newOrderNotification, setNewOrderNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const notificationTimeoutRef = useRef(null);
+
+  // Play notification sound using Web Audio API
+  const playNotificationSound = useCallback(() => {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const playTone = (freq, startTime, duration) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = freq;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.3, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      };
+      const now = audioCtx.currentTime;
+      playTone(880, now, 0.15);
+      playTone(1100, now + 0.15, 0.15);
+      playTone(1320, now + 0.3, 0.25);
+    } catch (e) { /* silent */ }
+  }, []);
+
+  const showOrderNotification = useCallback((msg = '🔔 New order received!') => {
+    setNewOrderNotification(true);
+    setNotificationMessage(msg);
+    playNotificationSound();
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('QuickBite - New Order!', { body: msg, icon: '/quickbite_logo.svg' });
+    }
+    if (notificationTimeoutRef.current) clearTimeout(notificationTimeoutRef.current);
+    notificationTimeoutRef.current = setTimeout(() => {
+      setNewOrderNotification(false);
+      setNotificationMessage('');
+    }, 8000);
+  }, [playNotificationSound]);
 
   const [newOrderForm, setNewOrderForm] = useState({
     customerName: '',
@@ -39,38 +82,73 @@ function RestaurantOwnerDashboardPage() {
     quantity: 1,
     specialInstructions: ''
   });
+  // Request browser notification permission
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
 
   // Load data
   useEffect(() => {
-    const loadDashboardData = async () => {
+    const fetchDashboardData = async (isSilent = false) => {
       try {
-        setLoading(true);
-        setError('');
+        if (!isSilent) {
+          setLoading(true);
+          setError('');
+        }
 
-        // Get dashboard stats
-        const statsRes = await getDashboardStats();
+        const [statsRes, ordersRes] = await Promise.all([
+          getDashboardStats().catch(() => ({ success: false })),
+          getRestaurantOwnerOrders().catch(() => ({ success: false }))
+        ]);
+
         if (statsRes.success && statsRes.data) {
           setDashboardStats(statsRes.data);
         }
 
-        // Get orders
-        const ordersRes = await getRestaurantOwnerOrders();
-        const orders = ordersRes.success && ordersRes.data?.orders
-          ? ordersRes.data.orders
-          : ordersRes.success && Array.isArray(ordersRes.data)
-            ? ordersRes.data
-            : [];
-        setOrdersData(orders);
-
+        if (ordersRes.success) {
+          const orders = ordersRes.data?.orders || (Array.isArray(ordersRes.data) ? ordersRes.data : []);
+          setOrdersData(orders);
+        }
       } catch (err) {
-        console.error('Dashboard data load error:', err);
-        setError(err.message || 'Failed to load dashboard data');
+        if (!isSilent) {
+          console.error('Dashboard data load error:', err);
+          setError(err.message || 'Failed to load dashboard data');
+        }
       } finally {
-        setLoading(false);
+        if (!isSilent) setLoading(false);
       }
     };
 
-    loadDashboardData();
+    let socket = null;
+
+    const setupSocket = async () => {
+      try {
+        const profileRes = await getCurrentRestaurantOwner();
+        if (profileRes.success && profileRes.data && profileRes.data.restaurantId) {
+          const restaurantId = profileRes.data.restaurantId;
+          socket = io(`http://${window.location.hostname}:5004`);
+          socket.on('connect', () => {
+            socket.emit('join_restaurant', restaurantId);
+          });
+          socket.on('new_order', (newOrder) => {
+            showOrderNotification('🔔 New order just placed!');
+            fetchDashboardData(true);
+          });
+        }
+      } catch (err) {
+        console.error('Socket setup error:', err);
+      }
+    };
+
+    // Initial load and socket connect
+    fetchDashboardData();
+    setupSocket();
+
+    return () => {
+      if (socket) socket.disconnect();
+    };
   }, []);
 
   // Map orders for UI, always deducting ₹30 for delivery
@@ -481,7 +559,25 @@ function RestaurantOwnerDashboardPage() {
     );
   }
   return (
-    <div className="min-h-screen p-3 sm:p-4 md:p-8 bg-gray-50">
+    <div className="min-h-screen p-3 sm:p-4 md:p-8 bg-gray-50 relative">
+      {/* New Order Notification Banner */}
+      {newOrderNotification && (
+        <div className="fixed top-4 right-4 z-[9999] animate-bounce">
+          <div className="flex items-center gap-3 px-5 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl shadow-2xl border border-orange-300">
+            <Bell className="w-6 h-6" />
+            <div>
+              <p className="font-bold text-sm">{notificationMessage || 'New Order!'}</p>
+              <p className="text-xs opacity-90">Check your orders now</p>
+            </div>
+            <button
+              onClick={() => { setNewOrderNotification(false); setNotificationMessage(''); }}
+              className="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="flex flex-col items-start justify-between gap-3 mb-5 sm:mb-8 md:flex-row md:items-center">
         <div className="flex items-center gap-3 sm:gap-4">
@@ -496,12 +592,6 @@ function RestaurantOwnerDashboardPage() {
               Welcome back! Here's what's happening today
             </p>
           </div>
-        </div>
-        <div className="flex items-center gap-3 self-end md:self-auto">
-          <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100">
-            <Download size={14} className="sm:w-4 sm:h-4" />
-            Export
-          </button>
         </div>
       </div>
       {/* Error Message */}
