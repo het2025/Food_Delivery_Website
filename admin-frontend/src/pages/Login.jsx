@@ -136,12 +136,6 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="mt-4 sm:mt-6 text-sm text-center text-gray-600">
-            <p>Default credentials:</p>
-            <p className="p-2 mt-2 text-xs sm:text-sm font-mono bg-gray-100 rounded break-all">
-              admin@quickbite.com / Admin@123
-            </p>
-          </div>
         </div>
 
         <p className="mt-6 text-sm text-center text-white">
