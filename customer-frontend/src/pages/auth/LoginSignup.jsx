@@ -226,7 +226,9 @@ export default function LoginSignup() {
         }
       }
     } catch (err) {
-      setError("An unknown error occurred. Please try again."); // hide error details
+      console.error('Login/Signup error:', err);
+      // Use the server-provided error message if available, otherwise fallback
+      setError(err.message || "An unknown error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
