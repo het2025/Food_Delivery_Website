@@ -191,7 +191,7 @@ export const updateRestaurantOwnerOrderStatus = async (req, res) => {
           console.error('❌ Critical: Restaurant details not found for delivery creation');
         } else {
           const DELIVERY_BACKEND_URL = process.env.DELIVERY_BACKEND_URL || 
-            (process.env.NODE_ENV === 'production' ? 'https://delivery-backend-ibwg.onrender.com' : 'http://localhost:5003');
+            (process.env.NODE_ENV === 'production' ? 'https://delivery-backend-zot7.onrender.com' : 'http://localhost:5003');
 
           // ✅ FIX: Validate all required fields before sending to delivery-backend
           const customerId = updatedOrder.userId || updatedOrder.customer || null;
