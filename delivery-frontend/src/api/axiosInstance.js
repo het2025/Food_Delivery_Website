@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:5003/api/delivery`;
+let BASE_URL = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:5003/api/delivery`;
+if (BASE_URL !== `http://${window.location.hostname}:5003/api/delivery` && !BASE_URL.endsWith('/api/delivery')) {
+  BASE_URL = BASE_URL.replace(/\/$/, '') + '/api/delivery';
+}
 
 export const deliveryAPI = axios.create({
   baseURL: BASE_URL,

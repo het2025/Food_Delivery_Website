@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL || '/api/admin';
+let BASE_URL = import.meta.env.VITE_API_URL || '/api/admin';
+if (BASE_URL !== '/api/admin' && !BASE_URL.endsWith('/api/admin')) {
+  BASE_URL = BASE_URL.replace(/\/$/, '') + '/api/admin';
+}
 
 export const adminAPI = axios.create({
   baseURL: BASE_URL,
