@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Star, User, Calendar } from 'lucide-react';
+import { API_BASE_URL } from '../api/axiosInstance';
 
 const ReviewList = ({ restaurantId }) => {
     const [reviews, setReviews] = useState([]);
@@ -11,7 +12,7 @@ const ReviewList = ({ restaurantId }) => {
     const fetchReviews = async (pageNum) => {
         try {
             setLoading(true);
-            const response = await fetch(`/api/reviews/restaurant/${restaurantId}?pageNumber=${pageNum}`);
+            const response = await fetch(`${API_BASE_URL}/reviews/restaurant/${restaurantId}?pageNumber=${pageNum}`);
             const data = await response.json();
 
             if (pageNum === 1) {

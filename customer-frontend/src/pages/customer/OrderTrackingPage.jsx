@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import { useSocket } from '../../context/SocketContext'
+import { API_BASE_URL } from '../../api/axiosInstance'
 
 // --- 🍑 WARM PEACH THEME (With Clean White Cards) ---
 // bgMain: '#FFF3E8'
@@ -92,7 +93,7 @@ const OrderTrackingPage = () => {
   // Fetch order details
   const fetchOrderDetails = async () => {
     try {
-      const response = await fetch(`/api/orders/${orderId}`, {
+      const response = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

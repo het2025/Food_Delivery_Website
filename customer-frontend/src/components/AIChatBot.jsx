@@ -8,6 +8,7 @@ import {
 import { useUser } from '../context/UserContext';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../api/axiosInstance';
 
 // --- 🍑 WARM PEACH THEME (With Clean White Cards) ---
 // bgMain: '#FFF3E8'
@@ -260,7 +261,7 @@ const AIChatBot = () => {
                 instructions: 'Order placed via QuickBites AI chat'
             };
 
-            const response = await fetch('/api/orders', {
+            const response = await fetch(`${API_BASE_URL}/orders`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -343,7 +344,7 @@ const AIChatBot = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('/api/ai/chat', {
+            const response = await fetch(`${API_BASE_URL}/ai/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

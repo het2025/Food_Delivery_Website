@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { API_BASE_URL } from '../../api/axiosInstance';
 
 // --- 🍑 WARM PEACH THEME (With Clean White Cards) ---
 // bgMain: '#FFF3E8'
@@ -30,7 +31,7 @@ function NewlyRegistered() {
 
       console.log('🔍 Fetching newly registered restaurants...');
 
-      const response = await fetch('/api/restaurants/newly-registered');
+      const response = await fetch(`${API_BASE_URL}/restaurants/newly-registered`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

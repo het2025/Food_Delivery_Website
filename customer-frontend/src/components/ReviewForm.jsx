@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Star, Upload, X } from 'lucide-react';
+import { API_BASE_URL } from '../api/axiosInstance';
 
 const ReviewForm = ({ restaurantId, orderId, onReviewSubmitted }) => {
     const [rating, setRating] = useState(0);
@@ -45,7 +46,7 @@ const ReviewForm = ({ restaurantId, orderId, onReviewSubmitted }) => {
             // Get token from localStorage (assuming auth is implemented)
             const token = localStorage.getItem('token');
 
-            const response = await fetch('/api/reviews', {
+            const response = await fetch(`${API_BASE_URL}/reviews`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
