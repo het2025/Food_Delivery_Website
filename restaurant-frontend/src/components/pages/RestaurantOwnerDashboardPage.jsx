@@ -128,7 +128,7 @@ function RestaurantOwnerDashboardPage() {
         const profileRes = await getCurrentRestaurantOwner();
         if (profileRes.success && profileRes.data && profileRes.data.restaurantId) {
           const restaurantId = profileRes.data.restaurantId;
-          socket = io(import.meta.env.VITE_SOCKET_URL || `http://${window.location.hostname}:5004`);
+          socket = io(import.meta.env.VITE_SOCKET_URL || '');
           socket.on('connect', () => {
             socket.emit('join_restaurant', restaurantId);
           });

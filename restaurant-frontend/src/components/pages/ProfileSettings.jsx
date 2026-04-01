@@ -17,7 +17,7 @@ import {
   EyeOff
 } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || `http://${window.location.hostname}:5004/api`;
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 function ProfileSettings() {
   const [loading, setLoading] = useState(true);

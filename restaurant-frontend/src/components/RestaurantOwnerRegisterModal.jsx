@@ -196,7 +196,7 @@ function RestaurantOwnerRegisterModal({ isOpen, onClose }) {
       }
     } catch (err) {
       console.error('Restaurant owner registration error:', err);
-      setError(err.message || 'Registration failed. Please check if backend is running on port 5004');
+      setError(err.message || 'Registration failed. Please check your connection or try again later.');
     } finally {
       setIsSubmitting(false);
     }

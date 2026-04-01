@@ -1,8 +1,8 @@
 // src/api/restaurantOwnerApi.js
 // Central API helper for restaurant owner backend (cleaned - removed menu/additives/extras)
 
-let API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://${window.location.hostname}:5004/api`;
-if (API_BASE_URL !== `http://${window.location.hostname}:5004/api` && !API_BASE_URL.endsWith('/api')) {
+export let API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+if (API_BASE_URL !== '/api' && !API_BASE_URL.endsWith('/api')) {
   API_BASE_URL = API_BASE_URL.replace(/\/$/, '') + '/api';
 }
 
