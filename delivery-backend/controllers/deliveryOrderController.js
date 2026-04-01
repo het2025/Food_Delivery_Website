@@ -283,10 +283,10 @@ export const pickupOrder = async (req, res) => {
       const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'https://customer-backend-ibwg.onrender.com';
       await axios.put(
         `${CUSTOMER_BACKEND_URL}/api/orders/${order.orderId}/update-status`,
-        { status: 'OutForDelivery' },
+        { status: 'Out for Delivery' },
         { timeout: 5000 }
       );
-      console.log(`✅ Synced 'OutForDelivery' status to customer-backend for order ${order.orderNumber}`);
+      console.log(`✅ Synced 'Out for Delivery' status to customer-backend`);
     } catch (syncError) {
       console.error('⚠️ Failed to sync pickup status to customer-backend:', syncError.message);
       // Don't fail the request if sync fails
