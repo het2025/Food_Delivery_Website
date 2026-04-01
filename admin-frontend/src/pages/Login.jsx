@@ -66,11 +66,8 @@ const Login = () => {
       <div className="w-full max-w-md">
         {/* Logo and Title */}
         <div className="mb-5 sm:mb-8 text-center">
-          <div className="inline-block p-3 sm:p-4 mb-3 sm:mb-4 bg-white rounded-full shadow-lg">
-            <svg className="w-12 h-12 sm:w-16 sm:h-16 text-primary" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
-              <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
-            </svg>
+          <div className="inline-block mb-3 sm:mb-4 bg-white rounded-full shadow-lg overflow-hidden w-20 h-20 sm:w-24 sm:h-24 p-2">
+            <img src="/quickbite_logo.svg" alt="QuickBite Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="mb-2 text-3xl sm:text-4xl font-bold text-white">QuickBite</h1>
           <p className="text-sm sm:text-base text-white text-opacity-90">Admin Panel</p>
