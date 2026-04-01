@@ -461,8 +461,9 @@ export const acceptOrder = async (req, res) => {
     const targetId = order.originalOrderId || id;
 
     // Update order status in customer backend
+    const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'http://localhost:5000';
     const updateResponse = await axios.put(
-      `http://localhost:5000/api/orders/${targetId}/update-status`,
+      `${CUSTOMER_BACKEND_URL}/api/orders/${targetId}/update-status`,
       {
         status: 'Accepted',
         acceptedAt: new Date()
@@ -511,8 +512,9 @@ export const rejectOrder = async (req, res) => {
 
     const targetId = order.originalOrderId || id;
 
+    const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'http://localhost:5000';
     const updateResponse = await axios.put(
-      `http://localhost:5000/api/orders/${targetId}/update-status`,
+      `${CUSTOMER_BACKEND_URL}/api/orders/${targetId}/update-status`,
       {
         status: 'Rejected',
         rejectedAt: new Date(),
