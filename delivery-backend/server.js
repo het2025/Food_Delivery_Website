@@ -23,15 +23,11 @@ const httpServer = createServer(app);
 // Setup Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.NODE_ENV === 'development' ? true : [
-      'http://localhost:5176',
-      'http://localhost:5177',
-      'http://localhost:3000',
-      // Match ALL Vercel preview & production deployments for delivery frontend
-      /^https:\/\/delivery-frontend[\w-]*\.vercel\.app$/,
-      /^http:\/\/(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}):(5173|5176|5177|3000)$/,
-      process.env.FRONTEND_URL
-    ].filter(Boolean),
+    origin: function (origin, callback) {
+      // Dynamically allow the requesting origin, which works flawlessly 
+      // with credentials: true and prevents any RegEx/Array quirks on Render.
+      callback(null, origin || true);
+    },
     credentials: true
   }
 });
@@ -47,15 +43,10 @@ connectDB();
 
 // CORS Configuration
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'development' ? true : [
-    'http://localhost:5176',
-    'http://localhost:5177',
-    'http://localhost:3000',
-    'http://localhost:5173',
-    // Match ALL Vercel preview & production deployments for delivery frontend
-    /^https:\/\/delivery-frontend[\w-]*\.vercel\.app$/,
-    process.env.FRONTEND_URL
-  ].filter(Boolean),
+  origin: function (origin, callback) {
+    // Same dynamic fallback for HTTP routes
+    callback(null, origin || true);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
