@@ -280,7 +280,8 @@ export const pickupOrder = async (req, res) => {
 
     // ✅ NEW: Sync to customer-backend - update status to 'OutForDelivery'
     try {
-      const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'http://localhost:5000';
+      const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 
+        (process.env.NODE_ENV === 'production' ? 'https://customer-backend-ibwg.onrender.com' : 'http://localhost:5000');
       await axios.put(
         `${CUSTOMER_BACKEND_URL}/api/orders/${order.orderId}/update-status`,
         { status: 'OutForDelivery' },
@@ -397,7 +398,8 @@ export const completeDelivery = async (req, res) => {
 
     // ✅ NEW: Sync to customer-backend - update status to 'Delivered'
     try {
-      const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'http://localhost:5000';
+      const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 
+        (process.env.NODE_ENV === 'production' ? 'https://customer-backend-ibwg.onrender.com' : 'http://localhost:5000');
       await axios.put(
         `${CUSTOMER_BACKEND_URL}/api/orders/${order.orderId}/update-status`,
         { status: 'Delivered' },

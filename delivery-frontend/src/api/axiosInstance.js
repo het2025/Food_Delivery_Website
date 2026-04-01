@@ -1,9 +1,12 @@
 import axios from 'axios';
 
-let BASE_URL = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:5003/api/delivery`;
-if (BASE_URL !== `http://${window.location.hostname}:5003/api/delivery` && !BASE_URL.endsWith('/api/delivery')) {
-  BASE_URL = BASE_URL.replace(/\/$/, '') + '/api/delivery';
-}
+// Dev  : Vite proxy handles /api/delivery
+// Prod : Vercel proxies /api/delivery -> Render Backend, OR we use VITE_API_URL explicitly
+const _raw = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const BASE_URL = _raw
+  ? (_raw.endsWith('/api/delivery') ? _raw : _raw + '/api/delivery')
+  : '/api/delivery';
+
 
 export const deliveryAPI = axios.create({
   baseURL: BASE_URL,

@@ -27,7 +27,8 @@ const io = new Server(httpServer, {
       'http://localhost:5176',
       'http://localhost:5177',
       'http://localhost:3000',
-      // Allow local network IP addresses
+      // Match ALL Vercel preview & production deployments for delivery frontend
+      /^https:\/\/delivery-frontend[\w-]*\.vercel\.app$/,
       /^http:\/\/(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}):(5173|5176|5177|3000)$/,
       process.env.FRONTEND_URL
     ].filter(Boolean),
@@ -51,6 +52,8 @@ const corsOptions = {
     'http://localhost:5177',
     'http://localhost:3000',
     'http://localhost:5173',
+    // Match ALL Vercel preview & production deployments for delivery frontend
+    /^https:\/\/delivery-frontend[\w-]*\.vercel\.app$/,
     process.env.FRONTEND_URL
   ].filter(Boolean),
   credentials: true,
@@ -118,7 +121,8 @@ process.on('unhandledRejection', (err) => {
 // Polling Service: Fetch Ready orders from Customer Backend
 const pollReadyOrders = async () => {
   try {
-    const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'http://localhost:5000';
+    const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 
+      (process.env.NODE_ENV === 'production' ? 'https://customer-backend-ibwg.onrender.com' : 'http://localhost:5000');
 
     // Fetch orders with status 'Ready'
     const response = await axios.get(`${CUSTOMER_BACKEND_URL}/api/orders/internal/ready`);

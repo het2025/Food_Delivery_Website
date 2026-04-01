@@ -1,6 +1,10 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || `http://${window.location.hostname}:5003`;
+// Production : VITE_SOCKET_URL = 'https://delivery-backend-xxxx.onrender.com'
+// Development: No env var → connect to window.location (Vite proxy handles /socket.io)
+// NEVER fall back to http://hostname:5003 in production — that hits the Vercel frontend!
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || undefined; // undefined = connect to same origin (works with Vite proxy in dev)
+
 
 let socket = null;
 

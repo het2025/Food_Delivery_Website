@@ -190,7 +190,8 @@ export const updateRestaurantOwnerOrderStatus = async (req, res) => {
         if (!restaurantDetails) {
           console.error('❌ Critical: Restaurant details not found for delivery creation');
         } else {
-          const DELIVERY_BACKEND_URL = process.env.DELIVERY_BACKEND_URL || 'http://localhost:5003';
+          const DELIVERY_BACKEND_URL = process.env.DELIVERY_BACKEND_URL || 
+            (process.env.NODE_ENV === 'production' ? 'https://delivery-backend-ibwg.onrender.com' : 'http://localhost:5003');
 
           // ✅ FIX: Validate all required fields before sending to delivery-backend
           const customerId = updatedOrder.userId || updatedOrder.customer || null;
@@ -248,7 +249,8 @@ export const updateRestaurantOwnerOrderStatus = async (req, res) => {
     // ✅ Sync status update to customer-backend
     // This is crucial for 'Ready' status to trigger delivery notification!
     try {
-      const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'http://localhost:5000';
+      const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 
+        (process.env.NODE_ENV === 'production' ? 'https://customer-backend-ibwg.onrender.com' : 'http://localhost:5000');
       const targetId = remoteOrderId || id;
 
       console.log(`📡 Syncing status '${status}' to customer-backend for order ${targetId}...`);
@@ -461,7 +463,8 @@ export const acceptOrder = async (req, res) => {
     const targetId = order.originalOrderId || id;
 
     // Update order status in customer backend
-    const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'http://localhost:5000';
+    const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 
+      (process.env.NODE_ENV === 'production' ? 'https://customer-backend-ibwg.onrender.com' : 'http://localhost:5000');
     const updateResponse = await axios.put(
       `${CUSTOMER_BACKEND_URL}/api/orders/${targetId}/update-status`,
       {
@@ -512,7 +515,8 @@ export const rejectOrder = async (req, res) => {
 
     const targetId = order.originalOrderId || id;
 
-    const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 'http://localhost:5000';
+    const CUSTOMER_BACKEND_URL = process.env.CUSTOMER_BACKEND_URL || 
+      (process.env.NODE_ENV === 'production' ? 'https://customer-backend-ibwg.onrender.com' : 'http://localhost:5000');
     const updateResponse = await axios.put(
       `${CUSTOMER_BACKEND_URL}/api/orders/${targetId}/update-status`,
       {
