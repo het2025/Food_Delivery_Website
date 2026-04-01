@@ -1,9 +1,14 @@
 import axios from 'axios'
 
-// In production: VITE_API_BASE_URL = 'https://customer-backend-ibwg.onrender.com/api'
-// In development: VITE_API_BASE_URL = '/api'  (Vite proxy forwards to localhost:5000)
-// Strip any accidental trailing slash to keep URL joins consistent.
-export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
+// Resolve the backend base URL.
+// Dev  : VITE_API_BASE_URL=/api  → Vite proxy forwards /api/* to localhost:5000
+// Prod : VITE_API_BASE_URL=https://customer-backend-ibwg.onrender.com (with OR without /api)
+//        We always ensure the URL ends with /api so every fetch/AxiosInstance call is correct.
+const _raw = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+export const API_BASE_URL = _raw
+  ? (_raw.endsWith('/api') ? _raw : _raw + '/api')
+  : '/api';
+
 
 // Create axios instance for API calls
 const axiosInstance = axios.create({

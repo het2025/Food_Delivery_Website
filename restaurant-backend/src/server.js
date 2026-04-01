@@ -20,16 +20,17 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: process.env.NODE_ENV === 'development'
-      ? true  // Allow all origins in development (needed for mobile/LAN access)
+      ? true
       : [
           process.env.FRONTEND_URL,
           ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : []),
+          // Match ALL Vercel preview & production deployments for this project
+          /^https:\/\/restaurant-frontend[\w-]*\.vercel\.app$/,
           'http://localhost:3000',
           'http://localhost:5173',
           'http://localhost:5174',
           'http://localhost:5175',
           'http://localhost:3174',
-          // Allow local network IP addresses
           /^http:\/\/(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}):(5173|5174|5175|3174|3000)$/
         ].filter(Boolean),
     credentials: true,
@@ -60,10 +61,12 @@ app.use((req, res, next) => {
 // CORS
 app.use(cors({
   origin: process.env.NODE_ENV === 'development'
-    ? true  // Allow all origins in development (needed for mobile/LAN access)
+    ? true
     : [
         process.env.FRONTEND_URL,
         ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : []),
+        // Match ALL Vercel preview & production deployments for this project
+        /^https:\/\/restaurant-frontend[\w-]*\.vercel\.app$/,
         'http://localhost:3000',
         'http://localhost:5173',
         'http://localhost:5174',

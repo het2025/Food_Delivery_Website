@@ -1,10 +1,15 @@
 // src/api/restaurantOwnerApi.js
 // Central API helper for restaurant owner backend (cleaned - removed menu/additives/extras)
 
-export let API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
-if (API_BASE_URL !== '/api' && !API_BASE_URL.endsWith('/api')) {
-  API_BASE_URL = API_BASE_URL.replace(/\/$/, '') + '/api';
-}
+// Resolve restaurant backend URL.
+// Dev  : Vite proxy /api → localhost:5004
+// Prod : Vercel rewrites /api/* → https://restaurant-backend-1mkh.onrender.com/api/*
+//        So we always use /api as the relative base (no full URL needed for restaurant frontend).
+const _raw = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+export let API_BASE_URL = _raw
+  ? (_raw.endsWith('/api') ? _raw : _raw + '/api')
+  : '/api';
+
 
 // Token key for restaurant owner
 const getToken = () =>
@@ -32,7 +37,9 @@ const handleResponse = async (res) => {
 
   if (!res.ok) {
     console.warn(`API Error ${res.status}:`, res.url, json);
-    if (res.status === 401 || res.status === 403) {
+    // Only auto-logout on 401/403 for authenticated endpoint calls, NOT for /auth/login itself
+    const isAuthEndpoint = res.url && res.url.includes('/auth/login');
+    if ((res.status === 401 || res.status === 403) && !isAuthEndpoint) {
       logoutRestaurantOwner();
     }
     const errorMsg = json.message || `HTTP ${res.status}`;
@@ -62,7 +69,8 @@ export const loginRestaurantOwner = async ({ email, password }) => {
     headers: {
       'Content-Type': 'application/json'
     },
-    credentials: 'include',
+    // Do NOT use credentials:'include' — backend sends JWT in JSON body, not cookies.
+    // Using credentials:include causes CORS preflight issues on Render.
     body: JSON.stringify({ email, password })
   });
 
