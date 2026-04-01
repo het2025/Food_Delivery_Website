@@ -399,7 +399,8 @@ export const updateOrderStatus = async (req, res) => {
     // If order status is 'Ready', notify delivery-backend to create DeliveryOrder
     if (status === 'Ready' && oldOrder && oldOrder.status !== 'Ready') {
       try {
-        const DELIVERY_BACKEND_URL = process.env.DELIVERY_BACKEND_URL || 'http://localhost:5003';
+        const DELIVERY_BACKEND_URL = process.env.DELIVERY_BACKEND_URL || 
+          (process.env.NODE_ENV === 'production' ? 'https://delivery-backend-zot7.onrender.com' : 'http://localhost:5003');
 
         const deliveryOrderData = {
           orderId: order._id.toString(),
@@ -441,7 +442,8 @@ export const updateOrderStatus = async (req, res) => {
     // ✅ NEW: Sync status to Restaurant Backend (e.g. Delivered)
     if (['Delivered', 'OutForDelivery', 'Out for Delivery'].includes(status)) {
       try {
-        const RESTAURANT_BACKEND_URL = process.env.RESTAURANT_BACKEND_URL || 'http://localhost:5004';
+        const RESTAURANT_BACKEND_URL = process.env.RESTAURANT_BACKEND_URL || 
+          (process.env.NODE_ENV === 'production' ? 'https://restaurant-backend-1mkh.onrender.com' : 'http://localhost:5004');
 
         console.log(`📡 Syncing status '${status}' to restaurant-backend...`);
 

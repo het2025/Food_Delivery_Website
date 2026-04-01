@@ -198,7 +198,9 @@ function RestaurantOwnerOrdersPage() {
         if (profileRes.success && profileRes.data && profileRes.data.restaurantId) {
           const restaurantId = profileRes.data.restaurantId;
         if (!socket) {
-          socket = io(import.meta.env.VITE_SOCKET_URL || ''); // Connect to Restaurant Backend
+          const socketUrl = import.meta.env.VITE_SOCKET_URL || 
+            (import.meta.env.MODE === 'production' ? 'https://restaurant-backend-1mkh.onrender.com' : 'http://localhost:5004');
+          socket = io(socketUrl); // Connect to Restaurant Backend
           
           socket.on('connect', () => {
             console.log('🔌 Connected to Restaurant Backend Socket');
