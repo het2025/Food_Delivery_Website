@@ -7,7 +7,7 @@ if (API_BASE_URL !== '/api' && !API_BASE_URL.endsWith('/api')) {
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
+  timeout: 60000, // Increased to 60s to account for Render cold-starts
   headers: {
     'Content-Type': 'application/json'
   }
