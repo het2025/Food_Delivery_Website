@@ -223,7 +223,7 @@ export const updateRestaurantOwnerOrderStatus = async (req, res) => {
             const deliveryResponse = await axios.post(
               `${DELIVERY_BACKEND_URL}/api/delivery/orders/create`,
               deliveryPayload,
-              { timeout: 5000 }
+              { timeout: 30000 }
             );
 
             if (deliveryResponse.data.success) {
@@ -256,7 +256,7 @@ export const updateRestaurantOwnerOrderStatus = async (req, res) => {
       const syncResponse = await axios.put(
         `${CUSTOMER_BACKEND_URL}/api/orders/${targetId}/update-status`,
         { status: status },
-        { timeout: 5000 }
+        { timeout: 30000 }
       );
 
       if (syncResponse.data.success) {
@@ -520,7 +520,7 @@ export const rejectOrder = async (req, res) => {
         rejectedAt: new Date(),
         rejectionReason: reason
       },
-      { timeout: 5000 }
+      { timeout: 30000 }
     );
 
     if (updateResponse.data.success) {

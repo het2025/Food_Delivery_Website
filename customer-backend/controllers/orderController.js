@@ -426,7 +426,7 @@ export const updateOrderStatus = async (req, res) => {
         const deliveryResponse = await axios.post(
           `${DELIVERY_BACKEND_URL}/api/delivery/orders/create`,
           deliveryOrderData,
-          { timeout: 5000 }
+          { timeout: 30000 }
         );
 
         if (deliveryResponse.data.success) {
@@ -448,7 +448,7 @@ export const updateOrderStatus = async (req, res) => {
         await axios.put(`${RESTAURANT_BACKEND_URL}/api/orders/receive-status-update`, {
           orderId: order._id.toString(),
           status: status
-        });
+        }, { timeout: 30000 });
 
         console.log('✅ Status synced to restaurant-backend');
       } catch (syncError) {

@@ -284,7 +284,7 @@ export const pickupOrder = async (req, res) => {
       await axios.put(
         `${CUSTOMER_BACKEND_URL}/api/orders/${order.orderId}/update-status`,
         { status: 'Out for Delivery' },
-        { timeout: 5000 }
+        { timeout: 30000 }
       );
       console.log(`✅ Synced 'Out for Delivery' status to customer-backend`);
     } catch (syncError) {
@@ -401,7 +401,7 @@ export const completeDelivery = async (req, res) => {
       await axios.put(
         `${CUSTOMER_BACKEND_URL}/api/orders/${order.orderId}/update-status`,
         { status: 'Delivered' },
-        { timeout: 5000 }
+        { timeout: 30000 }
       );
       console.log(`✅ Synced 'Delivered' status to customer-backend for order ${order.orderNumber}`);
     } catch (syncError) {
